@@ -42,9 +42,29 @@ const LeafBullet = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Skull bullet for obstacles
-const SkullBullet = ({ className }: { className?: string }) => (
-  <Skull className={cn("h-2.5 w-2.5 text-destructive", className)} />
+// Crossed bones bullet for obstacles
+const CrossedBonesBullet = ({ className }: { className?: string }) => (
+  <svg
+    width="10"
+    height="10"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    {/* Crossed bones */}
+    <path
+      d="M4 4L20 20M4 20L20 4"
+      stroke="hsl(0, 70%, 55%)"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+    {/* Bone ends */}
+    <circle cx="4" cy="4" r="2" fill="hsl(0, 70%, 55%)" />
+    <circle cx="20" cy="4" r="2" fill="hsl(0, 70%, 55%)" />
+    <circle cx="4" cy="20" r="2" fill="hsl(0, 70%, 55%)" />
+    <circle cx="20" cy="20" r="2" fill="hsl(0, 70%, 55%)" />
+  </svg>
 );
 
 export const RealityInput = ({
@@ -71,7 +91,7 @@ export const RealityInput = ({
         onChange={onObstaclesChange}
         colorScheme="obstacles"
         placeholder="What's stopping you?"
-        BulletIcon={SkullBullet}
+        BulletIcon={CrossedBonesBullet}
       />
     </div>
   );
