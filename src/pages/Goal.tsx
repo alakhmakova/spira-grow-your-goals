@@ -581,6 +581,7 @@ const GoalPage = () => {
         open={showCreateTarget} 
         onOpenChange={setShowCreateTarget}
         goalId={goal.id}
+        optionId={goal.activeOptionId}
       />
 
       {/* Delete Confirmation */}
