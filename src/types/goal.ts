@@ -11,6 +11,12 @@ export interface RealityItem {
   name: string;
 }
 
+export interface AchievabilityEntry {
+  id: string;
+  value: number;
+  timestamp: Date;
+}
+
 export interface Resource {
   id: string;
   type: ResourceType;
@@ -40,6 +46,7 @@ export interface Goal {
   will?: string;
   resources?: Resource[];
   achievability: number;
+  achievabilityHistory?: AchievabilityEntry[];
   dueDate?: Date;
   createdAt: Date;
   progress: number;

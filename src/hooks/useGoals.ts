@@ -118,9 +118,22 @@ export const useGoals = () => {
   }, []);
 
   const updateGoal = useCallback((id: string, updates: Partial<Goal>) => {
-    setGoals(prev => prev.map(goal => 
-      goal.id === id ? { ...goal, ...updates } : goal
-    ));
+    setGoals(prev => prev.map(goal => {
+      if (goal.id !== id) return goal;
+      
+      // Track achievability history if achievability is being updated
+      if (updates.achievability !== undefined && updates.achievability !== goal.achievability) {
+        const newEntry = {
+          id: Date.now().toString(),
+          value: updates.achievability,
+          timestamp: new Date(),
+        };
+        const history = [...(goal.achievabilityHistory || []), newEntry];
+        return { ...goal, ...updates, achievabilityHistory: history };
+      }
+      
+      return { ...goal, ...updates };
+    }));
   }, []);
 
   const deleteGoal = useCallback((id: string) => {

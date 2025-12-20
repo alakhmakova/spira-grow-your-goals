@@ -62,6 +62,7 @@ import { CommentsSection } from "@/components/goals/CommentsSection";
 import { ResourcesSection } from "@/components/goals/ResourcesSection";
 import { OptionsSection } from "@/components/goals/OptionsSection";
 import { RealitySection } from "@/components/goals/RealitySection";
+import { AchievabilityHistory } from "@/components/goals/AchievabilityHistory";
 import { Confetti } from "@/components/Confetti";
 import { Resource, GoalOption, RealityItem } from "@/types/goal";
 
@@ -270,6 +271,14 @@ const GoalPage = () => {
                             {num}
                           </Button>
                         ))}
+                      </div>
+                      
+                      {/* History button */}
+                      <div className="pt-2 border-t">
+                        <AchievabilityHistory 
+                          history={goal.achievabilityHistory || []} 
+                          currentValue={goal.achievability} 
+                        />
                       </div>
                     </div>
                   </PopoverContent>
