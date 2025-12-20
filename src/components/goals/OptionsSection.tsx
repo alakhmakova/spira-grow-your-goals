@@ -326,14 +326,12 @@ export const OptionsSection = ({
           <span className="line-clamp-2">{goalName}</span>
         </div>
 
-        {/* SVG for connection lines */}
+        {/* SVG for connection lines - full size overlay */}
         <svg 
-          className="absolute pointer-events-none z-0" 
-          width="400" 
-          height="400"
-          style={{ left: 'calc(50% - 200px)', top: 'calc(50% - 200px)' }}
+          className="absolute inset-0 w-full h-full pointer-events-none z-0" 
+          style={{ overflow: 'visible' }}
         >
-          <g transform="translate(200, 200)">
+          <g style={{ transform: 'translate(50%, 50%)' }}>
             {options.map((option, index) => {
               const pos = getActualPosition(option.id, index, totalItems);
               return (
@@ -370,7 +368,7 @@ export const OptionsSection = ({
         </svg>
 
         {/* Options arranged radially */}
-        <div className="relative w-[400px] h-[400px]">
+        <div className="relative w-full h-full" style={{ minWidth: '400px', minHeight: '400px' }}>
           {options.map((option, index) => {
             const colors = optionColors[index % optionColors.length];
             const isActive = activeOptionId === option.id;
