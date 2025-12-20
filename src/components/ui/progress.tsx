@@ -76,6 +76,15 @@ const CircularProgress = ({
   const offset = circumference - (value / 100) * circumference
   const isComplete = value === 100
 
+  // Color based on progress percentage
+  const getProgressColor = () => {
+    if (value === 100) return "stroke-success"
+    if (value >= 75) return "stroke-primary"
+    if (value >= 50) return "stroke-accent"
+    if (value >= 25) return "stroke-warning"
+    return "stroke-muted-foreground"
+  }
+
   return (
     <div className={cn("relative inline-flex items-center justify-center", className)}>
       <svg
@@ -100,7 +109,7 @@ const CircularProgress = ({
           fill="none"
           className={cn(
             "transition-all duration-500 ease-out",
-            isComplete ? "stroke-success" : "stroke-primary"
+            getProgressColor()
           )}
           strokeWidth={strokeWidth}
           strokeLinecap="round"

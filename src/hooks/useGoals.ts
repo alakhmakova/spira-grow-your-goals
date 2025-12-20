@@ -169,11 +169,12 @@ export const useGoals = () => {
     }));
   }, []);
 
-  const addComment = useCallback((goalId: string, content: string, targetId?: string) => {
+  const addComment = useCallback((goalId: string, content: string, targetId?: string, parentId?: string) => {
     const newComment: Comment = {
       id: Date.now().toString(),
       goalId,
       targetId,
+      parentId,
       content,
       author: targetId ? goals.find(g => g.id === goalId)?.targets.find(t => t.id === targetId)?.name || "Target" : "User",
       createdAt: new Date(),

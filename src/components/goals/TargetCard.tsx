@@ -343,40 +343,125 @@ export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
           <DialogHeader>
             <DialogTitle className="font-display">{target.name}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <Progress value={progress} variant={isComplete ? "success" : "nature"} className="h-4" />
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div className="p-2 rounded-lg bg-muted">
-                <div className="text-xs text-muted-foreground mb-1">Start</div>
-                <div className="font-semibold">{target.startValue}</div>
-              </div>
-              <div className="p-2 rounded-lg bg-primary/10">
-                <div className="text-xs text-muted-foreground mb-1">Current</div>
-                <Input
-                  type="number"
-                  value={target.currentValue}
-                  onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    if (!isNaN(value) && value >= (target.startValue || 0) && value <= (target.targetValue || 0)) {
-                      const range = (target.targetValue || 0) - (target.startValue || 0);
-                      const newProgress = range > 0 ? Math.round(((value - (target.startValue || 0)) / range) * 100) : 0;
-                      updateTarget(goalId, target.id, { currentValue: value, progress: newProgress });
-                    }
-                  }}
-                  className="h-8 text-center font-semibold"
-                />
-              </div>
-              <div className="p-2 rounded-lg bg-muted">
-                <div className="text-xs text-muted-foreground mb-1">Target</div>
-                <div className="font-semibold">{target.targetValue}</div>
-              </div>
-            </div>
-            {target.unit && (
-              <p className="text-center text-sm text-muted-foreground">Unit: {target.unit}</p>
-            )}
-          </div>
+          <ProgressUpdateForm 
+            target={target} 
+            goalId={goalId}
+            onClose={() => setShowProgressModal(false)}
+          />
         </DialogContent>
       </Dialog>
     </>
+  );
+};
+
+// Separated form for editing target progress with all fields editable
+const ProgressUpdateForm = ({ 
+  target, 
+  goalId, 
+  onClose 
+}: { 
+  target: Target; 
+  goalId: string;
+  onClose: () => void;
+}) => {
+  const { updateTarget } = useGoalsContext();
+  const [startValue, setStartValue] = useState(target.startValue || 0);
+  const [targetValue, setTargetValue] = useState(target.targetValue || 0);
+  const [currentValue, setCurrentValue] = useState(target.currentValue || 0);
+  const [unit, setUnit] = useState(target.unit || "");
+  const [error, setError] = useState("");
+
+  const range = targetValue - startValue;
+  const progress = range > 0 ? Math.round(((currentValue - startValue) / range) * 100) : 0;
+  const isComplete = progress >= 100;
+
+  const handleSave = () => {
+    // Validation
+    if (startValue < 0 || targetValue < 0 || currentValue < 0) {
+      setError("Negative numbers are not allowed");
+      return;
+    }
+    if (startValue === targetValue) {
+      setError("Start and target values cannot be the same");
+      return;
+    }
+    if (currentValue < startValue || currentValue > targetValue) {
+      setError("Current value must be between start and target");
+      return;
+    }
+
+    const newProgress = range > 0 ? Math.round(((currentValue - startValue) / range) * 100) : 0;
+    updateTarget(goalId, target.id, { 
+      startValue, 
+      targetValue, 
+      currentValue, 
+      unit: unit.trim() || undefined,
+      progress: Math.max(0, Math.min(100, newProgress))
+    });
+    onClose();
+  };
+
+  return (
+    <div className="space-y-4 py-4">
+      <Progress value={Math.max(0, Math.min(100, progress))} variant={isComplete ? "success" : "nature"} className="h-4" />
+      
+      {error && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
+      
+      <div className="grid grid-cols-3 gap-3 text-center">
+        <div className="p-2 rounded-lg bg-muted space-y-1">
+          <div className="text-xs text-muted-foreground">Start</div>
+          <Input
+            type="number"
+            value={startValue}
+            onChange={(e) => {
+              setStartValue(parseFloat(e.target.value) || 0);
+              setError("");
+            }}
+            className="h-8 text-center font-semibold"
+          />
+        </div>
+        <div className="p-2 rounded-lg bg-primary/10 space-y-1">
+          <div className="text-xs text-muted-foreground">Current</div>
+          <Input
+            type="number"
+            value={currentValue}
+            onChange={(e) => {
+              setCurrentValue(parseFloat(e.target.value) || 0);
+              setError("");
+            }}
+            className="h-8 text-center font-semibold"
+          />
+        </div>
+        <div className="p-2 rounded-lg bg-muted space-y-1">
+          <div className="text-xs text-muted-foreground">Target</div>
+          <Input
+            type="number"
+            value={targetValue}
+            onChange={(e) => {
+              setTargetValue(parseFloat(e.target.value) || 0);
+              setError("");
+            }}
+            className="h-8 text-center font-semibold"
+          />
+        </div>
+      </div>
+      
+      <div className="space-y-1">
+        <label className="text-xs text-muted-foreground">Unit (optional)</label>
+        <Input
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
+          placeholder="e.g., USD, kg, hours"
+          className="h-8"
+        />
+      </div>
+      
+      <div className="flex justify-end gap-2">
+        <Button variant="ghost" size="sm" onClick={onClose}>Cancel</Button>
+        <Button variant="nature" size="sm" onClick={handleSave}>Save Changes</Button>
+      </div>
+    </div>
   );
 };
