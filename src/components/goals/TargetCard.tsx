@@ -180,11 +180,10 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
       >
         {/* Progress fill background */}
         <div 
-          className="absolute inset-0 transition-all duration-500"
+          className="absolute inset-0 transition-all duration-500 gradient-progress opacity-30"
           style={{ 
             width: `${progress}%`,
-            borderRadius: 'inherit',
-            background: '#d9ff66'
+            borderRadius: 'inherit'
           }}
         />
         
