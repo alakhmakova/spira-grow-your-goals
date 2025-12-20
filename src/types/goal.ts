@@ -1,5 +1,7 @@
 export type ResourceType = "link" | "email" | "text" | "picture" | "document";
 
+export type GoalType = "short-term" | "long-term" | "north-star" | "dream";
+
 export interface GoalOption {
   id: string;
   name: string;
@@ -37,6 +39,7 @@ export interface Resource {
 export interface Goal {
   id: string;
   name: string;
+  goalType?: GoalType;
   reality?: string;
   actions?: RealityItem[]; // Actions taken or to take
   obstacles?: RealityItem[]; // Obstacles to overcome
@@ -108,6 +111,7 @@ export type SortOption =
 
 export interface GoalFilters {
   achieved?: boolean;
+  goalType?: GoalType;
   dueDateRange?: { start?: Date; end?: Date };
   createdDateRange?: { start?: Date; end?: Date };
   achievabilityRange?: { min: number; max: number };

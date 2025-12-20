@@ -231,6 +231,11 @@ export const useGoals = () => {
       );
     }
 
+    // Goal type filter
+    if (filters.goalType) {
+      result = result.filter(goal => goal.goalType === filters.goalType);
+    }
+
     if (filters.dueDateRange) {
       result = result.filter(goal => {
         if (!goal.dueDate) return false;
@@ -288,6 +293,11 @@ export const useGoals = () => {
           return 0;
       }
     });
+
+    // Pin North Star to the top
+    const northStarGoals = result.filter(g => g.goalType === "north-star");
+    const otherGoals = result.filter(g => g.goalType !== "north-star");
+    result = [...northStarGoals, ...otherGoals];
 
     return result;
   }, [goals, searchQuery, sortOption, filters]);
