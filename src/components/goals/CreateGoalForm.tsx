@@ -27,9 +27,10 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { Link } from "react-router-dom";
-import { Resource, GoalOption } from "@/types/goal";
+import { Resource, GoalOption, RealityItem } from "@/types/goal";
 import { ResourceInput } from "./ResourceInput";
 import { OptionInput } from "./OptionInput";
+import { RealityInput } from "./RealityInput";
 
 interface CreateGoalFormProps {
   open: boolean;
@@ -42,6 +43,8 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
   
   const [name, setName] = useState("");
   const [reality, setReality] = useState("");
+  const [actions, setActions] = useState<RealityItem[]>([]);
+  const [obstacles, setObstacles] = useState<RealityItem[]>([]);
   const [achievability, setAchievability] = useState<number | null>(null);
   const [optionsText, setOptionsText] = useState("");
   const [goalOptions, setGoalOptions] = useState<GoalOption[]>([]);
@@ -70,6 +73,8 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     const newGoal = createGoal({
       name: name.trim(),
       reality: reality.trim() || undefined,
+      actions: actions.length > 0 ? actions : undefined,
+      obstacles: obstacles.length > 0 ? obstacles : undefined,
       options: optionsText.trim() || undefined,
       goalOptions: goalOptions.length > 0 ? goalOptions : undefined,
       will: will.trim() || undefined,
@@ -81,12 +86,15 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     // Reset form
     setName("");
     setReality("");
+    setActions([]);
+    setObstacles([]);
     setAchievability(null);
     setOptionsText("");
     setGoalOptions([]);
     setWill("");
     setResources([]);
     setDueDate(undefined);
+    setErrors({});
     setErrors({});
     
     onOpenChange(false);
@@ -156,11 +164,21 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
             </div>
             <Textarea
               id="reality"
-              placeholder="What action(s) have you taken so far to get you here? What has stopped you from doing more?"
+              placeholder="Describe your current situation..."
               value={reality}
               onChange={(e) => setReality(e.target.value)}
-              rows={3}
+              rows={2}
             />
+            
+            {/* Actions & Obstacles */}
+            <div className="mt-4">
+              <RealityInput
+                actions={actions}
+                obstacles={obstacles}
+                onActionsChange={setActions}
+                onObstaclesChange={setObstacles}
+              />
+            </div>
           </div>
 
           {/* Achievability */}

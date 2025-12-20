@@ -61,8 +61,9 @@ import { TargetCard } from "@/components/goals/TargetCard";
 import { CommentsSection } from "@/components/goals/CommentsSection";
 import { ResourcesSection } from "@/components/goals/ResourcesSection";
 import { OptionsSection } from "@/components/goals/OptionsSection";
+import { RealitySection } from "@/components/goals/RealitySection";
 import { Confetti } from "@/components/Confetti";
-import { Resource, GoalOption } from "@/types/goal";
+import { Resource, GoalOption, RealityItem } from "@/types/goal";
 
 const GoalPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -347,14 +348,24 @@ const GoalPage = () => {
             <AccordionItem value="reality">
               <AccordionTrigger className="font-medium">
                 Reality: What is happening now?
-                {!goal.reality && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
+                {!goal.reality && (!goal.actions || goal.actions.length === 0) && (!goal.obstacles || goal.obstacles.length === 0) && (
+                  <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>
+                )}
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="space-y-4">
                 <Textarea
                   value={goal.reality || ""}
                   onChange={(e) => updateGoal(goal.id, { reality: e.target.value })}
                   placeholder="Describe your current situation..."
-                  className="min-h-[100px] resize-y"
+                  className="min-h-[80px] resize-y"
+                />
+                
+                {/* Actions & Obstacles */}
+                <RealitySection
+                  actions={goal.actions || []}
+                  obstacles={goal.obstacles || []}
+                  onUpdateActions={(actions) => updateGoal(goal.id, { actions })}
+                  onUpdateObstacles={(obstacles) => updateGoal(goal.id, { obstacles })}
                 />
               </AccordionContent>
             </AccordionItem>

@@ -6,6 +6,11 @@ export interface GoalOption {
   description?: string;
 }
 
+export interface RealityItem {
+  id: string;
+  name: string;
+}
+
 export interface Resource {
   id: string;
   type: ResourceType;
@@ -27,6 +32,8 @@ export interface Goal {
   id: string;
   name: string;
   reality?: string;
+  actions?: RealityItem[]; // Actions taken or to take
+  obstacles?: RealityItem[]; // Obstacles to overcome
   options?: string; // Legacy text field
   goalOptions?: GoalOption[]; // New structured options
   activeOptionId?: string; // Currently selected option
