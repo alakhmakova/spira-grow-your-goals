@@ -160,11 +160,11 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
     <>
       <div 
         className={cn(
-          "p-4 rounded-lg border bg-card animate-fade-in transition-all cursor-pointer",
-          isComplete && "border-success/30 bg-success/5",
-          !isComplete && overdueStatus === "overdue" && "border-destructive/50 bg-destructive/5",
-          !isComplete && overdueStatus === "due-today" && "border-warning/50 bg-warning/5",
-          !isComplete && overdueStatus === "due-soon" && "border-amber-500/30 bg-amber-500/5"
+          "relative overflow-hidden p-4 rounded-lg border bg-card animate-fade-in transition-all cursor-pointer",
+          isComplete && "border-success/30",
+          !isComplete && overdueStatus === "overdue" && "border-destructive/50",
+          !isComplete && overdueStatus === "due-today" && "border-warning/50",
+          !isComplete && overdueStatus === "due-soon" && "border-amber-500/30"
         )}
         style={style}
         onClick={(e) => {
@@ -178,28 +178,30 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
           }
         }}
       >
-        <div className="flex items-start gap-4">
-          {/* Progress indicator */}
-          <div className="flex-shrink-0 w-16 text-center">
-            {targetData.type === "success" ? (
+        {/* Progress fill background */}
+        <div 
+          className={cn(
+            "absolute inset-0 transition-all duration-500",
+            isComplete ? "bg-success" : "bg-success/70"
+          )}
+          style={{ 
+            width: `${progress}%`,
+            borderRadius: 'inherit'
+          }}
+        />
+        
+        {/* Content overlay */}
+        <div className="relative z-10 flex items-start gap-4">
+          {/* Toggle for success type only */}
+          {targetData.type === "success" && (
+            <div className="flex-shrink-0">
               <Switch
                 checked={targetData.isCompleted}
                 onCheckedChange={handleToggleComplete}
                 className="data-[state=checked]:bg-success"
               />
-            ) : (
-              <div
-                className={cn(
-                  "w-14 h-14 rounded-full flex items-center justify-center font-semibold text-sm transition-all border-2",
-                  isComplete 
-                    ? "border-success bg-success/20 text-success" 
-                    : "border-foreground bg-muted text-foreground"
-                )}
-              >
-                {progress}%
-              </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Content */}
           <div className="flex-1 min-w-0">
@@ -207,8 +209,7 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
               <div className="flex items-center gap-2">
                 {isComplete && <SpiraSproutIcon className="animate-sprout-grow" size={20} />}
                 <h4 className={cn(
-                  "font-medium",
-                  isComplete && "text-success"
+                  "font-medium text-foreground"
                 )}>
                   {targetData.name}
                 </h4>
@@ -345,13 +346,10 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
               </Popover>
             </div>
 
-            {/* Progress bar for number type */}
+            {/* Progress display for number type */}
             {targetData.type === "number" && (
-              <div className="mt-3">
-                <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-muted-foreground">{display}</span>
-                </div>
-                <Progress value={progress} variant={isComplete ? "success" : "default"} />
+              <div className="mt-2 text-sm text-foreground font-medium">
+                {display}
               </div>
             )}
 
@@ -417,6 +415,13 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
                 )}
               </div>
             )}
+          </div>
+
+          {/* Progress percentage on the right */}
+          <div className={cn(
+            "flex-shrink-0 text-2xl font-bold text-foreground"
+          )}>
+            {progress}%
           </div>
         </div>
       </div>
