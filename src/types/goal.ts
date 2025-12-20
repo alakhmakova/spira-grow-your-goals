@@ -1,5 +1,11 @@
 export type ResourceType = "link" | "email" | "text" | "picture" | "document";
 
+export interface GoalOption {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 export interface Resource {
   id: string;
   type: ResourceType;
@@ -21,7 +27,9 @@ export interface Goal {
   id: string;
   name: string;
   reality?: string;
-  options?: string;
+  options?: string; // Legacy text field
+  goalOptions?: GoalOption[]; // New structured options
+  activeOptionId?: string; // Currently selected option
   will?: string;
   resources?: Resource[];
   achievability: number;
@@ -34,6 +42,7 @@ export interface Goal {
 export interface Target {
   id: string;
   goalId: string;
+  optionId?: string; // Link target to an option
   name: string;
   type: "number" | "success" | "tasks";
   createdAt: Date;

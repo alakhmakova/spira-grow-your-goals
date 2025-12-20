@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { format } from "date-fns";
 import {
@@ -16,6 +16,7 @@ import {
   ChevronDown,
   ChevronUp,
   Clock,
+  Lightbulb,
 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { useGoalsContext } from "@/context/GoalsContext";
@@ -59,8 +60,9 @@ import { CreateTargetForm } from "@/components/goals/CreateTargetForm";
 import { TargetCard } from "@/components/goals/TargetCard";
 import { CommentsSection } from "@/components/goals/CommentsSection";
 import { ResourcesSection } from "@/components/goals/ResourcesSection";
+import { OptionsSection } from "@/components/goals/OptionsSection";
 import { Confetti } from "@/components/Confetti";
-import { Resource } from "@/types/goal";
+import { Resource, GoalOption } from "@/types/goal";
 
 const GoalPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -76,7 +78,28 @@ const GoalPage = () => {
   const [editingName, setEditingName] = useState(false);
   const [tempName, setTempName] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(["reality", "options", "will", "resources"]);
+  const [expandedSections, setExpandedSections] = useState<string[]>(["reality", "goalOptions", "options", "will", "resources"]);
+
+  // Filter targets by active option
+  const filteredTargets = useMemo(() => {
+    if (!goal) return [];
+    // If no options exist, show all targets
+    if (!goal.goalOptions || goal.goalOptions.length === 0) {
+      return goal.targets;
+    }
+    // If options exist but none is active, show only targets without optionId
+    if (!goal.activeOptionId) {
+      return goal.targets.filter(t => !t.optionId);
+    }
+    // Show targets for active option
+    return goal.targets.filter(t => t.optionId === goal.activeOptionId);
+  }, [goal]);
+
+  // Get active option name
+  const activeOption = useMemo(() => {
+    if (!goal?.goalOptions || !goal.activeOptionId) return null;
+    return goal.goalOptions.find(o => o.id === goal.activeOptionId);
+  }, [goal]);
 
   useEffect(() => {
     if (goal?.progress === 100) {
@@ -117,7 +140,7 @@ const GoalPage = () => {
     return "text-success bg-success/10";
   };
 
-  const hasEmptyGrowFields = !goal.reality || !goal.options || !goal.will || !goal.resources;
+  const hasEmptyGrowFields = !goal.reality || (!goal.goalOptions || goal.goalOptions.length === 0) || !goal.will || !goal.resources;
 
   return (
     <Layout>
@@ -336,17 +359,35 @@ const GoalPage = () => {
               </AccordionContent>
             </AccordionItem>
 
+            <AccordionItem value="goalOptions">
+              <AccordionTrigger className="font-medium">
+                <div className="flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  Options: What strategies could you use?
+                </div>
+                {(!goal.goalOptions || goal.goalOptions.length === 0) && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
+                {activeOption && <Badge variant="success" className="ml-2 text-xs">Active: {activeOption.name}</Badge>}
+              </AccordionTrigger>
+              <AccordionContent>
+                <OptionsSection
+                  options={goal.goalOptions || []}
+                  activeOptionId={goal.activeOptionId}
+                  onUpdate={(options) => updateGoal(goal.id, { goalOptions: options })}
+                  onSetActiveOption={(optionId) => updateGoal(goal.id, { activeOptionId: optionId })}
+                />
+              </AccordionContent>
+            </AccordionItem>
+
             <AccordionItem value="options">
               <AccordionTrigger className="font-medium">
-                Options: What could you do?
-                {!goal.options && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
+                Additional Notes
               </AccordionTrigger>
               <AccordionContent>
                 <Textarea
                   value={goal.options || ""}
                   onChange={(e) => updateGoal(goal.id, { options: e.target.value })}
-                  placeholder="List your options and strategies..."
-                  className="min-h-[100px] resize-y"
+                  placeholder="Any additional notes about your options..."
+                  className="min-h-[80px] resize-y"
                 />
               </AccordionContent>
             </AccordionItem>
@@ -387,7 +428,8 @@ const GoalPage = () => {
             <h2 className="font-display text-xl font-semibold flex items-center gap-2">
               <TargetIcon className="h-5 w-5 text-primary" />
               Targets
-              <Badge variant="muted">{goal.targets.length}</Badge>
+              <Badge variant="muted">{filteredTargets.length}</Badge>
+              {activeOption && <Badge variant="outline" className="text-xs">{activeOption.name}</Badge>}
             </h2>
             <Button onClick={() => setShowCreateTarget(true)} variant="nature" size="sm" className="gap-2">
               <Plus className="h-4 w-4" />
@@ -395,7 +437,7 @@ const GoalPage = () => {
             </Button>
           </div>
 
-          {goal.targets.length === 0 ? (
+          {filteredTargets.length === 0 ? (
             <Card variant="nature" className="text-center py-8">
               <CardContent>
                 <TargetIcon className="h-12 w-12 text-primary/40 mx-auto mb-4" />
@@ -413,7 +455,7 @@ const GoalPage = () => {
           ) : (
             <>
               <div className="space-y-3">
-                {goal.targets.map((target, index) => (
+                {filteredTargets.map((target, index) => (
                   <TargetCard 
                     key={target.id} 
                     target={target} 
@@ -423,7 +465,7 @@ const GoalPage = () => {
                 ))}
               </div>
               
-              {goal.targets.length > 3 && (
+              {filteredTargets.length > 3 && (
                 <div className="mt-4 flex justify-center">
                   <Button onClick={() => setShowCreateTarget(true)} variant="soft" size="sm" className="gap-2">
                     <Plus className="h-4 w-4" />
