@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HelpCircle, ExternalLink, Trash2, Pencil, ToggleLeft } from "lucide-react";
+import { HelpCircle, ExternalLink, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,8 +26,31 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
 
-// Leaf icon for Tasks type (like the logo)
-const LeafIcon = ({ className }: { className?: string }) => (
+// Number icon (same size as others)
+const NumberIcon = ({ className }: { className?: string }) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <text
+      x="12"
+      y="16"
+      textAnchor="middle"
+      fontSize="12"
+      fontWeight="600"
+      fill="currentColor"
+    >
+      123
+    </text>
+  </svg>
+);
+
+// Toggle icon for Done/Not Done (matching goal page style)
+const ToggleIcon = ({ className }: { className?: string }) => (
   <svg
     width="24"
     height="24"
@@ -37,21 +60,82 @@ const LeafIcon = ({ className }: { className?: string }) => (
     className={className}
   >
     <defs>
-      <linearGradient id="leafIconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient id="toggleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="hsl(142, 70%, 45%)" />
         <stop offset="100%" stopColor="hsl(168, 80%, 45%)" />
       </linearGradient>
     </defs>
-    <path
-      d="M12 3C7.5 3 4 6.5 4 11C4 14.5 6 17.5 9 19L12 21L15 19C18 17.5 20 14.5 20 11C20 6.5 16.5 3 12 3Z"
-      fill="url(#leafIconGradient)"
+    {/* Toggle track */}
+    <rect
+      x="2"
+      y="7"
+      width="20"
+      height="10"
+      rx="5"
+      fill="url(#toggleGradient)"
     />
+    {/* Toggle knob */}
+    <circle
+      cx="17"
+      cy="12"
+      r="3.5"
+      fill="white"
+    />
+  </svg>
+);
+
+// Leaves icon for Tasks (like the Spira logo)
+const LeavesIcon = ({ className }: { className?: string }) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <defs>
+      <linearGradient id="leavesGradient" x1="50%" y1="100%" x2="50%" y2="0%">
+        <stop offset="0%" stopColor="hsl(170, 50%, 22%)" />
+        <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
+        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
+      </linearGradient>
+      <linearGradient id="leavesLeftLeaf" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
+        <stop offset="100%" stopColor="hsl(155, 70%, 45%)" />
+      </linearGradient>
+      <linearGradient id="leavesRightLeaf" x1="100%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stopColor="hsl(175, 55%, 45%)" />
+        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
+      </linearGradient>
+    </defs>
+    
+    {/* Curved base */}
     <path
-      d="M12 7V15M9 10L12 7L15 10"
-      stroke="white"
+      d="M5 19 Q12 17, 19 19"
+      stroke="url(#leavesGradient)"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    
+    {/* Stem */}
+    <path
+      d="M12 18 C12 15, 12 12, 12 10"
+      stroke="url(#leavesGradient)"
       strokeWidth="1.5"
       strokeLinecap="round"
-      strokeLinejoin="round"
+    />
+    
+    {/* Left leaf */}
+    <path
+      d="M12 11 C10 9, 6 6, 4 4 C6 3, 8 4, 10 6 C11 8, 12 10, 12 11"
+      fill="url(#leavesLeftLeaf)"
+    />
+    
+    {/* Right leaf */}
+    <path
+      d="M12 9 C14 7, 17 5, 20 3 C18 2, 16 3, 14 5 C13 7, 12 8, 12 9"
+      fill="url(#leavesRightLeaf)"
     />
   </svg>
 );
@@ -264,7 +348,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <span className="text-2xl mb-1">123</span>
+                  <NumberIcon className="h-6 w-6 mb-1 text-foreground" />
                   <span className="text-sm font-medium text-center">Number</span>
                 </Label>
               </div>
@@ -279,7 +363,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <ToggleLeft className="h-6 w-6 mb-1 text-primary" />
+                  <ToggleIcon className="h-6 w-6 mb-1" />
                   <span className="text-sm font-medium text-center">Done/Not Done</span>
                 </Label>
               </div>
@@ -294,7 +378,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <LeafIcon className="h-6 w-6 mb-1" />
+                  <LeavesIcon className="h-6 w-6 mb-1" />
                   <span className="text-sm font-medium text-center">Tasks</span>
                 </Label>
               </div>
