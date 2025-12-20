@@ -470,6 +470,11 @@ const GoalPage = () => {
                     );
                     updateGoal(goal.id, { targets: updatedTargets });
                   }}
+                  onDeleteUnboundTargets={() => {
+                    // Delete all unbound targets
+                    const updatedTargets = goal.targets.filter(t => t.optionId);
+                    updateGoal(goal.id, { targets: updatedTargets });
+                  }}
                 />
               </AccordionContent>
             </AccordionItem>
