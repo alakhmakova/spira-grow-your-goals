@@ -427,19 +427,12 @@ const GoalPage = () => {
           <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections}>
             <AccordionItem value="reality">
               <AccordionTrigger className="font-medium">
-                Reality: What is happening now?
-                {!goal.reality && (!goal.actions || goal.actions.length === 0) && (!goal.obstacles || goal.obstacles.length === 0) && (
+                Reality: Actions & Obstacles
+                {(!goal.actions || goal.actions.length === 0) && (!goal.obstacles || goal.obstacles.length === 0) && (
                   <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>
                 )}
               </AccordionTrigger>
               <AccordionContent className="space-y-4">
-                <Textarea
-                  value={goal.reality || ""}
-                  onChange={(e) => updateGoal(goal.id, { reality: e.target.value })}
-                  placeholder="Describe your current situation..."
-                  className="min-h-[80px] resize-y"
-                />
-                
                 {/* Actions & Obstacles */}
                 <RealitySection
                   actions={goal.actions || []}

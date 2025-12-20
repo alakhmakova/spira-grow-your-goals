@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, AlertTriangle } from "lucide-react";
+import { Plus, X, Pencil, Check, Zap, Mountain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -20,24 +20,24 @@ export const RealitySection = ({
 }: RealitySectionProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {/* Actions - Green Container */}
+      {/* Actions - Primary/Teal theme */}
       <RealityList
         title="Actions"
         icon={<Zap className="h-4 w-4" />}
         items={actions}
         onUpdate={onUpdateActions}
-        colorScheme="success"
+        colorScheme="actions"
         placeholder="Add an action you've taken or will take..."
         emptyText="What actions have you taken so far?"
       />
 
-      {/* Obstacles - Red Container */}
+      {/* Obstacles - Warning/Amber theme */}
       <RealityList
         title="Obstacles"
-        icon={<AlertTriangle className="h-4 w-4" />}
+        icon={<Mountain className="h-4 w-4" />}
         items={obstacles}
         onUpdate={onUpdateObstacles}
-        colorScheme="destructive"
+        colorScheme="obstacles"
         placeholder="Add an obstacle to overcome..."
         emptyText="What's stopping you from achieving more?"
       />
@@ -50,7 +50,7 @@ interface RealityListProps {
   icon: React.ReactNode;
   items: RealityItem[];
   onUpdate: (items: RealityItem[]) => void;
-  colorScheme: "success" | "destructive";
+  colorScheme: "actions" | "obstacles";
   placeholder: string;
   emptyText: string;
 }
@@ -70,19 +70,21 @@ const RealityList = ({
   const [editName, setEditName] = useState("");
 
   const colors = {
-    success: {
-      bg: "bg-success/10",
-      border: "border-success/30",
-      text: "text-success",
-      hoverBg: "hover:bg-success/20",
-      buttonBg: "bg-success/20 hover:bg-success/30",
+    actions: {
+      bg: "bg-primary/10",
+      border: "border-primary/30",
+      text: "text-primary",
+      hoverBg: "hover:bg-primary/15",
+      buttonBg: "bg-primary/20 hover:bg-primary/30",
+      bulletBg: "bg-primary",
     },
-    destructive: {
-      bg: "bg-destructive/10",
-      border: "border-destructive/30",
-      text: "text-destructive",
-      hoverBg: "hover:bg-destructive/20",
-      buttonBg: "bg-destructive/20 hover:bg-destructive/30",
+    obstacles: {
+      bg: "bg-warning/10",
+      border: "border-warning/30",
+      text: "text-warning-foreground",
+      hoverBg: "hover:bg-warning/15",
+      buttonBg: "bg-warning/20 hover:bg-warning/30 text-warning-foreground",
+      bulletBg: "bg-warning",
     },
   };
 
@@ -154,7 +156,7 @@ const RealityList = ({
           <div
             key={item.id}
             className={cn(
-              "group flex items-center gap-2 p-2 rounded-lg transition-colors",
+              "group flex items-start gap-3 p-2 rounded-lg transition-colors",
               scheme.hoverBg
             )}
           >
@@ -188,19 +190,24 @@ const RealityList = ({
               </div>
             ) : (
               <>
-                <span className="flex-1 text-sm">{item.name}</span>
+                {/* Styled bullet */}
+                <div className={cn(
+                  "flex-shrink-0 w-2 h-2 rounded-full mt-1.5",
+                  scheme.bulletBg
+                )} />
+                <span className="flex-1 text-sm text-foreground">{item.name}</span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleEdit(item)}
                     className="p-1 hover:bg-background/50 rounded"
                   >
-                    <Pencil className="h-3 w-3" />
+                    <Pencil className="h-3 w-3 text-muted-foreground" />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className={cn("p-1 hover:bg-background/50 rounded", scheme.text)}
+                    className="p-1 hover:bg-background/50 rounded"
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3 w-3 text-muted-foreground" />
                   </button>
                 </div>
               </>
