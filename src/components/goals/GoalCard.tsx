@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { 
@@ -9,7 +9,7 @@ import {
   Pencil,
   Gauge,
   Star,
-  Pin
+  AlertTriangle
 } from "lucide-react";
 import { Goal } from "@/types/goal";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { getGoalTypeStyles } from "@/lib/goalTypeUtils";
+import { getOverdueStatus, getOverdueStyles } from "@/lib/dateUtils";
 
 interface GoalCardProps {
   goal: Goal;
@@ -62,6 +63,13 @@ export const GoalCard = ({
   };
 
   const typeStyles = goal.goalType ? getGoalTypeStyles(goal.goalType) : null;
+  
+  // Check overdue status for goal and its targets
+  const goalOverdueStatus = getOverdueStatus(goal.dueDate);
+  const goalOverdueStyles = getOverdueStyles(goalOverdueStatus);
+  const hasOverdueTargets = goal.targets.some(t => 
+    t.deadline && getOverdueStatus(t.deadline) === "overdue" && t.progress < 100
+  );
 
   const cardContent = (
     <Card 
@@ -69,7 +77,10 @@ export const GoalCard = ({
       className={cn(
         "relative h-full min-h-[280px] transition-all duration-500 cursor-grab active:cursor-grabbing",
         goal.progress === 100 && "border-success/30 shadow-success-glow",
-        goal.goalType === "north-star" && "ring-2 ring-amber-400/50"
+        goal.goalType === "north-star" && "ring-2 ring-amber-400/50",
+        goalOverdueStatus === "overdue" && goal.progress < 100 && "border-destructive/50 shadow-[0_0_20px_-5px_hsl(var(--destructive)/0.3)]",
+        goalOverdueStatus === "due-today" && goal.progress < 100 && "border-warning/50",
+        goalOverdueStatus === "due-soon" && goal.progress < 100 && "border-amber-500/30"
       )}
     >
       {/* Menu overlay on hover */}
@@ -179,9 +190,27 @@ export const GoalCard = ({
             <span>Created: {format(goal.createdAt, "MMM d, yyyy")}</span>
           </div>
           {goal.dueDate && (
-            <div className="flex items-center gap-2">
-              <Calendar className="h-3 w-3 text-primary" />
-              <span className="text-primary">Due: {format(goal.dueDate, "MMM d, yyyy")}</span>
+            <div className={cn(
+              "flex items-center gap-2",
+              goalOverdueStyles?.textColor || "text-primary"
+            )}>
+              {goalOverdueStatus === "overdue" && goal.progress < 100 ? (
+                <AlertTriangle className="h-3 w-3" />
+              ) : (
+                <Calendar className="h-3 w-3" />
+              )}
+              <span className="font-medium">
+                {goalOverdueStyles && goal.progress < 100 
+                  ? `${goalOverdueStyles.label}: ${format(goal.dueDate, "MMM d, yyyy")}`
+                  : `Due: ${format(goal.dueDate, "MMM d, yyyy")}`
+                }
+              </span>
+            </div>
+          )}
+          {hasOverdueTargets && (
+            <div className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-3 w-3" />
+              <span className="font-medium">Has overdue targets</span>
             </div>
           )}
         </div>

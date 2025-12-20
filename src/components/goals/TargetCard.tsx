@@ -6,7 +6,6 @@ import {
   Trash2,
   Calendar,
   MessageSquare,
-  Check,
   ChevronDown,
   ChevronUp,
   Plus,
@@ -51,6 +50,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { SpiraSproutIcon } from "@/components/SpiraLogo";
+import { getOverdueStatus, getOverdueStyles } from "@/lib/dateUtils";
 
 interface TargetCardProps {
   target: Target;
@@ -145,13 +145,20 @@ export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
 
   const { progress, display } = getProgressDisplay();
   const isComplete = progress === 100;
+  
+  // Overdue status
+  const overdueStatus = getOverdueStatus(target.deadline);
+  const overdueStyles = getOverdueStyles(overdueStatus);
 
   return (
     <>
       <div 
         className={cn(
           "p-4 rounded-lg border bg-card animate-fade-in transition-all",
-          isComplete && "border-success/30 bg-success/5"
+          isComplete && "border-success/30 bg-success/5",
+          !isComplete && overdueStatus === "overdue" && "border-destructive/50 bg-destructive/5",
+          !isComplete && overdueStatus === "due-today" && "border-warning/50 bg-warning/5",
+          !isComplete && overdueStatus === "due-soon" && "border-amber-500/30 bg-amber-500/5"
         )}
         style={style}
       >
@@ -236,17 +243,29 @@ export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
             <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-muted-foreground">
               <span>Created {format(target.createdAt, "MMM d")}</span>
               
-              {/* Clickable deadline */}
+              {/* Clickable deadline with overdue indicator */}
               <Popover>
                 <PopoverTrigger asChild>
                   <button
                     className={cn(
-                      "flex items-center gap-1 hover:underline cursor-pointer transition-colors",
-                      target.deadline ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                      "flex items-center gap-1 hover:underline cursor-pointer transition-colors font-medium",
+                      !target.deadline && "text-muted-foreground hover:text-foreground",
+                      target.deadline && !overdueStyles && "text-primary",
+                      target.deadline && overdueStyles && !isComplete && overdueStyles.textColor,
+                      isComplete && "text-success"
                     )}
                   >
-                    <Calendar className="h-3 w-3" />
-                    {target.deadline ? `Due ${format(target.deadline, "MMM d")}` : "Set deadline"}
+                    {overdueStatus === "overdue" && !isComplete ? (
+                      <AlertTriangle className="h-3 w-3" />
+                    ) : (
+                      <Calendar className="h-3 w-3" />
+                    )}
+                    {target.deadline 
+                      ? overdueStyles && !isComplete
+                        ? `${overdueStyles.label}: ${format(target.deadline, "MMM d")}`
+                        : `Due ${format(target.deadline, "MMM d")}`
+                      : "Set deadline"
+                    }
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
