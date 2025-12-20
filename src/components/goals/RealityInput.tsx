@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, AlertTriangle } from "lucide-react";
+import { Plus, X, Pencil, Check, Zap, Mountain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -25,15 +25,15 @@ export const RealityInput = ({
         icon={<Zap className="h-4 w-4" />}
         items={actions}
         onChange={onActionsChange}
-        colorScheme="success"
+        colorScheme="actions"
         placeholder="What action have you taken?"
       />
       <RealityItemList
         title="Obstacles"
-        icon={<AlertTriangle className="h-4 w-4" />}
+        icon={<Mountain className="h-4 w-4" />}
         items={obstacles}
         onChange={onObstaclesChange}
-        colorScheme="destructive"
+        colorScheme="obstacles"
         placeholder="What's stopping you?"
       />
     </div>
@@ -45,7 +45,7 @@ interface RealityItemListProps {
   icon: React.ReactNode;
   items: RealityItem[];
   onChange: (items: RealityItem[]) => void;
-  colorScheme: "success" | "destructive";
+  colorScheme: "actions" | "obstacles";
   placeholder: string;
 }
 
@@ -63,13 +63,15 @@ const RealityItemList = ({
   const [editName, setEditName] = useState("");
 
   const colors = {
-    success: {
-      chip: "bg-success/10 border-success/30 text-success",
-      button: "text-success hover:bg-success/10",
+    actions: {
+      chip: "bg-primary/10 border-primary/30 text-primary",
+      button: "text-primary hover:bg-primary/10",
+      bulletBg: "bg-primary",
     },
-    destructive: {
-      chip: "bg-destructive/10 border-destructive/30 text-destructive",
-      button: "text-destructive hover:bg-destructive/10",
+    obstacles: {
+      chip: "bg-warning/10 border-warning/30 text-warning-foreground",
+      button: "text-warning-foreground hover:bg-warning/10",
+      bulletBg: "bg-warning",
     },
   };
 
@@ -116,19 +118,18 @@ const RealityItemList = ({
         <span>{title}</span>
       </div>
 
-      {/* Chips */}
+      {/* Items with bullets */}
       {items.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="space-y-1.5 pl-1">
           {items.map((item) => (
             <div
               key={item.id}
               className={cn(
-                "group relative flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all",
-                scheme.chip
+                "group flex items-start gap-2 py-1 transition-all"
               )}
             >
               {editingId === item.id ? (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 flex-1">
                   <Input
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
@@ -136,7 +137,7 @@ const RealityItemList = ({
                       if (e.key === "Enter") handleSaveEdit();
                       if (e.key === "Escape") setEditingId(null);
                     }}
-                    className="h-6 text-xs w-32"
+                    className="h-6 text-xs flex-1"
                     autoFocus
                   />
                   <button onClick={handleSaveEdit} className="p-0.5">
@@ -145,21 +146,26 @@ const RealityItemList = ({
                 </div>
               ) : (
                 <>
-                  <span className="text-sm">{item.name}</span>
+                  {/* Styled bullet */}
+                  <div className={cn(
+                    "flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1.5",
+                    scheme.bulletBg
+                  )} />
+                  <span className="text-sm flex-1">{item.name}</span>
                   <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       type="button"
                       onClick={() => handleEdit(item)}
                       className="p-0.5 hover:bg-background/50 rounded"
                     >
-                      <Pencil className="h-3 w-3" />
+                      <Pencil className="h-3 w-3 text-muted-foreground" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
                       className="p-0.5 hover:bg-background/50 rounded"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-3 w-3 text-muted-foreground" />
                     </button>
                   </div>
                 </>

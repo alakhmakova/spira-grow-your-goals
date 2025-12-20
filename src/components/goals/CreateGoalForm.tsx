@@ -46,7 +46,6 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
   const hasNorthStar = allGoals.some(g => g.goalType === "north-star");
   const [name, setName] = useState("");
   const [goalType, setGoalType] = useState<GoalType | undefined>(undefined);
-  const [reality, setReality] = useState("");
   const [actions, setActions] = useState<RealityItem[]>([]);
   const [obstacles, setObstacles] = useState<RealityItem[]>([]);
   const [achievability, setAchievability] = useState<number | null>(null);
@@ -77,7 +76,6 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     const newGoal = createGoal({
       name: name.trim(),
       goalType,
-      reality: reality.trim() || undefined,
       actions: actions.length > 0 ? actions : undefined,
       obstacles: obstacles.length > 0 ? obstacles : undefined,
       options: optionsText.trim() || undefined,
@@ -91,7 +89,6 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     // Reset form
     setName("");
     setGoalType(undefined);
-    setReality("");
     setActions([]);
     setObstacles([]);
     setAchievability(null);
@@ -184,42 +181,32 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
             </div>
           </div>
 
-          {/* Reality */}
+          {/* Reality - Actions & Obstacles */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Label htmlFor="reality" className="text-base font-medium">
-                What is your current situation? How do you feel about this?
+              <Label className="text-base font-medium">
+                Reality: Actions & Obstacles
               </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
-                  Assess the current situation in terms of the action taken so far. 
-                  Clarify the results and effects of previously taken actions.
+                  What actions have you taken so far? What obstacles are in your way?
                 </TooltipContent>
               </Tooltip>
               <Link to="/info#reality" className="text-xs text-primary hover:underline flex items-center gap-1">
                 Learn more <ExternalLink className="h-3 w-3" />
               </Link>
             </div>
-            <Textarea
-              id="reality"
-              placeholder="Describe your current situation..."
-              value={reality}
-              onChange={(e) => setReality(e.target.value)}
-              rows={2}
-            />
             
             {/* Actions & Obstacles */}
-            <div className="mt-4">
-              <RealityInput
-                actions={actions}
-                obstacles={obstacles}
-                onActionsChange={setActions}
-                onObstaclesChange={setObstacles}
-              />
-            </div>
+            <RealityInput
+              actions={actions}
+              obstacles={obstacles}
+              onActionsChange={setActions}
+              onObstaclesChange={setObstacles}
+            />
           </div>
 
           {/* Achievability */}
