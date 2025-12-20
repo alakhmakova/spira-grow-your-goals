@@ -31,9 +31,11 @@ interface CreateTargetFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   goalId: string;
+  /** If provided, the new target will be linked to the currently active option on the Goal page */
+  optionId?: string;
 }
 
-export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFormProps) => {
+export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: CreateTargetFormProps) => {
   const { createTarget } = useGoalsContext();
   
   const [name, setName] = useState("");
@@ -124,6 +126,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
       name: name.trim(),
       type,
       deadline,
+      optionId: optionId || undefined,
     };
 
     if (type === "number") {

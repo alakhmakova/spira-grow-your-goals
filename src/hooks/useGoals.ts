@@ -141,24 +141,35 @@ export const useGoals = () => {
     setComments(prev => prev.filter(comment => comment.goalId !== id));
   }, []);
 
-  const createTarget = useCallback((goalId: string, targetData: Omit<Target, "id" | "goalId" | "createdAt" | "progress">) => {
-    const newTarget: Target = {
+  const createTarget = useCallback((
+    goalId: string,
+    targetData: Omit<Target, "id" | "goalId" | "createdAt" | "progress">
+  ) => {
+    const baseTarget: Target = {
       ...targetData,
       id: Date.now().toString(),
       goalId,
       createdAt: new Date(),
       progress: targetData.type === "success" ? (targetData.isCompleted ? 100 : 0) : 0,
     };
-    
-    setGoals(prev => prev.map(goal => {
-      if (goal.id === goalId) {
-        const targets = [...goal.targets, newTarget];
-        const progress = calculateGoalProgress(targets);
-        return { ...goal, targets, progress };
-      }
-      return goal;
-    }));
-    
+
+    // Ensure task items reference the correct targetId
+    const newTarget: Target =
+      baseTarget.type === "tasks" && baseTarget.tasks
+        ? { ...baseTarget, tasks: baseTarget.tasks.map((t) => ({ ...t, targetId: baseTarget.id })) }
+        : baseTarget;
+
+    setGoals((prev) =>
+      prev.map((goal) => {
+        if (goal.id === goalId) {
+          const targets = [...goal.targets, newTarget];
+          const progress = calculateGoalProgress(targets);
+          return { ...goal, targets, progress };
+        }
+        return goal;
+      })
+    );
+
     return newTarget;
   }, []);
 
