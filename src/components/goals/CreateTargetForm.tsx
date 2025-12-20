@@ -306,9 +306,11 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
             <div className="space-y-4 p-4 rounded-lg bg-muted/50">
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-2">
-                  <Label htmlFor="start-value">
-                    Start <span className="text-destructive">*</span>
-                  </Label>
+                  <div className="flex items-center gap-1 h-5">
+                    <Label htmlFor="start-value" className="leading-none">
+                      Start <span className="text-destructive">*</span>
+                    </Label>
+                  </div>
                   <Input
                     id="start-value"
                     type="number"
@@ -324,9 +326,11 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="target-value">
-                    Target <span className="text-destructive">*</span>
-                  </Label>
+                  <div className="flex items-center gap-1 h-5">
+                    <Label htmlFor="target-value" className="leading-none">
+                      Target <span className="text-destructive">*</span>
+                    </Label>
+                  </div>
                   <Input
                     id="target-value"
                     type="number"
@@ -342,8 +346,8 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="unit" className="flex items-center gap-1">
-                    Unit
+                  <div className="flex items-center gap-1 h-5">
+                    <Label htmlFor="unit" className="leading-none">Unit</Label>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
@@ -352,7 +356,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                         What will measure your success?
                       </TooltipContent>
                     </Tooltip>
-                  </Label>
+                  </div>
                   <Input
                     id="unit"
                     placeholder="USD, kg, etc."
