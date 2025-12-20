@@ -396,17 +396,11 @@ export const OptionsSection = ({
                     isActive
                       ? cn(colors.border, "ring-2 ring-offset-2", colors.glow, "shadow-lg")
                       : "border-transparent hover:border-border",
-                    isDragging && "shadow-xl scale-105"
+                    isDragging && "shadow-xl scale-105",
+                    !isEditing && "cursor-grab active:cursor-grabbing"
                   )}
+                  onMouseDown={(e) => !isEditing && handleMouseDown(e, option.id, pos)}
                 >
-                  {/* Drag handle */}
-                  <div
-                    className="absolute -top-1 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing p-1 rounded hover:bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onMouseDown={(e) => handleMouseDown(e, option.id, pos)}
-                  >
-                    <GripVertical className="h-3 w-3 text-muted-foreground" />
-                  </div>
-
                   {/* Active indicator */}
                   {isActive && (
                     <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs px-1.5">
@@ -415,7 +409,7 @@ export const OptionsSection = ({
                   )}
 
                   {isEditing ? (
-                    <div className="space-y-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="space-y-2" onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
                       <Input
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
@@ -446,8 +440,12 @@ export const OptionsSection = ({
                     </div>
                   ) : (
                     <div
-                      className="cursor-pointer"
-                      onClick={() => !isDragging && onSetActiveOption(isActive ? undefined : option.id)}
+                      onClick={(e) => {
+                        if (!isDragging) {
+                          e.stopPropagation();
+                          onSetActiveOption(isActive ? undefined : option.id);
+                        }
+                      }}
                     >
                       <div className="flex items-start gap-1.5 mb-1">
                         <Lightbulb className={cn("h-4 w-4 flex-shrink-0 mt-0.5", colors.text)} />
@@ -506,15 +504,11 @@ export const OptionsSection = ({
               >
                 <div className={cn(
                   "relative group",
-                  isDragging && "shadow-xl scale-105"
-                )}>
-                  {/* Drag handle for add button */}
-                  <div
-                    className="absolute -top-1 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing p-1 rounded hover:bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    onMouseDown={(e) => handleMouseDown(e, addButtonId, pos)}
-                  >
-                    <GripVertical className="h-3 w-3 text-muted-foreground" />
-                  </div>
+                  isDragging && "shadow-xl scale-105",
+                  !showAddForm && "cursor-grab active:cursor-grabbing"
+                )}
+                onMouseDown={(e) => !showAddForm && handleMouseDown(e, addButtonId, pos)}
+                >
 
                   {showAddForm ? (
                     <div
