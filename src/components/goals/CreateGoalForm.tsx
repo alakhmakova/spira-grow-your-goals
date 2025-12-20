@@ -27,8 +27,9 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { Link } from "react-router-dom";
-import { Resource } from "@/types/goal";
+import { Resource, GoalOption } from "@/types/goal";
 import { ResourceInput } from "./ResourceInput";
+import { OptionInput } from "./OptionInput";
 
 interface CreateGoalFormProps {
   open: boolean;
@@ -42,7 +43,8 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
   const [name, setName] = useState("");
   const [reality, setReality] = useState("");
   const [achievability, setAchievability] = useState<number | null>(null);
-  const [options, setOptions] = useState("");
+  const [optionsText, setOptionsText] = useState("");
+  const [goalOptions, setGoalOptions] = useState<GoalOption[]>([]);
   const [will, setWill] = useState("");
   const [resources, setResources] = useState<Resource[]>([]);
   const [dueDate, setDueDate] = useState<Date>();
@@ -68,7 +70,8 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     const newGoal = createGoal({
       name: name.trim(),
       reality: reality.trim() || undefined,
-      options: options.trim() || undefined,
+      options: optionsText.trim() || undefined,
+      goalOptions: goalOptions.length > 0 ? goalOptions : undefined,
       will: will.trim() || undefined,
       resources: resources.length > 0 ? resources : undefined,
       achievability: achievability!,
@@ -79,7 +82,8 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     setName("");
     setReality("");
     setAchievability(null);
-    setOptions("");
+    setOptionsText("");
+    setGoalOptions([]);
     setWill("");
     setResources([]);
     setDueDate(undefined);
@@ -203,31 +207,43 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
             )}
           </div>
 
-          {/* Options */}
+          {/* Options - Structured */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Label htmlFor="options" className="text-base font-medium">
-                What ideas do you have that might work to meet the goal?
+              <Label className="text-base font-medium">
+                What options or strategies could you use?
               </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
-                  What options, alternative strategies or courses of action 
-                  do you have at hand to achieve your goal?
+                  Add different strategies or approaches to achieve your goal. You can select one as your active focus later.
                 </TooltipContent>
               </Tooltip>
               <Link to="/info#options" className="text-xs text-primary hover:underline flex items-center gap-1">
                 Learn more <ExternalLink className="h-3 w-3" />
               </Link>
             </div>
+            <OptionInput
+              options={goalOptions}
+              onChange={setGoalOptions}
+            />
+          </div>
+
+          {/* Options - Legacy text (collapsible for backwards compatibility) */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="options" className="text-base font-medium">
+                Additional notes about your options
+              </Label>
+            </div>
             <Textarea
               id="options"
-              placeholder="What are the different ways in which you could approach this issue? What are the advantages of each option?"
-              value={options}
-              onChange={(e) => setOptions(e.target.value)}
-              rows={3}
+              placeholder="Any additional thoughts about your options..."
+              value={optionsText}
+              onChange={(e) => setOptionsText(e.target.value)}
+              rows={2}
             />
           </div>
 
