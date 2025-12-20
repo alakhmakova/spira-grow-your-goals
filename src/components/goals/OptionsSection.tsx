@@ -20,6 +20,7 @@ import {
 interface OptionsSectionProps {
   options: GoalOption[];
   activeOptionId?: string;
+  goalName: string;
   onUpdate: (options: GoalOption[]) => void;
   onSetActiveOption: (optionId: string | undefined) => void;
   existingTargetsCount?: number;
@@ -30,6 +31,7 @@ interface OptionsSectionProps {
 export const OptionsSection = ({
   options,
   activeOptionId,
+  goalName,
   onUpdate,
   onSetActiveOption,
   existingTargetsCount = 0,
@@ -254,36 +256,47 @@ export const OptionsSection = ({
       )}
 
       {/* Mind Map Visualization */}
-      <div className="relative py-4">
+      <div className="relative py-8">
         {/* Central goal node */}
-        <div className="flex justify-center mb-6">
-          <div className="px-4 py-2 rounded-full bg-foreground text-background font-semibold text-sm shadow-lg">
-            Your Goal
+        <div className="flex justify-center mb-12">
+          <div className="relative">
+            <div className="px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm shadow-lg max-w-[200px] text-center truncate">
+              {goalName}
+            </div>
+            {/* Radiating lines from center */}
+            {options.length > 0 && (
+              <div className="absolute top-full left-1/2 w-px h-8 bg-gradient-to-b from-foreground/50 to-border -translate-x-1/2" />
+            )}
           </div>
         </div>
 
-        {/* Connection lines - simplified for visual effect */}
-        <div className="absolute top-[52px] left-1/2 w-px h-4 bg-border -translate-x-1/2" />
+        {/* Horizontal connector line */}
+        {options.length > 0 && (
+          <div className="absolute top-[84px] left-1/2 -translate-x-1/2 w-[calc(100%-80px)] max-w-[600px] h-px bg-border" />
+        )}
 
-        {/* Options grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Options arranged in mind map style */}
+        <div className="relative flex flex-wrap justify-center gap-6">
           {options.map((option, index) => {
             const colors = optionColors[index % optionColors.length];
             const isActive = activeOptionId === option.id;
             const isEditing = editingId === option.id;
 
             return (
-              <div
-                key={option.id}
-                className={cn(
-                  "relative group p-4 rounded-xl border-2 transition-all cursor-pointer",
-                  colors.bg,
-                  isActive
-                    ? cn(colors.border, "ring-2 ring-offset-2", colors.glow, "shadow-lg")
-                    : "border-transparent hover:border-border"
-                )}
-                onClick={() => !isEditing && onSetActiveOption(isActive ? undefined : option.id)}
-              >
+              <div key={option.id} className="relative flex flex-col items-center">
+                {/* Vertical connector from horizontal line */}
+                <div className="w-px h-6 bg-border mb-2" />
+                
+                <div
+                  className={cn(
+                    "relative group p-4 rounded-xl border-2 transition-all cursor-pointer w-[200px]",
+                    colors.bg,
+                    isActive
+                      ? cn(colors.border, "ring-2 ring-offset-2", colors.glow, "shadow-lg")
+                      : "border-transparent hover:border-border"
+                  )}
+                  onClick={() => !isEditing && onSetActiveOption(isActive ? undefined : option.id)}
+                >
                 {/* Active indicator */}
                 {isActive && (
                   <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground">
@@ -360,16 +373,21 @@ export const OptionsSection = ({
                     )}
                   </>
                 )}
+                </div>
               </div>
             );
           })}
 
           {/* Add new option card */}
-          {showAddForm ? (
-            <div
-              className="p-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-3"
-              onClick={(e) => e.stopPropagation()}
-            >
+          <div className="relative flex flex-col items-center">
+            {/* Vertical connector from horizontal line */}
+            <div className="w-px h-6 bg-border mb-2" />
+            
+            {showAddForm ? (
+              <div
+                className="p-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-3 w-[200px]"
+                onClick={(e) => e.stopPropagation()}
+              >
               <Input
                 value={newName}
                 onChange={(e) => {
@@ -406,15 +424,16 @@ export const OptionsSection = ({
                 </Button>
               </div>
             </div>
-          ) : (
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="p-4 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 min-h-[120px]"
-            >
-              <Plus className="h-6 w-6 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Add Option</span>
-            </button>
-          )}
+            ) : (
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="p-4 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 min-h-[120px] w-[200px]"
+              >
+                <Plus className="h-6 w-6 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Add Option</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
