@@ -165,6 +165,7 @@ export const GoalCard = ({
             size={64} 
             strokeWidth={6}
             labelClassName="text-sm"
+            className={goal.progress === 100 ? "[&_circle:last-child]:stroke-success" : "[&_circle:last-child]:stroke-foreground"}
           />
           <div className="flex-1 min-w-0">
             <h3 className="font-display text-lg font-semibold leading-tight line-clamp-3 group-hover:text-primary transition-colors">
