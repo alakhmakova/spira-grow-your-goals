@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, HelpCircle, ExternalLink, Trash2, Pencil } from "lucide-react";
+import { HelpCircle, ExternalLink, Trash2, Pencil, ToggleLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,36 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
-import { Link } from "react-router-dom";
+
+// Leaf icon for Tasks type (like the logo)
+const LeafIcon = ({ className }: { className?: string }) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <defs>
+      <linearGradient id="leafIconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="hsl(142, 70%, 45%)" />
+        <stop offset="100%" stopColor="hsl(168, 80%, 45%)" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M12 3C7.5 3 4 6.5 4 11C4 14.5 6 17.5 9 19L12 21L15 19C18 17.5 20 14.5 20 11C20 6.5 16.5 3 12 3Z"
+      fill="url(#leafIconGradient)"
+    />
+    <path
+      d="M12 7V15M9 10L12 7L15 10"
+      stroke="white"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 interface CreateTargetFormProps {
   open: boolean;
@@ -175,22 +204,29 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
           {/* Target Name */}
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="target-name" className="text-base font-medium">
-                How would you break this goal down into smaller pieces? <span className="text-destructive">*</span>
-              </Label>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs">
-                  Accountability set-up – define actions, timeframe, and measures of accomplishment. 
-                  Targets are measurable steps towards your goal.
-                </TooltipContent>
-              </Tooltip>
-              <Link to="/info#targets" className="text-xs text-primary hover:underline flex items-center gap-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2 flex-1">
+                <Label htmlFor="target-name" className="text-base font-medium">
+                  How would you break this goal down into smaller pieces? <span className="text-destructive">*</span>
+                </Label>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help flex-shrink-0" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    Accountability set-up – define actions, timeframe, and measures of accomplishment. 
+                    Targets are measurable steps towards your goal.
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <a 
+                href="/info#targets" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs text-primary hover:underline flex items-center gap-1 whitespace-nowrap flex-shrink-0"
+              >
                 Learn more <ExternalLink className="h-3 w-3" />
-              </Link>
+              </a>
             </div>
             <Input
               id="target-name"
@@ -217,49 +253,49 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
               onValueChange={(v) => setType(v as typeof type)}
               className="grid grid-cols-3 gap-3"
             >
-              <div>
+              <div className="flex-1">
                 <RadioGroupItem value="number" id="type-number" className="peer sr-only" />
                 <Label
                   htmlFor="type-number"
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[88px]",
                     type === "number" 
                       ? "border-primary bg-primary/5" 
                       : "border-muted hover:border-primary/50"
                   )}
                 >
                   <span className="text-2xl mb-1">123</span>
-                  <span className="text-sm font-medium">Number</span>
+                  <span className="text-sm font-medium text-center">Number</span>
                 </Label>
               </div>
-              <div>
+              <div className="flex-1">
                 <RadioGroupItem value="success" id="type-success" className="peer sr-only" />
                 <Label
                   htmlFor="type-success"
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[88px]",
                     type === "success" 
                       ? "border-primary bg-primary/5" 
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <span className="text-2xl mb-1">✓</span>
-                  <span className="text-sm font-medium">Done/Not Done</span>
+                  <ToggleLeft className="h-6 w-6 mb-1 text-primary" />
+                  <span className="text-sm font-medium text-center">Done/Not Done</span>
                 </Label>
               </div>
-              <div>
+              <div className="flex-1">
                 <RadioGroupItem value="tasks" id="type-tasks" className="peer sr-only" />
                 <Label
                   htmlFor="type-tasks"
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all",
+                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[88px]",
                     type === "tasks" 
                       ? "border-primary bg-primary/5" 
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <span className="text-2xl mb-1">☐</span>
-                  <span className="text-sm font-medium">Tasks</span>
+                  <LeafIcon className="h-6 w-6 mb-1" />
+                  <span className="text-sm font-medium text-center">Tasks</span>
                 </Label>
               </div>
             </RadioGroup>
@@ -306,8 +342,8 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                   )}
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="unit">Unit</Label>
+                  <Label htmlFor="unit" className="flex items-center gap-1">
+                    Unit
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
@@ -316,7 +352,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
                         What will measure your success?
                       </TooltipContent>
                     </Tooltip>
-                  </div>
+                  </Label>
                   <Input
                     id="unit"
                     placeholder="USD, kg, etc."
@@ -433,14 +469,15 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
               <PopoverTrigger asChild>
                 <Button
                   type="button"
-                  variant="outline"
+                  variant={deadline ? "nature" : "outline"}
                   className={cn(
                     "w-full justify-start text-left font-normal",
-                    !deadline && "text-muted-foreground"
+                    !deadline && "text-muted-foreground",
+                    deadline && "text-white"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {deadline ? format(deadline, "PPP") : "Pick a deadline"}
+                  {deadline ? format(deadline, "MMMM do, yyyy") : "Pick a deadline"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
