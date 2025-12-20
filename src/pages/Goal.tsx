@@ -58,7 +58,9 @@ import { cn } from "@/lib/utils";
 import { CreateTargetForm } from "@/components/goals/CreateTargetForm";
 import { TargetCard } from "@/components/goals/TargetCard";
 import { CommentsSection } from "@/components/goals/CommentsSection";
+import { ResourcesSection } from "@/components/goals/ResourcesSection";
 import { Confetti } from "@/components/Confetti";
+import { Resource } from "@/types/goal";
 
 const GoalPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -367,14 +369,12 @@ const GoalPage = () => {
             <AccordionItem value="resources">
               <AccordionTrigger className="font-medium">
                 Resources: What support do you need?
-                {!goal.resources && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
+                {(!goal.resources || goal.resources.length === 0) && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
               </AccordionTrigger>
               <AccordionContent>
-                <Textarea
-                  value={goal.resources || ""}
-                  onChange={(e) => updateGoal(goal.id, { resources: e.target.value })}
-                  placeholder="List resources and support needed..."
-                  className="min-h-[100px] resize-y"
+                <ResourcesSection
+                  resources={goal.resources || []}
+                  onUpdate={(resources) => updateGoal(goal.id, { resources })}
                 />
               </AccordionContent>
             </AccordionItem>
