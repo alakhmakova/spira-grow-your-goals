@@ -65,19 +65,12 @@ const LeafToggle = React.forwardRef<HTMLButtonElement, LeafToggleProps>(
             marginLeft: checked ? sizeConfig.circleMargin : "0",
           }}
         >
-          {/* Leaves SVG - styled like Spira logo */}
+          {/* Leaves SVG - styled like Spira logo, filling the circle */}
           <svg
-            viewBox="0 0 40 45"
+            viewBox="0 0 40 40"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="absolute transition-all duration-300"
-            style={{
-              width: `${28 * sizeConfig.leafScale}px`,
-              height: `${32 * sizeConfig.leafScale}px`,
-              bottom: `${75 * sizeConfig.leafScale}%`,
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}
+            className="absolute inset-0 w-full h-full transition-all duration-300 p-1"
           >
             <defs>
               {/* Gradients matching the toggle background state */}
@@ -113,42 +106,42 @@ const LeafToggle = React.forwardRef<HTMLButtonElement, LeafToggleProps>(
               </linearGradient>
             </defs>
 
-            {/* Left leaf */}
+            {/* Left leaf - larger, filling more space */}
             <path
-              d="M20 28
-                 C16 24, 8 18, 2 10
-                 C6 8, 12 10, 16 14
-                 C19 18, 20 24, 20 28"
+              d="M20 36
+                 C14 30, 4 22, 0 10
+                 C6 6, 14 10, 18 16
+                 C21 22, 20 30, 20 36"
               fill={`url(#leafGradientLeft-${uniqueId})`}
               className="transition-all duration-300"
             />
             
             {/* Left leaf vein */}
             <path
-              d="M19 25 C14 19, 8 13, 4 10"
+              d="M18 30 C12 22, 6 14, 2 10"
               stroke={checked ? "hsl(170, 50%, 22%)" : "hsl(40, 10%, 75%)"}
-              strokeWidth="0.8"
+              strokeWidth="1"
               strokeLinecap="round"
               fill="none"
               opacity="0.4"
               className="transition-all duration-300"
             />
 
-            {/* Right leaf */}
+            {/* Right leaf - larger, filling more space */}
             <path
-              d="M21 24
-                 C25 20, 32 14, 38 8
-                 C34 6, 28 8, 24 12
-                 C21 16, 21 21, 21 24"
+              d="M22 32
+                 C28 26, 36 18, 40 6
+                 C34 2, 26 6, 22 12
+                 C20 18, 21 26, 22 32"
               fill={`url(#leafGradientRight-${uniqueId})`}
               className="transition-all duration-300"
             />
 
             {/* Right leaf vein */}
             <path
-              d="M22 22 C28 16, 34 10, 36 8"
+              d="M24 26 C30 18, 36 10, 38 6"
               stroke={checked ? "hsl(175, 60%, 35%)" : "hsl(40, 10%, 75%)"}
-              strokeWidth="0.6"
+              strokeWidth="0.8"
               strokeLinecap="round"
               fill="none"
               opacity="0.35"
