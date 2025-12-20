@@ -24,6 +24,7 @@ import { SortOption, GoalFilters, GoalType } from "@/types/goal";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { goalTypeConfig } from "@/lib/goalTypeUtils";
+import { goalTypeIcons } from "@/components/icons/GoalTypeIcons";
 
 interface GoalsToolbarProps {
   searchQuery: string;
@@ -170,21 +171,20 @@ export const GoalsToolbar = ({
               <div className="flex flex-wrap gap-2">
                 {(Object.keys(goalTypeConfig) as GoalType[]).map((type) => {
                   const config = goalTypeConfig[type];
+                  const Icon = goalTypeIcons[type];
                   return (
                     <Button
                       key={type}
                       variant={filters.goalType === type ? "default" : "outline"}
                       size="sm"
-                      className={cn(
-                        "text-xs",
-                        filters.goalType === type && config.bgColor
-                      )}
+                      className="text-xs gap-1.5"
                       onClick={() => onFiltersChange({ 
                         ...filters, 
                         goalType: filters.goalType === type ? undefined : type 
                       })}
                     >
-                      {config.icon} {config.label}
+                      <Icon size={12} />
+                      {config.label}
                     </Button>
                   );
                 })}
