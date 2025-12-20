@@ -1,17 +1,29 @@
 import { useState } from "react";
-import { Lightbulb, Check, Plus, Pencil, X, Sparkles, ArrowRight } from "lucide-react";
+import { Lightbulb, Check, Plus, Pencil, X, Sparkles, ArrowRight, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { GoalOption } from "@/types/goal";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface OptionsSectionProps {
   options: GoalOption[];
   activeOptionId?: string;
   onUpdate: (options: GoalOption[]) => void;
   onSetActiveOption: (optionId: string | undefined) => void;
+  existingTargetsCount?: number;
+  onBindTargetsToOption?: (optionId: string) => void;
 }
 
 export const OptionsSection = ({
@@ -19,6 +31,8 @@ export const OptionsSection = ({
   activeOptionId,
   onUpdate,
   onSetActiveOption,
+  existingTargetsCount = 0,
+  onBindTargetsToOption,
 }: OptionsSectionProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
@@ -27,6 +41,8 @@ export const OptionsSection = ({
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [error, setError] = useState("");
+  const [showBindConfirm, setShowBindConfirm] = useState(false);
+  const [pendingOption, setPendingOption] = useState<GoalOption | null>(null);
 
   const handleAdd = () => {
     if (!newName.trim()) {
@@ -40,11 +56,49 @@ export const OptionsSection = ({
       description: newDescription.trim() || undefined,
     };
 
-    onUpdate([...options, newOption]);
+    // If this is the first option and there are existing targets, ask for confirmation
+    if (options.length === 0 && existingTargetsCount > 0) {
+      setPendingOption(newOption);
+      setShowBindConfirm(true);
+      return;
+    }
+
+    // Otherwise, just add the option
+    completeAddOption(newOption, false);
+  };
+
+  const completeAddOption = (option: GoalOption, bindTargets: boolean) => {
+    onUpdate([...options, option]);
+    
+    // If this is the first option, set it as active by default
+    if (options.length === 0) {
+      onSetActiveOption(option.id);
+    }
+    
+    // If user confirmed to bind existing targets
+    if (bindTargets && onBindTargetsToOption) {
+      onBindTargetsToOption(option.id);
+    }
+    
     setNewName("");
     setNewDescription("");
     setError("");
     setShowAddForm(false);
+    setPendingOption(null);
+  };
+
+  const handleConfirmBind = () => {
+    if (pendingOption) {
+      completeAddOption(pendingOption, true);
+    }
+    setShowBindConfirm(false);
+  };
+
+  const handleCancelBind = () => {
+    if (pendingOption) {
+      completeAddOption(pendingOption, false);
+    }
+    setShowBindConfirm(false);
   };
 
   const handleDelete = (id: string) => {
@@ -326,6 +380,31 @@ export const OptionsSection = ({
           )}
         </div>
       </div>
+
+      {/* Confirmation Dialog for binding existing targets */}
+      <AlertDialog open={showBindConfirm} onOpenChange={setShowBindConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-warning" />
+              Bind Existing Targets?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              You have <strong>{existingTargetsCount} target{existingTargetsCount !== 1 ? 's' : ''}</strong> that are not linked to any option.
+              <br /><br />
+              Would you like to bind all existing targets to this new option? The option will become active by default.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleCancelBind}>
+              No, don't bind
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmBind}>
+              Yes, bind targets
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

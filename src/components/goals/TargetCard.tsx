@@ -10,8 +10,9 @@ import {
   ChevronUp,
   Plus,
   AlertTriangle,
+  ArrowRightLeft,
 } from "lucide-react";
-import { Target, Task } from "@/types/goal";
+import { Target, Task, GoalOption } from "@/types/goal";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -56,9 +61,10 @@ interface TargetCardProps {
   target: Target;
   goalId: string;
   style?: React.CSSProperties;
+  goalOptions?: GoalOption[];
 }
 
-export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
+export const TargetCard = ({ target, goalId, style, goalOptions = [] }: TargetCardProps) => {
   const { updateTarget, deleteTarget, addComment } = useGoalsContext();
   
   const [showTasks, setShowTasks] = useState(false);
@@ -227,6 +233,46 @@ export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Add Note
                   </DropdownMenuItem>
+                  
+                  {/* Move to option submenu - only show if there are options */}
+                  {goalOptions.length > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <ArrowRightLeft className="h-4 w-4 mr-2" />
+                          Move to Option
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                          <DropdownMenuSubContent>
+                            {/* Option to remove from any option */}
+                            <DropdownMenuItem
+                              onClick={() => updateTarget(goalId, target.id, { optionId: undefined })}
+                              disabled={!target.optionId}
+                              className={!target.optionId ? "opacity-50" : ""}
+                            >
+                              <span className="text-muted-foreground">No option (unbound)</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            {goalOptions.map((option) => (
+                              <DropdownMenuItem
+                                key={option.id}
+                                onClick={() => updateTarget(goalId, target.id, { optionId: option.id })}
+                                disabled={target.optionId === option.id}
+                                className={target.optionId === option.id ? "opacity-50" : ""}
+                              >
+                                {option.name}
+                                {target.optionId === option.id && (
+                                  <span className="ml-2 text-xs text-muted-foreground">(current)</span>
+                                )}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                      </DropdownMenuSub>
+                    </>
+                  )}
+                  
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-destructive focus:text-destructive"

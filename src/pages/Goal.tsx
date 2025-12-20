@@ -462,6 +462,14 @@ const GoalPage = () => {
                   activeOptionId={goal.activeOptionId}
                   onUpdate={(options) => updateGoal(goal.id, { goalOptions: options })}
                   onSetActiveOption={(optionId) => updateGoal(goal.id, { activeOptionId: optionId })}
+                  existingTargetsCount={goal.targets.filter(t => !t.optionId).length}
+                  onBindTargetsToOption={(optionId) => {
+                    // Bind all unbound targets to this option
+                    const updatedTargets = goal.targets.map(t => 
+                      !t.optionId ? { ...t, optionId } : t
+                    );
+                    updateGoal(goal.id, { targets: updatedTargets });
+                  }}
                 />
               </AccordionContent>
             </AccordionItem>
@@ -548,6 +556,7 @@ const GoalPage = () => {
                     key={target.id} 
                     target={target} 
                     goalId={goal.id}
+                    goalOptions={goal.goalOptions || []}
                     style={{ animationDelay: `${index * 0.05}s` }}
                   />
                 ))}
