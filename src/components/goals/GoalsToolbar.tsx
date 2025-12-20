@@ -20,9 +20,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
-import { SortOption, GoalFilters } from "@/types/goal";
+import { SortOption, GoalFilters, GoalType } from "@/types/goal";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { goalTypeConfig } from "@/lib/goalTypeUtils";
 
 interface GoalsToolbarProps {
   searchQuery: string;
@@ -160,6 +161,33 @@ export const GoalsToolbar = ({
                 >
                   In progress
                 </Button>
+              </div>
+            </div>
+
+            {/* Goal Type Filter */}
+            <div className="space-y-2">
+              <Label>Goal Type</Label>
+              <div className="flex flex-wrap gap-2">
+                {(Object.keys(goalTypeConfig) as GoalType[]).map((type) => {
+                  const config = goalTypeConfig[type];
+                  return (
+                    <Button
+                      key={type}
+                      variant={filters.goalType === type ? "default" : "outline"}
+                      size="sm"
+                      className={cn(
+                        "text-xs",
+                        filters.goalType === type && config.bgColor
+                      )}
+                      onClick={() => onFiltersChange({ 
+                        ...filters, 
+                        goalType: filters.goalType === type ? undefined : type 
+                      })}
+                    >
+                      {config.icon} {config.label}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
 

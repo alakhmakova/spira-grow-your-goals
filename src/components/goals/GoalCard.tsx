@@ -7,7 +7,9 @@ import {
   Target as TargetIcon, 
   Trash2,
   Pencil,
-  Gauge
+  Gauge,
+  Star,
+  Pin
 } from "lucide-react";
 import { Goal } from "@/types/goal";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { getGoalTypeStyles } from "@/lib/goalTypeUtils";
 
 interface GoalCardProps {
   goal: Goal;
@@ -58,12 +61,15 @@ export const GoalCard = ({
     onDragStart?.(e, goal);
   };
 
+  const typeStyles = goal.goalType ? getGoalTypeStyles(goal.goalType) : null;
+
   const cardContent = (
     <Card 
       variant="interactive"
       className={cn(
         "relative h-full min-h-[280px] transition-all duration-500 cursor-grab active:cursor-grabbing",
-        goal.progress === 100 && "border-success/30 shadow-success-glow"
+        goal.progress === 100 && "border-success/30 shadow-success-glow",
+        goal.goalType === "north-star" && "ring-2 ring-amber-400/50"
       )}
     >
       {/* Menu overlay on hover */}
@@ -120,6 +126,23 @@ export const GoalCard = ({
       </div>
 
       <CardContent className="p-5 flex flex-col h-full">
+        {/* Goal Type Badge */}
+        {goal.goalType && typeStyles && (
+          <div className="mb-3">
+            <Badge 
+              className={cn(
+                "text-xs font-medium",
+                typeStyles.bgColor,
+                typeStyles.color,
+                goal.goalType === "north-star" && "animate-pulse"
+              )}
+            >
+              {goal.goalType === "north-star" && <Star className="h-3 w-3 mr-1 fill-current" />}
+              {typeStyles.icon} {typeStyles.label}
+            </Badge>
+          </div>
+        )}
+
         {/* Progress Circle */}
         <div className="flex items-start gap-4 mb-4">
           <CircularProgress 

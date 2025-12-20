@@ -27,10 +27,11 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { Link } from "react-router-dom";
-import { Resource, GoalOption, RealityItem } from "@/types/goal";
+import { Resource, GoalOption, RealityItem, GoalType } from "@/types/goal";
 import { ResourceInput } from "./ResourceInput";
 import { OptionInput } from "./OptionInput";
 import { RealityInput } from "./RealityInput";
+import { goalTypeConfig } from "@/lib/goalTypeUtils";
 
 interface CreateGoalFormProps {
   open: boolean;
@@ -39,9 +40,11 @@ interface CreateGoalFormProps {
 
 export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
   const navigate = useNavigate();
-  const { createGoal } = useGoalsContext();
+  const { createGoal, allGoals } = useGoalsContext();
   
+  const hasNorthStar = allGoals.some(g => g.goalType === "north-star");
   const [name, setName] = useState("");
+  const [goalType, setGoalType] = useState<GoalType | undefined>(undefined);
   const [reality, setReality] = useState("");
   const [actions, setActions] = useState<RealityItem[]>([]);
   const [obstacles, setObstacles] = useState<RealityItem[]>([]);
@@ -72,6 +75,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
 
     const newGoal = createGoal({
       name: name.trim(),
+      goalType,
       reality: reality.trim() || undefined,
       actions: actions.length > 0 ? actions : undefined,
       obstacles: obstacles.length > 0 ? obstacles : undefined,
@@ -85,6 +89,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
 
     // Reset form
     setName("");
+    setGoalType(undefined);
     setReality("");
     setActions([]);
     setObstacles([]);
@@ -94,7 +99,6 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     setWill("");
     setResources([]);
     setDueDate(undefined);
-    setErrors({});
     setErrors({});
     
     onOpenChange(false);
@@ -141,6 +145,41 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name}</p>
             )}
+          </div>
+
+          {/* Goal Type */}
+          <div className="space-y-2">
+            <Label className="text-base font-medium">Goal Type</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.keys(goalTypeConfig) as GoalType[]).map((type) => {
+                const config = goalTypeConfig[type];
+                const isNorthStarDisabled = type === "north-star" && hasNorthStar;
+                
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    disabled={isNorthStarDisabled}
+                    onClick={() => setGoalType(goalType === type ? undefined : type)}
+                    className={cn(
+                      "p-3 rounded-lg border-2 text-left transition-all",
+                      goalType === type
+                        ? cn(config.borderColor, config.bgColor)
+                        : "border-border hover:border-muted-foreground/50",
+                      isNorthStarDisabled && "opacity-50 cursor-not-allowed"
+                    )}
+                  >
+                    <div className={cn("font-medium flex items-center gap-2", config.color)}>
+                      <span>{config.icon}</span>
+                      <span>{config.label}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {isNorthStarDisabled ? "Only one North Star allowed" : config.description}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Reality */}
