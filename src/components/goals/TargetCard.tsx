@@ -178,15 +178,15 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
           }
         }}
       >
-        {/* Progress fill background */}
+        {/* Progress fill background with gradient */}
         <div 
-          className={cn(
-            "absolute inset-0 transition-all duration-500",
-            isComplete ? "bg-success" : "bg-success/70"
-          )}
+          className="absolute inset-0 transition-all duration-500"
           style={{ 
             width: `${progress}%`,
-            borderRadius: 'inherit'
+            borderRadius: 'inherit',
+            background: isComplete 
+              ? 'hsl(var(--success))' 
+              : 'linear-gradient(90deg, hsl(48, 96%, 53%) 0%, hsl(142, 76%, 36%) 100%)'
           }}
         />
         

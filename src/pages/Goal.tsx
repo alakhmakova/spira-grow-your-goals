@@ -192,7 +192,7 @@ const GoalPage = () => {
                 size={120}
                 strokeWidth={10}
                 labelClassName="text-2xl"
-                className={goal.progress === 100 ? "animate-pulse-soft" : ""}
+                className={goal.progress === 100 ? "animate-pulse-soft [&_circle:last-child]:stroke-success" : "[&_circle:last-child]:stroke-foreground"}
               />
             </div>
 
