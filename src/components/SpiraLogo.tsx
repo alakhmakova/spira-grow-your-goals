@@ -33,26 +33,26 @@ export const SpiraLogo = ({
         className={cn(animated && "animate-float")}
       >
         <defs>
-          {/* Main gradient - dark green to lime */}
+          {/* Main gradient - matching app theme: teal to emerald to lime */}
           <linearGradient id="spiraGreen" x1="50%" y1="100%" x2="50%" y2="0%">
-            <stop offset="0%" stopColor="#1B5E20" />
-            <stop offset="40%" stopColor="#2E7D32" />
-            <stop offset="70%" stopColor="#4CAF50" />
-            <stop offset="100%" stopColor="#8BC34A" />
+            <stop offset="0%" stopColor="hsl(170, 50%, 22%)" />
+            <stop offset="40%" stopColor="hsl(175, 60%, 35%)" />
+            <stop offset="70%" stopColor="hsl(155, 70%, 45%)" />
+            <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
           </linearGradient>
           
           {/* Left leaf gradient */}
           <linearGradient id="leftLeafGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#2E7D32" />
-            <stop offset="50%" stopColor="#43A047" />
-            <stop offset="100%" stopColor="#66BB6A" />
+            <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
+            <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
+            <stop offset="100%" stopColor="hsl(155, 70%, 45%)" />
           </linearGradient>
 
           {/* Right leaf gradient */}
           <linearGradient id="rightLeafGradient" x1="100%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="#388E3C" />
-            <stop offset="50%" stopColor="#4CAF50" />
-            <stop offset="100%" stopColor="#8BC34A" />
+            <stop offset="0%" stopColor="hsl(175, 55%, 45%)" />
+            <stop offset="50%" stopColor="hsl(155, 60%, 50%)" />
+            <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
           </linearGradient>
         </defs>
 
@@ -86,7 +86,7 @@ export const SpiraLogo = ({
         {/* Left leaf center vein */}
         <path
           d="M31 30 C26 24, 18 18, 13 14"
-          stroke="#1B5E20"
+          stroke="hsl(170, 50%, 22%)"
           strokeWidth="1"
           strokeLinecap="round"
           fill="none"
@@ -105,7 +105,7 @@ export const SpiraLogo = ({
         {/* Right leaf center vein */}
         <path
           d="M34 26 C40 20, 48 14, 52 12"
-          stroke="#2E7D32"
+          stroke="hsl(175, 60%, 35%)"
           strokeWidth="0.8"
           strokeLinecap="round"
           fill="none"
@@ -116,7 +116,7 @@ export const SpiraLogo = ({
       {showText && (
         <span className={cn(
           "font-display font-semibold uppercase bg-clip-text text-transparent",
-          "bg-gradient-to-r from-[#1B5E20] via-[#43A047] to-[#8BC34A]",
+          "bg-gradient-to-r from-primary via-accent to-lime",
           text,
           letterSpacing
         )}>
@@ -138,17 +138,17 @@ export const SpiraSproutIcon = ({ className, size = 18 }: { className?: string; 
   >
     <defs>
       <linearGradient id="miniSpira" x1="50%" y1="100%" x2="50%" y2="0%">
-        <stop offset="0%" stopColor="#1B5E20" />
-        <stop offset="50%" stopColor="#43A047" />
-        <stop offset="100%" stopColor="#8BC34A" />
+        <stop offset="0%" stopColor="hsl(170, 50%, 22%)" />
+        <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
+        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
       </linearGradient>
       <linearGradient id="miniLeafLeft" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#2E7D32" />
-        <stop offset="100%" stopColor="#66BB6A" />
+        <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
+        <stop offset="100%" stopColor="hsl(155, 70%, 45%)" />
       </linearGradient>
       <linearGradient id="miniLeafRight" x1="100%" y1="100%" x2="0%" y2="0%">
-        <stop offset="0%" stopColor="#388E3C" />
-        <stop offset="100%" stopColor="#8BC34A" />
+        <stop offset="0%" stopColor="hsl(175, 55%, 45%)" />
+        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
       </linearGradient>
     </defs>
     
