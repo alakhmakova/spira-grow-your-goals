@@ -158,15 +158,17 @@ const GoalsPage = () => {
               <Sprout className="h-12 w-12 text-primary" />
             </div>
             <h2 className="font-display text-2xl font-semibold mb-2">
-              Plant your first goal
+              {filters.achieved === true ? "No achieved goals yet" : "Plant your first goal"}
             </h2>
             <p className="text-muted-foreground max-w-md mb-6">
-              Start your growth journey by setting your first goal. 
-              Use the GROW model to break it down into achievable steps.
+              {filters.achieved === true 
+                ? "Keep working on your goals! Once you achieve 100% progress, they'll appear here."
+                : "Start your growth journey by setting your first goal. Use the GROW model to break it down into achievable steps."
+              }
             </p>
             <Button onClick={() => setShowCreateForm(true)} variant="nature" size="lg" className="gap-2">
               <Plus className="h-5 w-5" />
-              Create your first goal
+              Create {filters.achieved === true ? "a new" : "your first"} goal
             </Button>
           </div>
         )}

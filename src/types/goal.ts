@@ -43,6 +43,7 @@ export interface Comment {
   id: string;
   goalId: string;
   targetId?: string; // If it's a note for a specific target
+  parentId?: string; // For threading - if this is a reply to another comment
   content: string;
   author: string;
   createdAt: Date;

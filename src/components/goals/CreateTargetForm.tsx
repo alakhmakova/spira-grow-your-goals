@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, HelpCircle, ExternalLink, Plus, Trash2 } from "lucide-react";
+import { X, HelpCircle, ExternalLink, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +44,8 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
   const [deadline, setDeadline] = useState<Date>();
   const [tasks, setTasks] = useState<string[]>([]);
   const [newTask, setNewTask] = useState("");
+  const [editingTaskIndex, setEditingTaskIndex] = useState<number | null>(null);
+  const [editingTaskValue, setEditingTaskValue] = useState("");
   
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -60,6 +62,22 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
   const handleRemoveTask = (index: number) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
+
+  const handleEditTask = (index: number) => {
+    setEditingTaskIndex(index);
+    setEditingTaskValue(tasks[index]);
+  };
+
+  const handleSaveTaskEdit = (index: number) => {
+    if (editingTaskValue.trim()) {
+      const newTasks = [...tasks];
+      newTasks[index] = editingTaskValue.trim();
+      setTasks(newTasks);
+    }
+    setEditingTaskIndex(null);
+    setEditingTaskValue("");
+  };
+
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -322,7 +340,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
               <Label>Add tasks to your target</Label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="Task name"
+                  placeholder="Enter task name"
                   value={newTask}
                   onChange={(e) => setNewTask(e.target.value)}
                   onKeyDown={(e) => {
@@ -333,7 +351,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
                   }}
                 />
                 <Button type="button" onClick={handleAddTask} variant="secondary">
-                  <Plus className="h-4 w-4" />
+                  Create
                 </Button>
               </div>
               {tasks.length > 0 && (
@@ -343,7 +361,31 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
                       key={index} 
                       className="flex items-center gap-2 p-2 rounded bg-background"
                     >
-                      <span className="flex-1 text-sm">{task}</span>
+                      {editingTaskIndex === index ? (
+                        <Input
+                          autoFocus
+                          value={editingTaskValue}
+                          onChange={(e) => setEditingTaskValue(e.target.value)}
+                          onBlur={() => handleSaveTaskEdit(index)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSaveTaskEdit(index);
+                            if (e.key === "Escape") setEditingTaskIndex(null);
+                          }}
+                          className="flex-1 h-8"
+                        />
+                      ) : (
+                        <>
+                          <span className="flex-1 text-sm">{task}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => handleEditTask(index)}
+                          >
+                            <Pencil className="h-3 w-3 text-muted-foreground" />
+                          </Button>
+                        </>
+                      )}
                       <Button
                         type="button"
                         variant="ghost"

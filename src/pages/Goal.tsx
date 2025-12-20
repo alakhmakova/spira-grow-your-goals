@@ -189,21 +189,15 @@ const GoalPage = () => {
                       <Pencil className="h-4 w-4 mr-2" />
                       Rename
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Popover>
-                        <PopoverTrigger className="flex items-center w-full px-2 py-1.5 text-sm">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          Change Due Date
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <CalendarUI
-                            mode="single"
-                            selected={goal.dueDate}
-                            onSelect={(date) => updateGoal(goal.id, { dueDate: date })}
-                            className="pointer-events-auto"
-                          />
-                        </PopoverContent>
-                      </Popover>
+                    <DropdownMenuItem onClick={() => {
+                      const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
+                      const num = parseInt(value || "");
+                      if (num >= 1 && num <= 10) {
+                        updateGoal(goal.id, { achievability: num });
+                      }
+                    }}>
+                      <Gauge className="h-4 w-4 mr-2" />
+                      Change Achievability
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
@@ -219,27 +213,68 @@ const GoalPage = () => {
 
               {/* Meta info */}
               <div className="flex flex-wrap items-center gap-4 mb-4">
-                {/* Achievability */}
-                <div className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-lg",
-                  getAchievabilityColor(goal.achievability)
-                )}>
-                  <Gauge className="h-4 w-4" />
-                  <span className="font-semibold">{goal.achievability}/10</span>
-                  <span className="text-sm opacity-80">Achievability</span>
-                </div>
+                {/* Achievability - Clickable to edit */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className={cn(
+                        "flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all",
+                        getAchievabilityColor(goal.achievability)
+                      )}
+                      title="Click to change achievability"
+                    >
+                      <Gauge className="h-4 w-4" />
+                      <span className="font-semibold">{goal.achievability}/10</span>
+                      <span className="text-sm opacity-80">Achievability</span>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64">
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium">Update Achievability</p>
+                      <p className="text-xs text-muted-foreground">On a scale of 1–10, how confident are you that this goal is achievable right now?</p>
+                      <div className="grid grid-cols-5 gap-2">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                          <Button
+                            key={num}
+                            variant={goal.achievability === num ? "default" : "outline"}
+                            size="sm"
+                            className="w-full"
+                            onClick={() => updateGoal(goal.id, { achievability: num })}
+                          >
+                            {num}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
 
                 {/* Dates */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Clock className="h-4 w-4" />
                   <span>Created {format(goal.createdAt, "MMM d, yyyy")}</span>
                 </div>
-                {goal.dueDate && (
-                  <div className="flex items-center gap-2 text-sm text-primary">
-                    <Calendar className="h-4 w-4" />
-                    <span>Due {format(goal.dueDate, "MMM d, yyyy")}</span>
-                  </div>
-                )}
+                
+                {/* Due Date - Clickable to change */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className="flex items-center gap-2 text-sm text-primary hover:underline cursor-pointer"
+                      title="Click to change due date"
+                    >
+                      <Calendar className="h-4 w-4" />
+                      <span>{goal.dueDate ? `Due ${format(goal.dueDate, "MMM d, yyyy")}` : "Set due date"}</span>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarUI
+                      mode="single"
+                      selected={goal.dueDate}
+                      onSelect={(date) => updateGoal(goal.id, { dueDate: date })}
+                      className="pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
 
               {/* Achievability reminder */}
@@ -249,20 +284,6 @@ const GoalPage = () => {
                   <p className="text-sm">
                     Has anything changed about this goal? Consider updating your achievability rating.
                   </p>
-                  <Button 
-                    variant="soft" 
-                    size="sm"
-                    onClick={() => {
-                      const value = prompt("Update achievability (1-10):", goal.achievability.toString());
-                      const num = parseInt(value || "");
-                      if (num >= 1 && num <= 10) {
-                        updateGoal(goal.id, { achievability: num });
-                      }
-                      setShowAchievabilityReminder(false);
-                    }}
-                  >
-                    Update
-                  </Button>
                   <Button 
                     variant="ghost" 
                     size="sm"
