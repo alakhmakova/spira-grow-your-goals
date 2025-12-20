@@ -127,11 +127,14 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
 
   const getProgressDisplay = () => {
     if (targetData.type === "number") {
-      const current = targetData.currentValue || targetData.startValue || 0;
-      const start = targetData.startValue || 0;
-      const end = targetData.targetValue || 0;
-      const range = end - start;
-      const progress = range > 0 ? Math.round(((current - start) / range) * 100) : 0;
+      const current = targetData.currentValue ?? targetData.startValue ?? 0;
+      const start = targetData.startValue ?? 0;
+      const end = targetData.targetValue ?? 0;
+      const range = Math.abs(end - start);
+      // Support both directions: start < target (increasing) and start > target (decreasing)
+      const progress = range > 0 
+        ? Math.round((Math.abs(current - start) / range) * 100) 
+        : 0;
       return {
         progress: Math.max(0, Math.min(100, progress)),
         display: `${current} / ${end} ${targetData.unit || ""}`.trim(),
@@ -493,9 +496,15 @@ const ProgressUpdateForm = ({
   const startNum = parseFloat(startValue) || 0;
   const targetNum = parseFloat(targetValue) || 0;
   const currentNum = parseFloat(currentValue) || 0;
-  const range = targetNum - startNum;
-  const progress = range > 0 ? Math.round(((currentNum - startNum) / range) * 100) : 0;
+  const range = Math.abs(targetNum - startNum);
+  // Support both directions: increasing (start < target) and decreasing (start > target)
+  const progress = range > 0 ? Math.round((Math.abs(currentNum - startNum) / range) * 100) : 0;
   const isComplete = progress >= 100;
+
+  // Determine if we're going up or down
+  const isIncreasing = targetNum > startNum;
+  const minValue = Math.min(startNum, targetNum);
+  const maxValue = Math.max(startNum, targetNum);
 
   const handleSave = () => {
     // Validation
@@ -507,12 +516,13 @@ const ProgressUpdateForm = ({
       setError("Start and target values cannot be the same");
       return;
     }
-    if (currentNum < startNum || currentNum > targetNum) {
-      setError("Current value must be between start and target");
+    // Current must be between start and target (regardless of direction)
+    if (currentNum < minValue || currentNum > maxValue) {
+      setError(`Current value must be between ${minValue} and ${maxValue}`);
       return;
     }
 
-    const newProgress = range > 0 ? Math.round(((currentNum - startNum) / range) * 100) : 0;
+    const newProgress = range > 0 ? Math.round((Math.abs(currentNum - startNum) / range) * 100) : 0;
     updateTarget(goalId, target.id, { 
       startValue: startNum, 
       targetValue: targetNum, 
