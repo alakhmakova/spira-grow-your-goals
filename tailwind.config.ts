@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['DM Sans', 'sans-serif'],
-        display: ['Playfair Display', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+        display: ['Space Grotesk', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -45,9 +45,13 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
-        earth: {
-          DEFAULT: "hsl(var(--earth))",
-          foreground: "hsl(var(--earth-foreground))",
+        pink: {
+          DEFAULT: "hsl(var(--pink))",
+          foreground: "hsl(var(--pink-foreground))",
+        },
+        cyan: {
+          DEFAULT: "hsl(var(--cyan))",
+          foreground: "hsl(var(--cyan-foreground))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
@@ -85,6 +89,7 @@ export default {
         'nature': 'var(--shadow-lg)',
         'glow': 'var(--shadow-glow)',
         'success-glow': 'var(--shadow-success)',
+        'accent-glow': 'var(--shadow-accent)',
       },
       keyframes: {
         "accordion-down": {
@@ -119,6 +124,10 @@ export default {
           "0%, 100%": { transform: "rotate(-3deg)" },
           "50%": { transform: "rotate(3deg)" },
         },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.5)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -129,6 +138,7 @@ export default {
         "scale-up": "scale-up 0.2s ease-out forwards",
         "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
         "wiggle": "wiggle 0.3s ease-in-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
       },
     },
   },
