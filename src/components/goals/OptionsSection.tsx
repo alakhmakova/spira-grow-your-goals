@@ -129,13 +129,13 @@ export const OptionsSection = ({
     setEditDescription("");
   };
 
-  // Mind map layout colors
+  // Consistent color scheme using primary/secondary
   const optionColors = [
-    { bg: "bg-primary/15", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-accent/15", border: "border-accent/40", text: "text-accent-foreground", glow: "shadow-accent/20" },
-    { bg: "bg-warning/15", border: "border-warning/40", text: "text-warning", glow: "shadow-warning/20" },
-    { bg: "bg-success/15", border: "border-success/40", text: "text-success", glow: "shadow-success/20" },
-    { bg: "bg-destructive/15", border: "border-destructive/40", text: "text-destructive", glow: "shadow-destructive/20" },
+    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
+    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
+    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
+    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
+    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
   ];
 
   if (options.length === 0) {
@@ -150,7 +150,7 @@ export const OptionsSection = ({
         </div>
         
         {showAddForm ? (
-          <div className="p-4 rounded-lg border border-dashed border-primary/30 bg-primary/5 space-y-3">
+          <div className="p-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-3">
             <Input
               value={newName}
               onChange={(e) => {
@@ -200,6 +200,31 @@ export const OptionsSection = ({
             </Button>
           </div>
         )}
+
+        {/* Confirmation Dialog for binding existing targets - must be here too! */}
+        <AlertDialog open={showBindConfirm} onOpenChange={setShowBindConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-warning" />
+                Bind Existing Targets?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                You have <strong>{existingTargetsCount} target{existingTargetsCount !== 1 ? 's' : ''}</strong> that are not linked to any option.
+                <br /><br />
+                Would you like to bind all existing targets to this new option? The option will become active by default.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleCancelBind}>
+                No, don't bind
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleConfirmBind}>
+                Yes, bind targets
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     );
   }
