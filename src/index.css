@@ -74,6 +74,9 @@
     --shadow-glow: 0 0 32px hsl(122 39% 49% / 0.25);
     --shadow-success: 0 0 32px hsl(122 39% 49% / 0.3);
     --shadow-accent: 0 0 32px hsl(88 50% 53% / 0.25);
+    
+    /* Progress gradient */
+    --gradient-progress: linear-gradient(90deg, hsl(122 39% 49%) 0%, #d9ff66 100%);
 
     --sidebar-background: 120 12% 97%;
     --sidebar-foreground: 120 20% 20%;
@@ -150,6 +153,9 @@
     --shadow-glow: 0 0 40px hsl(122 45% 55% / 0.3);
     --shadow-success: 0 0 40px hsl(122 45% 55% / 0.35);
     --shadow-accent: 0 0 40px hsl(88 55% 50% / 0.3);
+    
+    /* Progress gradient */
+    --gradient-progress: linear-gradient(90deg, hsl(122 45% 55%) 0%, #d9ff66 100%);
 
     --sidebar-background: 120 12% 8%;
     --sidebar-foreground: 120 15% 85%;
@@ -222,6 +228,10 @@
 
   .shadow-accent-glow {
     box-shadow: var(--shadow-accent);
+  }
+
+  .gradient-progress {
+    background: var(--gradient-progress);
   }
 
   .text-gradient {

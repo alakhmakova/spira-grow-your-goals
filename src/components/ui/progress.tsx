@@ -14,7 +14,7 @@ const Progress = React.forwardRef<
 >(({ className, value, variant = "default", showLabel = false, ...props }, ref) => {
   const variants = {
     default: "bg-primary",
-    success: "bg-success",
+    success: "gradient-progress",
     warning: "bg-warning",
     nature: "bg-gradient-to-r from-primary to-accent",
   }
@@ -35,7 +35,7 @@ const Progress = React.forwardRef<
         <ProgressPrimitive.Indicator
           className={cn(
             "h-full w-full flex-1 transition-all duration-500 ease-out rounded-full",
-            isComplete ? "bg-success" : variants[variant]
+            isComplete ? "gradient-progress" : variants[variant]
           )}
           style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
         />
