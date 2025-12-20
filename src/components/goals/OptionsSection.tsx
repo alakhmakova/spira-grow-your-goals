@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Lightbulb, Check, Plus, Pencil, X, Sparkles, AlertTriangle } from "lucide-react";
+import { useState, useRef, useCallback } from "react";
+import { Lightbulb, Check, Plus, Pencil, X, Sparkles, AlertTriangle, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,6 +28,11 @@ interface OptionsSectionProps {
   onDeleteUnboundTargets?: () => void;
 }
 
+interface DragPosition {
+  x: number;
+  y: number;
+}
+
 export const OptionsSection = ({
   options,
   activeOptionId,
@@ -47,6 +52,12 @@ export const OptionsSection = ({
   const [error, setError] = useState("");
   const [showBindConfirm, setShowBindConfirm] = useState(false);
   const [pendingOption, setPendingOption] = useState<GoalOption | null>(null);
+  
+  // Drag state
+  const [positions, setPositions] = useState<Record<string, DragPosition>>({});
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const dragStart = useRef<{ x: number; y: number; initialPos: DragPosition } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleAdd = () => {
     if (!newName.trim()) {
@@ -141,7 +152,7 @@ export const OptionsSection = ({
   ];
 
   // Calculate positions for radial layout
-  const getOptionPosition = (index: number, total: number) => {
+  const getOptionPosition = (index: number, total: number): DragPosition => {
     const angleStep = (2 * Math.PI) / total;
     const startAngle = -Math.PI / 2; // Start from top
     const angle = startAngle + index * angleStep;
@@ -151,6 +162,46 @@ export const OptionsSection = ({
       y: Math.sin(angle) * radius,
     };
   };
+
+  // Get actual position (custom or default radial)
+  const getActualPosition = (optionId: string, index: number, total: number): DragPosition => {
+    if (positions[optionId]) {
+      return positions[optionId];
+    }
+    return getOptionPosition(index, total);
+  };
+
+  // Drag handlers
+  const handleMouseDown = useCallback((e: React.MouseEvent, optionId: string, currentPos: DragPosition) => {
+    if (editingId) return;
+    e.preventDefault();
+    setDraggingId(optionId);
+    dragStart.current = {
+      x: e.clientX,
+      y: e.clientY,
+      initialPos: currentPos,
+    };
+  }, [editingId]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!draggingId || !dragStart.current) return;
+    
+    const deltaX = e.clientX - dragStart.current.x;
+    const deltaY = e.clientY - dragStart.current.y;
+    
+    setPositions(prev => ({
+      ...prev,
+      [draggingId]: {
+        x: dragStart.current!.initialPos.x + deltaX,
+        y: dragStart.current!.initialPos.y + deltaY,
+      },
+    }));
+  }, [draggingId]);
+
+  const handleMouseUp = useCallback(() => {
+    setDraggingId(null);
+    dragStart.current = null;
+  }, []);
 
   const totalItems = options.length + 1; // +1 for add button
 
@@ -263,7 +314,13 @@ export const OptionsSection = ({
       )}
 
       {/* Mind Map Visualization - Radial Layout */}
-      <div className="relative min-h-[420px] flex items-center justify-center">
+      <div 
+        ref={containerRef}
+        className="relative min-h-[420px] flex items-center justify-center select-none"
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      >
         {/* Central goal node */}
         <div className="absolute z-10 px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm shadow-lg max-w-[160px] text-center">
           <span className="line-clamp-2">{goalName}</span>
@@ -271,14 +328,14 @@ export const OptionsSection = ({
 
         {/* SVG for connection lines */}
         <svg 
-          className="absolute pointer-events-none" 
+          className="absolute pointer-events-none z-0" 
           width="400" 
           height="400"
           style={{ left: 'calc(50% - 200px)', top: 'calc(50% - 200px)' }}
         >
           <g transform="translate(200, 200)">
-            {options.map((_, index) => {
-              const pos = getOptionPosition(index, totalItems);
+            {options.map((option, index) => {
+              const pos = getActualPosition(option.id, index, totalItems);
               return (
                 <line
                   key={`line-${index}`}
@@ -295,7 +352,7 @@ export const OptionsSection = ({
             })}
             {/* Line to add button */}
             {(() => {
-              const pos = getOptionPosition(options.length, totalItems);
+              const pos = getActualPosition('add-button', options.length, totalItems);
               return (
                 <line
                   x1="0"
@@ -318,12 +375,16 @@ export const OptionsSection = ({
             const colors = optionColors[index % optionColors.length];
             const isActive = activeOptionId === option.id;
             const isEditing = editingId === option.id;
-            const pos = getOptionPosition(index, totalItems);
+            const isDragging = draggingId === option.id;
+            const pos = getActualPosition(option.id, index, totalItems);
 
             return (
               <div
                 key={option.id}
-                className="absolute"
+                className={cn(
+                  "absolute z-20",
+                  isDragging && "z-30"
+                )}
                 style={{
                   left: `calc(50% + ${pos.x}px)`,
                   top: `calc(50% + ${pos.y}px)`,
@@ -332,14 +393,22 @@ export const OptionsSection = ({
               >
                 <div
                   className={cn(
-                    "relative group p-3 rounded-xl border-2 transition-all cursor-pointer w-[140px]",
+                    "relative group p-3 rounded-xl border-2 transition-all w-[140px]",
                     colors.bg,
                     isActive
                       ? cn(colors.border, "ring-2 ring-offset-2", colors.glow, "shadow-lg")
-                      : "border-transparent hover:border-border"
+                      : "border-transparent hover:border-border",
+                    isDragging && "shadow-xl scale-105"
                   )}
-                  onClick={() => !isEditing && onSetActiveOption(isActive ? undefined : option.id)}
                 >
+                  {/* Drag handle */}
+                  <div
+                    className="absolute -top-1 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing p-1 rounded hover:bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onMouseDown={(e) => handleMouseDown(e, option.id, pos)}
+                  >
+                    <GripVertical className="h-3 w-3 text-muted-foreground" />
+                  </div>
+
                   {/* Active indicator */}
                   {isActive && (
                     <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs px-1.5">
@@ -378,7 +447,10 @@ export const OptionsSection = ({
                       </div>
                     </div>
                   ) : (
-                    <>
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => !isDragging && onSetActiveOption(isActive ? undefined : option.id)}
+                    >
                       <div className="flex items-start gap-1.5 mb-1">
                         <Lightbulb className={cn("h-4 w-4 flex-shrink-0 mt-0.5", colors.text)} />
                         <h4 className="font-semibold text-sm line-clamp-2">{option.name}</h4>
@@ -388,26 +460,28 @@ export const OptionsSection = ({
                           {option.description}
                         </p>
                       )}
+                    </div>
+                  )}
 
-                      {/* Action buttons */}
-                      <div
-                        className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => e.stopPropagation()}
+                  {/* Action buttons */}
+                  {!isEditing && (
+                    <div
+                      className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={() => handleEdit(option)}
+                        className="p-1 hover:bg-background/50 rounded"
                       >
-                        <button
-                          onClick={() => handleEdit(option)}
-                          className="p-1 hover:bg-background/50 rounded"
-                        >
-                          <Pencil className="h-3 w-3" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(option.id)}
-                          className="p-1 hover:bg-destructive/20 rounded text-destructive"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </div>
-                    </>
+                        <Pencil className="h-3 w-3" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(option.id)}
+                        className="p-1 hover:bg-destructive/20 rounded text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
