@@ -8,7 +8,6 @@ import {
   Trash2,
   Pencil,
   Gauge,
-  Star,
   AlertTriangle
 } from "lucide-react";
 import { Goal } from "@/types/goal";
@@ -26,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { getGoalTypeStyles } from "@/lib/goalTypeUtils";
 import { getOverdueStatus, getOverdueStyles } from "@/lib/dateUtils";
+import { goalTypeIcons } from "@/components/icons/GoalTypeIcons";
 
 interface GoalCardProps {
   goal: Goal;
@@ -140,17 +140,21 @@ export const GoalCard = ({
         {/* Goal Type Badge */}
         {goal.goalType && typeStyles && (
           <div className="mb-3">
-            <Badge 
-              className={cn(
-                "text-xs font-medium",
-                typeStyles.bgColor,
-                typeStyles.color,
-                goal.goalType === "north-star" && "animate-pulse"
-              )}
-            >
-              {goal.goalType === "north-star" && <Star className="h-3 w-3 mr-1 fill-current" />}
-              {typeStyles.icon} {typeStyles.label}
-            </Badge>
+            {(() => {
+              const Icon = goalTypeIcons[goal.goalType];
+              return (
+                <Badge 
+                  variant="outline"
+                  className={cn(
+                    "text-xs font-medium gap-1.5 border-primary/30 text-primary",
+                    goal.goalType === "north-star" && "animate-pulse border-primary bg-primary/10"
+                  )}
+                >
+                  <Icon size={12} />
+                  {typeStyles.label}
+                </Badge>
+              );
+            })()}
           </div>
         )}
 

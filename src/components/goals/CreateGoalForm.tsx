@@ -32,6 +32,7 @@ import { ResourceInput } from "./ResourceInput";
 import { OptionInput } from "./OptionInput";
 import { RealityInput } from "./RealityInput";
 import { goalTypeConfig } from "@/lib/goalTypeUtils";
+import { goalTypeIcons } from "@/components/icons/GoalTypeIcons";
 
 interface CreateGoalFormProps {
   open: boolean;
@@ -155,6 +156,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
                 const config = goalTypeConfig[type];
                 const isNorthStarDisabled = type === "north-star" && hasNorthStar;
                 
+                const Icon = goalTypeIcons[type];
                 return (
                   <button
                     key={type}
@@ -164,13 +166,13 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
                     className={cn(
                       "p-3 rounded-lg border-2 text-left transition-all",
                       goalType === type
-                        ? cn(config.borderColor, config.bgColor)
-                        : "border-border hover:border-muted-foreground/50",
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50",
                       isNorthStarDisabled && "opacity-50 cursor-not-allowed"
                     )}
                   >
-                    <div className={cn("font-medium flex items-center gap-2", config.color)}>
-                      <span>{config.icon}</span>
+                    <div className={cn("font-medium flex items-center gap-2", goalType === type ? "text-primary" : "text-foreground")}>
+                      <Icon size={16} />
                       <span>{config.label}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">

@@ -17,7 +17,6 @@ import {
   ChevronUp,
   Clock,
   Lightbulb,
-  Star,
 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { useGoalsContext } from "@/context/GoalsContext";
@@ -74,6 +73,7 @@ import { AchievabilityHistory } from "@/components/goals/AchievabilityHistory";
 import { Confetti } from "@/components/Confetti";
 import { Resource, GoalOption, RealityItem, GoalType } from "@/types/goal";
 import { goalTypeConfig, getGoalTypeStyles } from "@/lib/goalTypeUtils";
+import { goalTypeIcons } from "@/components/icons/GoalTypeIcons";
 
 const GoalPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -269,14 +269,16 @@ const GoalPage = () => {
                 >
                   <SelectTrigger className={cn(
                     "w-auto min-w-[140px] h-9",
-                    typeStyles && typeStyles.bgColor,
-                    typeStyles && typeStyles.color
+                    goal.goalType && "border-primary/30 text-primary"
                   )}>
                     <SelectValue placeholder="Set type">
                       {goal.goalType ? (
                         <span className="flex items-center gap-2">
-                          {goal.goalType === "north-star" && <Star className="h-3 w-3 fill-current" />}
-                          {goalTypeConfig[goal.goalType].icon} {goalTypeConfig[goal.goalType].label}
+                          {(() => {
+                            const Icon = goalTypeIcons[goal.goalType];
+                            return <Icon size={14} />;
+                          })()}
+                          {goalTypeConfig[goal.goalType].label}
                         </span>
                       ) : (
                         "Set type"
@@ -289,6 +291,7 @@ const GoalPage = () => {
                     </SelectItem>
                     {(Object.keys(goalTypeConfig) as GoalType[]).map((type) => {
                       const config = goalTypeConfig[type];
+                      const Icon = goalTypeIcons[type];
                       const isDisabled = type === "north-star" && hasExistingNorthStar;
                       return (
                         <SelectItem 
@@ -298,7 +301,7 @@ const GoalPage = () => {
                           className={cn(isDisabled && "opacity-50")}
                         >
                           <div className="flex items-center gap-2">
-                            <span>{config.icon}</span>
+                            <Icon size={14} />
                             <span>{config.label}</span>
                             {isDisabled && <span className="text-xs text-muted-foreground">(already exists)</span>}
                           </div>
