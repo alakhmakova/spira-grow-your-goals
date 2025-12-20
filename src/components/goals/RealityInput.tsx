@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, Mountain } from "lucide-react";
+import { Plus, X, Pencil, Check, Zap, Skull } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -11,6 +11,41 @@ interface RealityInputProps {
   onActionsChange: (actions: RealityItem[]) => void;
   onObstaclesChange: (obstacles: RealityItem[]) => void;
 }
+
+// Mini leaf bullet icon matching the Spira logo style
+const LeafBullet = ({ className }: { className?: string }) => (
+  <svg
+    width="10"
+    height="10"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <defs>
+      <linearGradient id="leafBulletGradientInput" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
+        <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
+        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
+      </linearGradient>
+    </defs>
+    {/* Left leaf */}
+    <path
+      d="M12 20 C8 16, 2 10, 0 4 C4 2, 8 4, 10 8 C11 12, 12 16, 12 20"
+      fill="url(#leafBulletGradientInput)"
+    />
+    {/* Right leaf */}
+    <path
+      d="M13 18 C17 14, 22 8, 24 2 C20 0, 16 2, 14 6 C13 10, 13 14, 13 18"
+      fill="url(#leafBulletGradientInput)"
+    />
+  </svg>
+);
+
+// Skull bullet for obstacles
+const SkullBullet = ({ className }: { className?: string }) => (
+  <Skull className={cn("h-2.5 w-2.5 text-destructive", className)} />
+);
 
 export const RealityInput = ({
   actions,
@@ -27,14 +62,16 @@ export const RealityInput = ({
         onChange={onActionsChange}
         colorScheme="actions"
         placeholder="What action have you taken?"
+        BulletIcon={LeafBullet}
       />
       <RealityItemList
         title="Obstacles"
-        icon={<Mountain className="h-4 w-4" />}
+        icon={<Skull className="h-4 w-4" />}
         items={obstacles}
         onChange={onObstaclesChange}
         colorScheme="obstacles"
         placeholder="What's stopping you?"
+        BulletIcon={SkullBullet}
       />
     </div>
   );
@@ -47,6 +84,7 @@ interface RealityItemListProps {
   onChange: (items: RealityItem[]) => void;
   colorScheme: "actions" | "obstacles";
   placeholder: string;
+  BulletIcon: React.ComponentType<{ className?: string }>;
 }
 
 const RealityItemList = ({
@@ -56,6 +94,7 @@ const RealityItemList = ({
   onChange,
   colorScheme,
   placeholder,
+  BulletIcon,
 }: RealityItemListProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
@@ -66,12 +105,10 @@ const RealityItemList = ({
     actions: {
       chip: "bg-primary/10 border-primary/30 text-primary",
       button: "text-primary hover:bg-primary/10",
-      bulletBg: "bg-primary",
     },
     obstacles: {
-      chip: "bg-warning/10 border-warning/30 text-warning-foreground",
-      button: "text-warning-foreground hover:bg-warning/10",
-      bulletBg: "bg-warning",
+      chip: "bg-destructive/10 border-destructive/30 text-destructive",
+      button: "text-destructive hover:bg-destructive/10",
     },
   };
 
@@ -118,15 +155,13 @@ const RealityItemList = ({
         <span>{title}</span>
       </div>
 
-      {/* Items with bullets */}
+      {/* Items with styled bullets */}
       {items.length > 0 && (
         <div className="space-y-1.5 pl-1">
           {items.map((item) => (
             <div
               key={item.id}
-              className={cn(
-                "group flex items-start gap-2 py-1 transition-all"
-              )}
+              className="group flex items-start gap-2 py-1 transition-all"
             >
               {editingId === item.id ? (
                 <div className="flex items-center gap-1 flex-1">
@@ -146,11 +181,10 @@ const RealityItemList = ({
                 </div>
               ) : (
                 <>
-                  {/* Styled bullet */}
-                  <div className={cn(
-                    "flex-shrink-0 w-1.5 h-1.5 rounded-full mt-1.5",
-                    scheme.bulletBg
-                  )} />
+                  {/* Styled bullet icon */}
+                  <div className="flex-shrink-0 mt-1">
+                    <BulletIcon />
+                  </div>
                   <span className="text-sm flex-1">{item.name}</span>
                   <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button

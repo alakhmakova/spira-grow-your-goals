@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, Mountain } from "lucide-react";
+import { Plus, X, Pencil, Check, Zap, Skull } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -11,6 +11,41 @@ interface RealitySectionProps {
   onUpdateActions: (actions: RealityItem[]) => void;
   onUpdateObstacles: (obstacles: RealityItem[]) => void;
 }
+
+// Mini leaf bullet icon matching the Spira logo style
+const LeafBullet = ({ className }: { className?: string }) => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <defs>
+      <linearGradient id="leafBulletGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
+        <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
+        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
+      </linearGradient>
+    </defs>
+    {/* Left leaf */}
+    <path
+      d="M12 20 C8 16, 2 10, 0 4 C4 2, 8 4, 10 8 C11 12, 12 16, 12 20"
+      fill="url(#leafBulletGradient)"
+    />
+    {/* Right leaf */}
+    <path
+      d="M13 18 C17 14, 22 8, 24 2 C20 0, 16 2, 14 6 C13 10, 13 14, 13 18"
+      fill="url(#leafBulletGradient)"
+    />
+  </svg>
+);
+
+// Skull bullet for obstacles
+const SkullBullet = ({ className }: { className?: string }) => (
+  <Skull className={cn("h-3 w-3 text-destructive", className)} />
+);
 
 export const RealitySection = ({
   actions,
@@ -29,17 +64,19 @@ export const RealitySection = ({
         colorScheme="actions"
         placeholder="Add an action you've taken or will take..."
         emptyText="What actions have you taken so far?"
+        BulletIcon={LeafBullet}
       />
 
-      {/* Obstacles - Warning/Amber theme */}
+      {/* Obstacles - Destructive/Red theme */}
       <RealityList
         title="Obstacles"
-        icon={<Mountain className="h-4 w-4" />}
+        icon={<Skull className="h-4 w-4" />}
         items={obstacles}
         onUpdate={onUpdateObstacles}
         colorScheme="obstacles"
         placeholder="Add an obstacle to overcome..."
         emptyText="What's stopping you from achieving more?"
+        BulletIcon={SkullBullet}
       />
     </div>
   );
@@ -53,6 +90,7 @@ interface RealityListProps {
   colorScheme: "actions" | "obstacles";
   placeholder: string;
   emptyText: string;
+  BulletIcon: React.ComponentType<{ className?: string }>;
 }
 
 const RealityList = ({
@@ -63,6 +101,7 @@ const RealityList = ({
   colorScheme,
   placeholder,
   emptyText,
+  BulletIcon,
 }: RealityListProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
@@ -76,15 +115,13 @@ const RealityList = ({
       text: "text-primary",
       hoverBg: "hover:bg-primary/15",
       buttonBg: "bg-primary/20 hover:bg-primary/30",
-      bulletBg: "bg-primary",
     },
     obstacles: {
-      bg: "bg-warning/10",
-      border: "border-warning/30",
-      text: "text-warning-foreground",
-      hoverBg: "hover:bg-warning/15",
-      buttonBg: "bg-warning/20 hover:bg-warning/30 text-warning-foreground",
-      bulletBg: "bg-warning",
+      bg: "bg-destructive/10",
+      border: "border-destructive/30",
+      text: "text-destructive",
+      hoverBg: "hover:bg-destructive/15",
+      buttonBg: "bg-destructive/20 hover:bg-destructive/30",
     },
   };
 
@@ -190,11 +227,10 @@ const RealityList = ({
               </div>
             ) : (
               <>
-                {/* Styled bullet */}
-                <div className={cn(
-                  "flex-shrink-0 w-2 h-2 rounded-full mt-1.5",
-                  scheme.bulletBg
-                )} />
+                {/* Styled bullet icon */}
+                <div className="flex-shrink-0 mt-0.5">
+                  <BulletIcon />
+                </div>
                 <span className="flex-1 text-sm text-foreground">{item.name}</span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
