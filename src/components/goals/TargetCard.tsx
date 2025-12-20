@@ -186,7 +186,7 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
             borderRadius: 'inherit',
             background: isComplete 
               ? 'hsl(var(--success))' 
-              : 'linear-gradient(90deg, hsl(48, 96%, 53%) 0%, hsl(142, 76%, 36%) 100%)'
+              : '#d9ff66'
           }}
         />
         
