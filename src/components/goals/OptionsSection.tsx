@@ -24,6 +24,7 @@ interface OptionsSectionProps {
   onSetActiveOption: (optionId: string | undefined) => void;
   existingTargetsCount?: number;
   onBindTargetsToOption?: (optionId: string) => void;
+  onDeleteUnboundTargets?: () => void;
 }
 
 export const OptionsSection = ({
@@ -33,6 +34,7 @@ export const OptionsSection = ({
   onSetActiveOption,
   existingTargetsCount = 0,
   onBindTargetsToOption,
+  onDeleteUnboundTargets,
 }: OptionsSectionProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
@@ -96,6 +98,10 @@ export const OptionsSection = ({
 
   const handleCancelBind = () => {
     if (pendingOption) {
+      // Delete unbound targets first, then add the option
+      if (onDeleteUnboundTargets) {
+        onDeleteUnboundTargets();
+      }
       completeAddOption(pendingOption, false);
     }
     setShowBindConfirm(false);
@@ -207,20 +213,26 @@ export const OptionsSection = ({
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-warning" />
-                Bind Existing Targets?
+                What to do with existing targets?
               </AlertDialogTitle>
-              <AlertDialogDescription>
-                You have <strong>{existingTargetsCount} target{existingTargetsCount !== 1 ? 's' : ''}</strong> that are not linked to any option.
-                <br /><br />
-                Would you like to bind all existing targets to this new option? The option will become active by default.
+              <AlertDialogDescription className="space-y-3">
+                <p>
+                  You have <strong>{existingTargetsCount} target{existingTargetsCount !== 1 ? 's' : ''}</strong> that are not linked to any option.
+                </p>
+                <p>
+                  <strong>Bind targets:</strong> Move all existing targets to this new option.
+                </p>
+                <p className="text-destructive">
+                  <strong>Delete targets:</strong> All existing targets will be permanently deleted.
+                </p>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={handleCancelBind}>
-                No, don't bind
+              <AlertDialogCancel onClick={handleCancelBind} className="text-destructive border-destructive hover:bg-destructive/10">
+                Delete targets
               </AlertDialogCancel>
               <AlertDialogAction onClick={handleConfirmBind}>
-                Yes, bind targets
+                Bind targets
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -412,20 +424,26 @@ export const OptionsSection = ({
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-warning" />
-              Bind Existing Targets?
+              What to do with existing targets?
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              You have <strong>{existingTargetsCount} target{existingTargetsCount !== 1 ? 's' : ''}</strong> that are not linked to any option.
-              <br /><br />
-              Would you like to bind all existing targets to this new option? The option will become active by default.
+            <AlertDialogDescription className="space-y-3">
+              <p>
+                You have <strong>{existingTargetsCount} target{existingTargetsCount !== 1 ? 's' : ''}</strong> that are not linked to any option.
+              </p>
+              <p>
+                <strong>Bind targets:</strong> Move all existing targets to this new option.
+              </p>
+              <p className="text-destructive">
+                <strong>Delete targets:</strong> All existing targets will be permanently deleted.
+              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancelBind}>
-              No, don't bind
+            <AlertDialogCancel onClick={handleCancelBind} className="text-destructive border-destructive hover:bg-destructive/10">
+              Delete targets
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmBind}>
-              Yes, bind targets
+              Bind targets
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
