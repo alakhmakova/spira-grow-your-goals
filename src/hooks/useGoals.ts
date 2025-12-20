@@ -9,7 +9,11 @@ const mockGoals: Goal[] = [
     reality: "Currently I feel nervous when speaking in front of groups. I've done 2 small presentations this year.",
     options: "Take a public speaking course, practice with friends, join Toastmasters",
     will: "This is important for my career growth and personal confidence",
-    resources: "Company training budget, supportive colleagues, YouTube tutorials",
+    resources: [
+      { id: "r1", type: "link", name: "TED Talks", url: "https://www.ted.com/talks" },
+      { id: "r2", type: "text", name: "Coach Contact", content: "John Smith - Public Speaking Coach" },
+      { id: "r3", type: "email", name: "HR Training", email: "training@company.com" },
+    ],
     achievability: 7,
     dueDate: new Date("2024-03-15"),
     createdAt: new Date("2024-01-01"),

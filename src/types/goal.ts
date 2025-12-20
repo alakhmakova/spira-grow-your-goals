@@ -1,10 +1,29 @@
+export type ResourceType = "link" | "email" | "text" | "picture" | "document";
+
+export interface Resource {
+  id: string;
+  type: ResourceType;
+  name: string;
+  // For links
+  url?: string;
+  // For email
+  email?: string;
+  // For text
+  content?: string;
+  // For picture/document - base64 or URL (frontend only, backend will handle file storage)
+  fileData?: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+}
+
 export interface Goal {
   id: string;
   name: string;
   reality?: string;
   options?: string;
   will?: string;
-  resources?: string;
+  resources?: Resource[];
   achievability: number;
   dueDate?: Date;
   createdAt: Date;

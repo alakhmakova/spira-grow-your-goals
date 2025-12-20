@@ -27,6 +27,8 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { Link } from "react-router-dom";
+import { Resource } from "@/types/goal";
+import { ResourceInput } from "./ResourceInput";
 
 interface CreateGoalFormProps {
   open: boolean;
@@ -42,7 +44,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
   const [achievability, setAchievability] = useState<number | null>(null);
   const [options, setOptions] = useState("");
   const [will, setWill] = useState("");
-  const [resources, setResources] = useState("");
+  const [resources, setResources] = useState<Resource[]>([]);
   const [dueDate, setDueDate] = useState<Date>();
   
   const [errors, setErrors] = useState<{ name?: string; achievability?: string }>({});
@@ -68,7 +70,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
       reality: reality.trim() || undefined,
       options: options.trim() || undefined,
       will: will.trim() || undefined,
-      resources: resources.trim() || undefined,
+      resources: resources.length > 0 ? resources : undefined,
       achievability: achievability!,
       dueDate,
     });
@@ -79,7 +81,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
     setAchievability(null);
     setOptions("");
     setWill("");
-    setResources("");
+    setResources([]);
     setDueDate(undefined);
     setErrors({});
     
@@ -259,7 +261,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
           {/* Resources */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Label htmlFor="resources" className="text-base font-medium">
+              <Label className="text-base font-medium">
                 What resources or support do you need?
               </Label>
               <Tooltip>
@@ -268,16 +270,13 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   What resources do you already have (skill, time, enthusiasm, support, money, etc.)? 
-                  What other resources are needed?
+                  What other resources are needed? Add links, emails, text notes, pictures, or documents.
                 </TooltipContent>
               </Tooltip>
             </div>
-            <Textarea
-              id="resources"
-              placeholder="What could someone do to support you? What can you do to support yourself?"
-              value={resources}
-              onChange={(e) => setResources(e.target.value)}
-              rows={3}
+            <ResourceInput 
+              resources={resources} 
+              onChange={setResources} 
             />
           </div>
 
