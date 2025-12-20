@@ -30,9 +30,9 @@
     --muted: 120 10% 92%;
     --muted-foreground: 120 8% 45%;
 
-    /* Lime accent */
-    --accent: 88 50% 53%;
-    --accent-foreground: 120 40% 10%;
+    /* Accent - slightly lighter green */
+    --accent: 122 35% 60%;
+    --accent-foreground: 123 43% 15%;
 
     /* Mint for highlights */
     --mint: 142 40% 60%;
@@ -59,13 +59,13 @@
 
     --radius: 0.75rem;
 
-    /* Spira gradients - dark to lime green */
-    --gradient-primary: linear-gradient(135deg, hsl(123 43% 25%) 0%, hsl(122 39% 49%) 50%, hsl(88 50% 53%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(122 39% 49%) 0%, hsl(88 50% 53%) 100%);
+    /* Spira gradients - cohesive green palette */
+    --gradient-primary: linear-gradient(135deg, hsl(123 43% 25%) 0%, hsl(122 39% 49%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(122 39% 45%) 0%, hsl(122 35% 60%) 100%);
     --gradient-forest: linear-gradient(135deg, hsl(123 43% 18%) 0%, hsl(122 39% 40%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(120 10% 98%) 0%, hsl(120 15% 96%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(120 10% 98%) 100%);
-    --gradient-text: linear-gradient(90deg, hsl(123 43% 18%) 0%, hsl(122 39% 45%) 50%, hsl(88 50% 53%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(120 10% 98%) 0%, hsl(120 12% 96%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(120 8% 98%) 100%);
+    --gradient-text: linear-gradient(90deg, hsl(123 43% 25%) 0%, hsl(122 39% 49%) 100%);
     
     /* Shadows */
     --shadow-sm: 0 1px 3px 0 hsl(123 30% 20% / 0.06);
@@ -109,8 +109,8 @@
     --muted: 120 10% 16%;
     --muted-foreground: 120 10% 55%;
 
-    /* Bright lime accent */
-    --accent: 88 55% 50%;
+    /* Accent - lighter green for dark mode */
+    --accent: 122 40% 45%;
     --accent-foreground: 0 0% 100%;
 
     /* Mint */
@@ -136,13 +136,13 @@
     --input: 120 10% 18%;
     --ring: 122 45% 55%;
 
-    /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(123 40% 30%) 0%, hsl(122 45% 55%) 50%, hsl(88 55% 50%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(122 45% 55%) 0%, hsl(88 55% 50%) 100%);
+    /* Dark mode gradients - cohesive green palette */
+    --gradient-primary: linear-gradient(135deg, hsl(123 40% 30%) 0%, hsl(122 45% 55%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(122 40% 40%) 0%, hsl(122 40% 50%) 100%);
     --gradient-forest: linear-gradient(135deg, hsl(123 40% 35%) 0%, hsl(122 45% 55%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(120 15% 7%) 0%, hsl(120 18% 9%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(120 12% 12%) 0%, hsl(120 15% 10%) 100%);
-    --gradient-text: linear-gradient(90deg, hsl(122 40% 50%) 0%, hsl(122 45% 60%) 50%, hsl(88 55% 55%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(120 15% 7%) 0%, hsl(120 15% 9%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(120 12% 12%) 0%, hsl(120 12% 10%) 100%);
+    --gradient-text: linear-gradient(90deg, hsl(122 40% 50%) 0%, hsl(122 45% 60%) 100%);
 
     --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.3);
     --shadow-md: 0 4px 16px -2px hsl(0 0% 0% / 0.4);
