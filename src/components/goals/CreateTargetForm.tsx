@@ -346,12 +346,21 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId }: CreateTargetFor
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
+                      e.stopPropagation();
                       handleAddTask();
                     }
                   }}
                 />
-                <Button type="button" onClick={handleAddTask} variant="secondary">
-                  Create
+                <Button 
+                  type="button" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAddTask();
+                  }} 
+                  variant="secondary"
+                >
+                  Add
                 </Button>
               </div>
               {tasks.length > 0 && (
