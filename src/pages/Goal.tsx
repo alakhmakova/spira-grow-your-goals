@@ -17,6 +17,7 @@ import {
   ChevronUp,
   Clock,
   Lightbulb,
+  Star,
 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { useGoalsContext } from "@/context/GoalsContext";
@@ -54,6 +55,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Calendar as CalendarUI } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { CreateTargetForm } from "@/components/goals/CreateTargetForm";
@@ -64,12 +72,13 @@ import { OptionsSection } from "@/components/goals/OptionsSection";
 import { RealitySection } from "@/components/goals/RealitySection";
 import { AchievabilityHistory } from "@/components/goals/AchievabilityHistory";
 import { Confetti } from "@/components/Confetti";
-import { Resource, GoalOption, RealityItem } from "@/types/goal";
+import { Resource, GoalOption, RealityItem, GoalType } from "@/types/goal";
+import { goalTypeConfig, getGoalTypeStyles } from "@/lib/goalTypeUtils";
 
 const GoalPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getGoalById, updateGoal, deleteGoal, getGoalComments } = useGoalsContext();
+  const { goals, getGoalById, updateGoal, deleteGoal, getGoalComments } = useGoalsContext();
 
   const goal = getGoalById(id || "");
   const comments = getGoalComments(id || "");
@@ -143,6 +152,19 @@ const GoalPage = () => {
   };
 
   const hasEmptyGrowFields = !goal.reality || (!goal.goalOptions || goal.goalOptions.length === 0) || !goal.will || !goal.resources;
+
+  // Check if another goal has north-star type
+  const hasExistingNorthStar = goals.some(g => g.goalType === "north-star" && g.id !== goal.id);
+
+  const handleGoalTypeChange = (newType: GoalType | "none") => {
+    if (newType === "none") {
+      updateGoal(goal.id, { goalType: undefined });
+    } else {
+      updateGoal(goal.id, { goalType: newType });
+    }
+  };
+
+  const typeStyles = goal.goalType ? getGoalTypeStyles(goal.goalType) : null;
 
   return (
     <Layout>
@@ -240,6 +262,52 @@ const GoalPage = () => {
 
               {/* Meta info */}
               <div className="flex flex-wrap items-center gap-4 mb-4">
+                {/* Goal Type Selector */}
+                <Select
+                  value={goal.goalType || "none"}
+                  onValueChange={(value) => handleGoalTypeChange(value as GoalType | "none")}
+                >
+                  <SelectTrigger className={cn(
+                    "w-auto min-w-[140px] h-9",
+                    typeStyles && typeStyles.bgColor,
+                    typeStyles && typeStyles.color
+                  )}>
+                    <SelectValue placeholder="Set type">
+                      {goal.goalType ? (
+                        <span className="flex items-center gap-2">
+                          {goal.goalType === "north-star" && <Star className="h-3 w-3 fill-current" />}
+                          {goalTypeConfig[goal.goalType].icon} {goalTypeConfig[goal.goalType].label}
+                        </span>
+                      ) : (
+                        "Set type"
+                      )}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover">
+                    <SelectItem value="none">
+                      <span className="text-muted-foreground">No type</span>
+                    </SelectItem>
+                    {(Object.keys(goalTypeConfig) as GoalType[]).map((type) => {
+                      const config = goalTypeConfig[type];
+                      const isDisabled = type === "north-star" && hasExistingNorthStar;
+                      return (
+                        <SelectItem 
+                          key={type} 
+                          value={type}
+                          disabled={isDisabled}
+                          className={cn(isDisabled && "opacity-50")}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span>{config.icon}</span>
+                            <span>{config.label}</span>
+                            {isDisabled && <span className="text-xs text-muted-foreground">(already exists)</span>}
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+
                 {/* Achievability - Clickable to edit */}
                 <Popover>
                   <PopoverTrigger asChild>
