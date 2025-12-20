@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Lightbulb, Check, Plus, Pencil, X, Sparkles, AlertTriangle, GripVertical } from "lucide-react";
+import { Lightbulb, Check, Plus, Pencil, X, Sparkles, AlertTriangle, MoreVertical, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +16,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface OptionsSectionProps {
   options: GoalOption[];
@@ -26,6 +39,7 @@ interface OptionsSectionProps {
   existingTargetsCount?: number;
   onBindTargetsToOption?: (optionId: string) => void;
   onDeleteUnboundTargets?: () => void;
+  onGoalNameChange?: (name: string) => void;
 }
 
 interface DragPosition {
@@ -42,6 +56,7 @@ export const OptionsSection = ({
   existingTargetsCount = 0,
   onBindTargetsToOption,
   onDeleteUnboundTargets,
+  onGoalNameChange,
 }: OptionsSectionProps) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
@@ -53,11 +68,18 @@ export const OptionsSection = ({
   const [showBindConfirm, setShowBindConfirm] = useState(false);
   const [pendingOption, setPendingOption] = useState<GoalOption | null>(null);
   
+  // Modal states
+  const [selectedOption, setSelectedOption] = useState<GoalOption | null>(null);
+  const [showOptionModal, setShowOptionModal] = useState(false);
+  const [showGoalNameModal, setShowGoalNameModal] = useState(false);
+  const [editingGoalName, setEditingGoalName] = useState("");
+  
   // Drag state
   const [positions, setPositions] = useState<Record<string, DragPosition>>({});
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const dragStart = useRef<{ x: number; y: number; initialPos: DragPosition } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const hasDragged = useRef(false);
 
   const handleAdd = () => {
     if (!newName.trim()) {
@@ -176,6 +198,7 @@ export const OptionsSection = ({
     if (editingId) return;
     e.preventDefault();
     setDraggingId(optionId);
+    hasDragged.current = false;
     dragStart.current = {
       x: e.clientX,
       y: e.clientY,
@@ -188,6 +211,11 @@ export const OptionsSection = ({
     
     const deltaX = e.clientX - dragStart.current.x;
     const deltaY = e.clientY - dragStart.current.y;
+    
+    // Consider it a drag if moved more than 5px
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+      hasDragged.current = true;
+    }
     
     setPositions(prev => ({
       ...prev,
@@ -202,6 +230,25 @@ export const OptionsSection = ({
     setDraggingId(null);
     dragStart.current = null;
   }, []);
+
+  const handleOptionClick = useCallback((option: GoalOption) => {
+    if (!hasDragged.current) {
+      setSelectedOption(option);
+      setShowOptionModal(true);
+    }
+  }, []);
+
+  const handleGoalNameClick = useCallback(() => {
+    setEditingGoalName(goalName);
+    setShowGoalNameModal(true);
+  }, [goalName]);
+
+  const handleSaveGoalName = useCallback(() => {
+    if (editingGoalName.trim() && onGoalNameChange) {
+      onGoalNameChange(editingGoalName.trim());
+    }
+    setShowGoalNameModal(false);
+  }, [editingGoalName, onGoalNameChange]);
 
   const totalItems = options.length + 1; // +1 for add button
 
@@ -321,8 +368,11 @@ export const OptionsSection = ({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
       >
-        {/* Central goal node */}
-        <div className="absolute z-10 px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm shadow-lg max-w-[160px] text-center">
+        {/* Central goal node - clickable to edit */}
+        <div 
+          className="absolute z-10 px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm shadow-lg max-w-[160px] text-center cursor-pointer hover:ring-2 hover:ring-primary/50 hover:ring-offset-2 transition-all"
+          onClick={handleGoalNameClick}
+        >
           <span className="line-clamp-2">{goalName}</span>
         </div>
 
@@ -440,12 +490,8 @@ export const OptionsSection = ({
                     </div>
                   ) : (
                     <div
-                      onClick={(e) => {
-                        if (!isDragging) {
-                          e.stopPropagation();
-                          onSetActiveOption(isActive ? undefined : option.id);
-                        }
-                      }}
+                      onClick={() => handleOptionClick(option)}
+                      onMouseUp={() => handleOptionClick(option)}
                     >
                       <div className="flex items-start gap-1.5 mb-1">
                         <Lightbulb className={cn("h-4 w-4 flex-shrink-0 mt-0.5", colors.text)} />
@@ -459,24 +505,39 @@ export const OptionsSection = ({
                     </div>
                   )}
 
-                  {/* Action buttons */}
+                  {/* Dropdown menu for actions */}
                   {!isEditing && (
                     <div
-                      className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
                     >
-                      <button
-                        onClick={() => handleEdit(option)}
-                        className="p-1 hover:bg-background/50 rounded"
-                      >
-                        <Pencil className="h-3 w-3" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(option.id)}
-                        className="p-1 hover:bg-destructive/20 rounded text-destructive"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1 hover:bg-background/50 rounded">
+                            <MoreVertical className="h-3 w-3" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem onClick={() => handleEdit(option)}>
+                            <Pencil className="h-4 w-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => onSetActiveOption(isActive ? undefined : option.id)}
+                          >
+                            <Star className={cn("h-4 w-4 mr-2", isActive && "fill-current")} />
+                            {isActive ? "Unset Active" : "Make Active"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleDelete(option.id)}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   )}
                 </div>
@@ -598,6 +659,100 @@ export const OptionsSection = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Option Details Modal */}
+      <Dialog open={showOptionModal} onOpenChange={setShowOptionModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Lightbulb className="h-5 w-5 text-primary" />
+              {selectedOption?.name}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {selectedOption?.description ? (
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground mb-1">Description</h4>
+                <p className="text-sm">{selectedOption.description}</p>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground italic">No description provided.</p>
+            )}
+            {activeOptionId === selectedOption?.id && (
+              <Badge className="bg-success text-success-foreground">
+                <Check className="h-3 w-3 mr-1" />
+                Active Option
+              </Badge>
+            )}
+          </div>
+          <DialogFooter className="flex-row gap-2 sm:justify-start">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (selectedOption) {
+                  handleEdit(selectedOption);
+                  setShowOptionModal(false);
+                }
+              }}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (selectedOption) {
+                  onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
+                  setShowOptionModal(false);
+                }
+              }}
+            >
+              <Star className={cn("h-4 w-4 mr-2", activeOptionId === selectedOption?.id && "fill-current")} />
+              {activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => {
+                if (selectedOption) {
+                  handleDelete(selectedOption.id);
+                  setShowOptionModal(false);
+                }
+              }}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Goal Name Edit Modal */}
+      <Dialog open={showGoalNameModal} onOpenChange={setShowGoalNameModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Goal Name</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              value={editingGoalName}
+              onChange={(e) => setEditingGoalName(e.target.value)}
+              placeholder="Goal name"
+              className="w-full"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowGoalNameModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveGoalName} disabled={!onGoalNameChange}>
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
