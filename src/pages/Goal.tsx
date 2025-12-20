@@ -456,6 +456,7 @@ const GoalPage = () => {
                 <OptionsSection
                   options={goal.goalOptions || []}
                   activeOptionId={goal.activeOptionId}
+                  goalName={goal.name}
                   onUpdate={(options) => updateGoal(goal.id, { goalOptions: options })}
                   onSetActiveOption={(optionId) => updateGoal(goal.id, { activeOptionId: optionId })}
                   existingTargetsCount={goal.targets.filter(t => !t.optionId).length}
