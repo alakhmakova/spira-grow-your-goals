@@ -204,9 +204,9 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
           {/* Target Name */}
           <div className="space-y-2">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-2 flex-1">
-                <Label htmlFor="target-name" className="text-base font-medium">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="target-name" className="text-base font-medium leading-none">
                   How would you break this goal down into smaller pieces? <span className="text-destructive">*</span>
                 </Label>
                 <Tooltip>
