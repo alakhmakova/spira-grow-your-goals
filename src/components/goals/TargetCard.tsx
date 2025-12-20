@@ -178,15 +178,13 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
           }
         }}
       >
-        {/* Progress fill background with gradient */}
+        {/* Progress fill background */}
         <div 
           className="absolute inset-0 transition-all duration-500"
           style={{ 
             width: `${progress}%`,
             borderRadius: 'inherit',
-            background: isComplete 
-              ? 'hsl(var(--success))' 
-              : '#d9ff66'
+            background: '#d9ff66'
           }}
         />
         
@@ -215,83 +213,6 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
                 </h4>
               </div>
               
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-sm">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => {
-                    const newName = prompt("Rename target:", targetData.name);
-                    if (newName) updateTarget(goalId, targetData.id, { name: newName });
-                  }}>
-                    <Pencil className="h-4 w-4 mr-2" />
-                    Rename
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => {
-                    // Will use popover for this
-                  }}>
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Set Deadline
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => {
-                    const note = prompt("Add a note:");
-                    if (note) addComment(goalId, note, targetData.id);
-                  }}>
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Add Note
-                  </DropdownMenuItem>
-                  
-                  {/* Move to option submenu - only show if there are options */}
-                  {goalOptions.length > 0 && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                          <ArrowRightLeft className="h-4 w-4 mr-2" />
-                          Move to Option
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                          <DropdownMenuSubContent>
-                            {/* Option to remove from any option */}
-                            <DropdownMenuItem
-                              onClick={() => updateTarget(goalId, targetData.id, { optionId: undefined })}
-                              disabled={!targetData.optionId}
-                              className={!targetData.optionId ? "opacity-50" : ""}
-                            >
-                              <span className="text-muted-foreground">No option (unbound)</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            {goalOptions.map((option) => (
-                              <DropdownMenuItem
-                                key={option.id}
-                                onClick={() => updateTarget(goalId, targetData.id, { optionId: option.id })}
-                                disabled={targetData.optionId === option.id}
-                                className={targetData.optionId === option.id ? "opacity-50" : ""}
-                              >
-                                {option.name}
-                                {targetData.optionId === option.id && (
-                                  <span className="ml-2 text-xs text-muted-foreground">(current)</span>
-                                )}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
-                      </DropdownMenuSub>
-                    </>
-                  )}
-                  
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-destructive focus:text-destructive"
-                    onClick={() => setShowDeleteConfirm(true)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
 
             {/* Meta info */}
@@ -417,11 +338,98 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
             )}
           </div>
 
-          {/* Progress percentage on the right */}
-          <div className={cn(
-            "flex-shrink-0 text-2xl font-bold text-foreground"
-          )}>
-            {progress}%
+          {/* Progress percentage and menu on the right */}
+          <div className="flex-shrink-0 flex items-center gap-2">
+            <span className="text-2xl font-bold text-foreground">
+              {progress}%
+            </span>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon-sm">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {targetData.type === "number" && (
+                  <>
+                    <DropdownMenuItem onClick={() => setShowProgressModal(true)}>
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Update Progress
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem onClick={() => {
+                  const newName = prompt("Rename target:", targetData.name);
+                  if (newName) updateTarget(goalId, targetData.id, { name: newName });
+                }}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Rename
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  // Will use popover for this
+                }}>
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Set Deadline
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  const note = prompt("Add a note:");
+                  if (note) addComment(goalId, note, targetData.id);
+                }}>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Add Note
+                </DropdownMenuItem>
+                
+                {/* Move to option submenu - only show if there are options */}
+                {goalOptions.length > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>
+                        <ArrowRightLeft className="h-4 w-4 mr-2" />
+                        Move to Option
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                          {/* Option to remove from any option */}
+                          <DropdownMenuItem
+                            onClick={() => updateTarget(goalId, targetData.id, { optionId: undefined })}
+                            disabled={!targetData.optionId}
+                            className={!targetData.optionId ? "opacity-50" : ""}
+                          >
+                            <span className="text-muted-foreground">No option (unbound)</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          {goalOptions.map((option) => (
+                            <DropdownMenuItem
+                              key={option.id}
+                              onClick={() => updateTarget(goalId, targetData.id, { optionId: option.id })}
+                              disabled={targetData.optionId === option.id}
+                              className={targetData.optionId === option.id ? "opacity-50" : ""}
+                            >
+                              {option.name}
+                              {targetData.optionId === option.id && (
+                                <span className="ml-2 text-xs text-muted-foreground">(current)</span>
+                              )}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+                  </>
+                )}
+                
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onClick={() => setShowDeleteConfirm(true)}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
