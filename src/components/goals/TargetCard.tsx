@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,6 +43,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { SpiraSproutIcon } from "@/components/SpiraLogo";
@@ -202,6 +208,12 @@ export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
                     Rename
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => {
+                    // Will use popover for this
+                  }}>
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Set Deadline
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
                     const note = prompt("Add a note:");
                     if (note) addComment(goalId, note, target.id);
                   }}>
@@ -223,12 +235,42 @@ export const TargetCard = ({ target, goalId, style }: TargetCardProps) => {
             {/* Meta info */}
             <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-muted-foreground">
               <span>Created {format(target.createdAt, "MMM d")}</span>
-              {target.deadline && (
-                <span className="flex items-center gap-1 text-primary">
-                  <Calendar className="h-3 w-3" />
-                  Due {format(target.deadline, "MMM d")}
-                </span>
-              )}
+              
+              {/* Clickable deadline */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center gap-1 hover:underline cursor-pointer transition-colors",
+                      target.deadline ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    <Calendar className="h-3 w-3" />
+                    {target.deadline ? `Due ${format(target.deadline, "MMM d")}` : "Set deadline"}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={target.deadline}
+                    onSelect={(date) => updateTarget(goalId, target.id, { deadline: date })}
+                    className="pointer-events-auto"
+                  />
+                  {target.deadline && (
+                    <div className="p-2 border-t">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full text-destructive"
+                        onClick={() => updateTarget(goalId, target.id, { deadline: undefined })}
+                      >
+                        Clear deadline
+                      </Button>
+                    </div>
+                  )}
+                </PopoverContent>
+              </Popover>
+              
               <Badge variant={target.type === "number" ? "default" : target.type === "success" ? "secondary" : "muted"}>
                 {target.type}
               </Badge>
