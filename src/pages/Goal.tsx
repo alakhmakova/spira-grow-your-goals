@@ -472,6 +472,7 @@ const GoalPage = () => {
                     const updatedTargets = goal.targets.filter(t => t.optionId);
                     updateGoal(goal.id, { targets: updatedTargets });
                   }}
+                  onGoalNameChange={(name) => updateGoal(goal.id, { name })}
                 />
               </AccordionContent>
             </AccordionItem>
