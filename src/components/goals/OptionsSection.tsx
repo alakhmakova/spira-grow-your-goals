@@ -490,67 +490,86 @@ export const OptionsSection = ({
 
           {/* Add new option card */}
           {(() => {
-            const pos = getOptionPosition(options.length, totalItems);
+            const addButtonId = 'add-button';
+            const pos = getActualPosition(addButtonId, options.length, totalItems);
+            const isDragging = draggingId === addButtonId;
+            
             return (
               <div
-                className="absolute"
+                className={cn(
+                  "absolute z-20",
+                  isDragging && "z-30"
+                )}
                 style={{
                   left: `calc(50% + ${pos.x}px)`,
                   top: `calc(50% + ${pos.y}px)`,
                   transform: 'translate(-50%, -50%)',
                 }}
               >
-                {showAddForm ? (
+                <div className={cn(
+                  "relative group",
+                  isDragging && "shadow-xl scale-105"
+                )}>
+                  {/* Drag handle for add button */}
                   <div
-                    className="p-3 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-2 w-[140px]"
-                    onClick={(e) => e.stopPropagation()}
+                    className="absolute -top-1 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing p-1 rounded hover:bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    onMouseDown={(e) => handleMouseDown(e, addButtonId, pos)}
                   >
-                    <Input
-                      value={newName}
-                      onChange={(e) => {
-                        setNewName(e.target.value);
-                        setError("");
-                      }}
-                      placeholder="Name *"
-                      className={cn("text-xs h-7", error && "border-destructive")}
-                      autoFocus
-                    />
-                    {error && <p className="text-xs text-destructive">{error}</p>}
-                    <Textarea
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                      placeholder="Description"
-                      rows={2}
-                      className="resize-none text-xs"
-                    />
-                    <div className="flex gap-1">
-                      <Button size="sm" onClick={handleAdd} className="h-6 text-xs px-2">
-                        Add
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                          setShowAddForm(false);
-                          setNewName("");
-                          setNewDescription("");
+                    <GripVertical className="h-3 w-3 text-muted-foreground" />
+                  </div>
+
+                  {showAddForm ? (
+                    <div
+                      className="p-3 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-2 w-[140px]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Input
+                        value={newName}
+                        onChange={(e) => {
+                          setNewName(e.target.value);
                           setError("");
                         }}
-                        className="h-6 text-xs px-2"
-                      >
-                        Cancel
-                      </Button>
+                        placeholder="Name *"
+                        className={cn("text-xs h-7", error && "border-destructive")}
+                        autoFocus
+                      />
+                      {error && <p className="text-xs text-destructive">{error}</p>}
+                      <Textarea
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                        placeholder="Description"
+                        rows={2}
+                        className="resize-none text-xs"
+                      />
+                      <div className="flex gap-1">
+                        <Button size="sm" onClick={handleAdd} className="h-6 text-xs px-2">
+                          Add
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setShowAddForm(false);
+                            setNewName("");
+                            setNewDescription("");
+                            setError("");
+                          }}
+                          className="h-6 text-xs px-2"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => setShowAddForm(true)}
-                    className="p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 w-[100px] h-[80px]"
-                  >
-                    <Plus className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Add Option</span>
-                  </button>
-                )}
+                  ) : (
+                    <button
+                      onClick={() => setShowAddForm(true)}
+                      className="p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 w-[100px] h-[80px]"
+                    >
+                      <Plus className="h-5 w-5 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">Add Option</span>
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })()}
