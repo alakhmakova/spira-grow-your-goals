@@ -54,7 +54,6 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useGoalsContext } from "@/context/GoalsContext";
-import { SpiraSproutIcon } from "@/components/SpiraLogo";
 import { getOverdueStatus, getOverdueStyles } from "@/lib/dateUtils";
 
 interface TargetCardProps {
@@ -204,14 +203,12 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2">
-                {isComplete && <SpiraSproutIcon className="animate-sprout-grow" size={20} />}
                 <h4 className={cn(
                   "font-medium text-foreground"
                 )}>
                   {targetData.name}
                 </h4>
               </div>
-              
             </div>
 
             {/* Meta info */}
@@ -225,9 +222,9 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
                     className={cn(
                       "flex items-center gap-1 hover:underline cursor-pointer transition-colors font-medium",
                       !targetData.deadline && "text-muted-foreground hover:text-foreground",
-                      targetData.deadline && !overdueStyles && "text-primary",
+                      targetData.deadline && !overdueStyles && !isComplete && "text-primary",
                       targetData.deadline && overdueStyles && !isComplete && overdueStyles.textColor,
-                      isComplete && "text-success"
+                      isComplete && "text-muted-foreground"
                     )}
                   >
                     {overdueStatus === "overdue" && !isComplete ? (
@@ -302,7 +299,6 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
                           "flex-1 text-sm",
                           task.isCompleted && "line-through text-muted-foreground"
                         )}>
-                          {task.isCompleted && <SpiraSproutIcon className="inline mr-1" size={14} />}
                           {task.name}
                         </span>
                         <Button
