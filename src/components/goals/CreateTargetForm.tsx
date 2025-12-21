@@ -21,6 +21,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -140,15 +147,19 @@ const LeavesIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+import { GoalOption } from "@/types/goal";
+
 interface CreateTargetFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   goalId: string;
   /** If provided, the new target will be linked to the currently active option on the Goal page */
   optionId?: string;
+  /** Available options for the goal - used to let user choose when no active option */
+  goalOptions?: GoalOption[];
 }
 
-export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: CreateTargetFormProps) => {
+export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOptions = [] }: CreateTargetFormProps) => {
   const { createTarget } = useGoalsContext();
   
   const [name, setName] = useState("");
@@ -161,8 +172,14 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
   const [newTask, setNewTask] = useState("");
   const [editingTaskIndex, setEditingTaskIndex] = useState<number | null>(null);
   const [editingTaskValue, setEditingTaskValue] = useState("");
+  const [selectedOptionId, setSelectedOptionId] = useState<string>("");
   
   const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  // Determine if we need to show option selector
+  const hasOptions = goalOptions.length > 0;
+  const hasActiveOption = !!optionId;
+  const showOptionSelector = hasOptions && !hasActiveOption;
 
   const handleAddTask = () => {
     if (newTask.trim()) {
@@ -235,11 +252,14 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
     
     if (!validate()) return;
 
+    // Determine which optionId to use
+    const finalOptionId = optionId || (showOptionSelector ? selectedOptionId || undefined : undefined);
+    
     const targetData: any = {
       name: name.trim(),
       type,
       deadline,
-      optionId: optionId || undefined,
+      optionId: finalOptionId,
     };
 
     if (type === "number") {
@@ -273,6 +293,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
     setTargetValue("");
     setDeadline(undefined);
     setTasks([]);
+    setSelectedOptionId("");
     setErrors({});
     
     onOpenChange(false);
@@ -326,6 +347,30 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId }: Creat
               <p className="text-sm text-destructive">{errors.name}</p>
             )}
           </div>
+
+          {/* Option Selector - only shown when options exist but none is active */}
+          {showOptionSelector && (
+            <div className="space-y-2">
+              <Label className="text-base font-medium">
+                Bind to option
+              </Label>
+              <Select value={selectedOptionId} onValueChange={setSelectedOptionId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an option to bind this target to..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {goalOptions.map((option) => (
+                    <SelectItem key={option.id} value={option.id}>
+                      {option.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Choose which option this target should be linked to
+              </p>
+            </div>
+          )}
 
           {/* Target Type */}
           <div className="space-y-3">
