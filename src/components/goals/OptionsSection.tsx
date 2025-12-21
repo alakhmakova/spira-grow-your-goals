@@ -553,7 +553,7 @@ export const OptionsSection = ({
                   {/* Dropdown menu for actions */}
                   {!isEditing && (
                     <div
-                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1"
                       onClick={(e) => e.stopPropagation()}
                       onMouseDown={(e) => e.stopPropagation()}
                     >
