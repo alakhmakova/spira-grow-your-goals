@@ -63,11 +63,11 @@ const resourceTypeLabels: Record<ResourceType, string> = {
 };
 
 const resourceTypeColors: Record<ResourceType, string> = {
-  link: "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20",
-  email: "bg-accent/10 text-accent-foreground border-accent/30 hover:bg-accent/20",
-  text: "bg-secondary/50 text-secondary-foreground border-secondary hover:bg-secondary/70",
-  picture: "bg-nature/10 text-nature border-nature/30 hover:bg-nature/20",
-  document: "bg-muted text-muted-foreground border-border hover:bg-muted/80",
+  link: "bg-primary/15 text-primary-dark border-primary/40 hover:bg-primary/25",
+  email: "bg-warning/15 text-warning-foreground border-warning/40 hover:bg-warning/25",
+  text: "bg-forest/15 text-forest border-forest/40 hover:bg-forest/25",
+  picture: "bg-accent/15 text-accent-foreground border-accent/40 hover:bg-accent/25",
+  document: "bg-secondary text-secondary-foreground border-border hover:bg-secondary/80",
 };
 
 const validateEmail = (email: string) => {
@@ -227,36 +227,49 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
 
     const newErrors: Record<string, string> = {};
 
-    if (!editName.trim()) {
-      newErrors.editName = "Name is required";
-      setErrors(newErrors);
-      return;
+    // Validate based on resource type
+    if (editingResource.type === "link") {
+      if (!editName.trim()) {
+        newErrors.editName = "Name is required";
+      }
+      if (!validateUrl(editUrl)) {
+        newErrors.editUrl = "Invalid URL format";
+      }
+    } else if (editingResource.type === "email") {
+      if (!validateEmail(editEmail)) {
+        newErrors.editEmail = "Invalid email format";
+      }
+    } else if (editingResource.type === "text") {
+      if (!editContent.trim()) {
+        newErrors.editContent = "Content is required";
+      }
+    } else if (editingResource.type === "picture") {
+      if (!editName.trim()) {
+        newErrors.editName = "Name is required";
+      }
     }
 
-    if (editingResource.type === "link" && !validateUrl(editUrl)) {
-      newErrors.editUrl = "Invalid URL format";
-      setErrors(newErrors);
-      return;
-    }
-
-    if (editingResource.type === "email" && !validateEmail(editEmail)) {
-      newErrors.editEmail = "Invalid email format";
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     onUpdate(
-      resources.map((r) =>
-        r.id === editingResource.id
-          ? {
-              ...r,
-              name: editName.trim(),
-              url: r.type === "link" ? editUrl.trim() : r.url,
-              email: r.type === "email" ? editEmail.trim() : r.email,
-              content: r.type === "text" ? editContent.trim() : r.content,
-            }
-          : r
-      )
+      resources.map((r) => {
+        if (r.id !== editingResource.id) return r;
+        
+        if (r.type === "email") {
+          return { ...r, name: editEmail.trim(), email: editEmail.trim() };
+        } else if (r.type === "text") {
+          return { ...r, name: editContent.trim(), content: editContent.trim() };
+        } else {
+          return {
+            ...r,
+            name: editName.trim(),
+            url: r.type === "link" ? editUrl.trim() : r.url,
+          };
+        }
+      })
     );
     setEditingResource(null);
     setErrors({});
@@ -329,24 +342,10 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                       <ExternalLink className="h-3 w-3 opacity-60" />
                     )}
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {(resource.type === "text" ||
-                        resource.type === "link" ||
-                        resource.type === "email") && (
+                      {resource.type !== "document" && (
                         <button
                           onClick={(e) => startEdit(resource, e)}
                           className="p-1 hover:bg-background/50 rounded"
-                        >
-                          <Pencil className="h-3 w-3" />
-                        </button>
-                      )}
-                      {(resource.type === "picture" || resource.type === "document") && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startEdit(resource, e);
-                          }}
-                          className="p-1 hover:bg-background/50 rounded"
-                          title="Edit name"
                         >
                           <Pencil className="h-3 w-3" />
                         </button>
@@ -618,30 +617,31 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
 
           {editingResource && (
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Name</Label>
-                <Input
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  className={cn(errors.editName && "border-destructive")}
-                />
-                {errors.editName && (
-                  <p className="text-xs text-destructive">{errors.editName}</p>
-                )}
-              </div>
-
               {editingResource.type === "link" && (
-                <div className="space-y-2">
-                  <Label>URL</Label>
-                  <Input
-                    value={editUrl}
-                    onChange={(e) => setEditUrl(e.target.value)}
-                    className={cn(errors.editUrl && "border-destructive")}
-                  />
-                  {errors.editUrl && (
-                    <p className="text-xs text-destructive">{errors.editUrl}</p>
-                  )}
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label>Name</Label>
+                    <Input
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className={cn(errors.editName && "border-destructive")}
+                    />
+                    {errors.editName && (
+                      <p className="text-xs text-destructive">{errors.editName}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>URL</Label>
+                    <Input
+                      value={editUrl}
+                      onChange={(e) => setEditUrl(e.target.value)}
+                      className={cn(errors.editUrl && "border-destructive")}
+                    />
+                    {errors.editUrl && (
+                      <p className="text-xs text-destructive">{errors.editUrl}</p>
+                    )}
+                  </div>
+                </>
               )}
 
               {editingResource.type === "email" && (
@@ -666,6 +666,20 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                     onChange={(e) => setEditContent(e.target.value)}
                     rows={4}
                   />
+                </div>
+              )}
+
+              {editingResource.type === "picture" && (
+                <div className="space-y-2">
+                  <Label>Name</Label>
+                  <Input
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className={cn(errors.editName && "border-destructive")}
+                  />
+                  {errors.editName && (
+                    <p className="text-xs text-destructive">{errors.editName}</p>
+                  )}
                 </div>
               )}
 
