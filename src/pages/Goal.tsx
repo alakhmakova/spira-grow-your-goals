@@ -428,9 +428,6 @@ const GoalPage = () => {
             <AccordionItem value="reality">
               <AccordionTrigger className="font-medium">
                 Reality: Actions & Obstacles
-                {(!goal.actions || goal.actions.length === 0) && (!goal.obstacles || goal.obstacles.length === 0) && (
-                  <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>
-                )}
               </AccordionTrigger>
               <AccordionContent className="space-y-4">
                 {/* Actions & Obstacles */}
@@ -449,7 +446,7 @@ const GoalPage = () => {
                   <Lightbulb className="h-4 w-4" />
                   Options: What strategies could you use?
                 </div>
-                {(!goal.goalOptions || goal.goalOptions.length === 0) && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
+                
                 {activeOption && <Badge variant="success" className="ml-2 text-xs">Active: {activeOption.name}</Badge>}
               </AccordionTrigger>
               <AccordionContent>
@@ -477,24 +474,9 @@ const GoalPage = () => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="options">
-              <AccordionTrigger className="font-medium">
-                Additional Notes
-              </AccordionTrigger>
-              <AccordionContent>
-                <Textarea
-                  value={goal.options || ""}
-                  onChange={(e) => updateGoal(goal.id, { options: e.target.value })}
-                  placeholder="Any additional notes about your options..."
-                  className="min-h-[80px] resize-y"
-                />
-              </AccordionContent>
-            </AccordionItem>
-
             <AccordionItem value="will">
               <AccordionTrigger className="font-medium">
                 Will: How committed are you?
-                {!goal.will && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
               </AccordionTrigger>
               <AccordionContent>
                 <Textarea
@@ -509,7 +491,6 @@ const GoalPage = () => {
             <AccordionItem value="resources">
               <AccordionTrigger className="font-medium">
                 Resources: What support do you need?
-                {(!goal.resources || goal.resources.length === 0) && <Badge variant="muted" className="ml-2 text-xs">Empty</Badge>}
               </AccordionTrigger>
               <AccordionContent>
                 <ResourcesSection

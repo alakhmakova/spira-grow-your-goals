@@ -277,22 +277,6 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
             />
           </div>
 
-          {/* Options - Legacy text (collapsible for backwards compatibility) */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="options" className="text-base font-medium">
-                Additional notes about your options
-              </Label>
-            </div>
-            <Textarea
-              id="options"
-              placeholder="Any additional thoughts about your options..."
-              value={optionsText}
-              onChange={(e) => setOptionsText(e.target.value)}
-              rows={2}
-            />
-          </div>
-
           {/* Will */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
