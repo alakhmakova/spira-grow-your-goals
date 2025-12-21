@@ -191,17 +191,15 @@ export const CommentsSection = ({ goalId, comments, targets }: CommentsSectionPr
                   <span className="text-xs text-muted-foreground">
                     {format(comment.createdAt, "MMM d, yyyy 'at' HH:mm")}
                   </span>
-                  {!isReply && (
-                    <Button 
-                      variant="ghost" 
-                      size="icon-sm" 
-                      className="h-6 w-6"
-                      onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
-                      title="Reply"
-                    >
-                      <Reply className="h-3 w-3" />
-                    </Button>
-                  )}
+                  <Button 
+                    variant="ghost" 
+                    size="icon-sm" 
+                    className="h-6 w-6"
+                    onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+                    title="Reply"
+                  >
+                    <Reply className="h-3 w-3" />
+                  </Button>
                   <Button 
                     variant="ghost" 
                     size="icon-sm" 
