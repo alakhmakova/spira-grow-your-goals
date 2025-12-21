@@ -488,18 +488,15 @@ const GoalPage = () => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="resources">
-              <AccordionTrigger className="font-medium">
-                Resources: What support do you need?
-              </AccordionTrigger>
-              <AccordionContent>
-                <ResourcesSection
-                  resources={goal.resources || []}
-                  onUpdate={(resources) => updateGoal(goal.id, { resources })}
-                />
-              </AccordionContent>
-            </AccordionItem>
           </Accordion>
+
+          {/* Resources Section - standalone */}
+          <div className="mt-6">
+            <ResourcesSection
+              resources={goal.resources || []}
+              onUpdate={(resources) => updateGoal(goal.id, { resources })}
+            />
+          </div>
         </section>
 
         {/* Targets Section */}
