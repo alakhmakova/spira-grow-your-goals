@@ -193,7 +193,7 @@ export const OptionsSection = ({
     return getOptionPosition(index, total);
   };
 
-  // Drag handlers
+  // Drag handlers - mouse
   const handleMouseDown = useCallback((e: React.MouseEvent, optionId: string, currentPos: DragPosition) => {
     if (editingId) return;
     e.preventDefault();
@@ -231,7 +231,47 @@ export const OptionsSection = ({
     dragStart.current = null;
   }, []);
 
-  const handleOptionClick = useCallback((option: GoalOption) => {
+  // Touch handlers for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent, optionId: string, currentPos: DragPosition) => {
+    if (editingId) return;
+    const touch = e.touches[0];
+    setDraggingId(optionId);
+    hasDragged.current = false;
+    dragStart.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      initialPos: currentPos,
+    };
+  }, [editingId]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!draggingId || !dragStart.current) return;
+    
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - dragStart.current.x;
+    const deltaY = touch.clientY - dragStart.current.y;
+    
+    // Consider it a drag if moved more than 10px (higher threshold for touch)
+    if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+      hasDragged.current = true;
+    }
+    
+    setPositions(prev => ({
+      ...prev,
+      [draggingId]: {
+        x: dragStart.current!.initialPos.x + deltaX,
+        y: dragStart.current!.initialPos.y + deltaY,
+      },
+    }));
+  }, [draggingId]);
+
+  const handleTouchEnd = useCallback(() => {
+    setDraggingId(null);
+    dragStart.current = null;
+  }, []);
+
+  const handleOptionClick = useCallback((option: GoalOption, e?: React.MouseEvent | React.TouchEvent) => {
+    e?.stopPropagation();
     if (!hasDragged.current) {
       setSelectedOption(option);
       setShowOptionModal(true);
@@ -363,10 +403,12 @@ export const OptionsSection = ({
       {/* Mind Map Visualization - Radial Layout */}
       <div 
         ref={containerRef}
-        className="relative min-h-[420px] flex items-center justify-center select-none"
+        className="relative min-h-[420px] flex items-center justify-center select-none touch-none"
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Central goal node - clickable to edit */}
         <div 
@@ -450,6 +492,8 @@ export const OptionsSection = ({
                     !isEditing && "cursor-grab active:cursor-grabbing"
                   )}
                   onMouseDown={(e) => !isEditing && handleMouseDown(e, option.id, pos)}
+                  onTouchStart={(e) => !isEditing && handleTouchStart(e, option.id, pos)}
+                  onClick={(e) => !isEditing && handleOptionClick(option, e)}
                 >
                   {/* Active indicator */}
                   {isActive && (
@@ -489,10 +533,7 @@ export const OptionsSection = ({
                       </div>
                     </div>
                   ) : (
-                    <div
-                      onClick={() => handleOptionClick(option)}
-                      onMouseUp={() => handleOptionClick(option)}
-                    >
+                    <div>
                       <div className="flex items-start gap-1.5 mb-1">
                         <Lightbulb className={cn("h-4 w-4 flex-shrink-0 mt-0.5", colors.text)} />
                         <h4 className="font-semibold text-sm line-clamp-2">{option.name}</h4>
