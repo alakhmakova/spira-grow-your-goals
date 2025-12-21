@@ -341,7 +341,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                     {resource.type === "link" && (
                       <ExternalLink className="h-3 w-3 opacity-60" />
                     )}
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1">
                       {resource.type !== "document" && (
                         <button
                           onClick={(e) => startEdit(resource, e)}
