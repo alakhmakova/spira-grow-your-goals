@@ -71,6 +71,9 @@ export const OptionsSection = ({
   // Modal states
   const [selectedOption, setSelectedOption] = useState<GoalOption | null>(null);
   const [showOptionModal, setShowOptionModal] = useState(false);
+  const [isEditingInModal, setIsEditingInModal] = useState(false);
+  const [modalEditName, setModalEditName] = useState("");
+  const [modalEditDescription, setModalEditDescription] = useState("");
   const [showGoalNameModal, setShowGoalNameModal] = useState(false);
   const [editingGoalName, setEditingGoalName] = useState("");
   
@@ -702,70 +705,138 @@ export const OptionsSection = ({
       </AlertDialog>
 
       {/* Option Details Modal */}
-      <Dialog open={showOptionModal} onOpenChange={setShowOptionModal}>
+      <Dialog open={showOptionModal} onOpenChange={(open) => {
+        setShowOptionModal(open);
+        if (!open) {
+          setIsEditingInModal(false);
+        }
+      }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Lightbulb className="h-5 w-5 text-primary" />
-              {selectedOption?.name}
+              {isEditingInModal ? "Edit Option" : selectedOption?.name}
             </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            {selectedOption?.description ? (
-              <div>
-                <h4 className="text-sm font-medium text-muted-foreground mb-1">Description</h4>
-                <p className="text-sm">{selectedOption.description}</p>
+          
+          {isEditingInModal ? (
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Name</label>
+                <Input
+                  value={modalEditName}
+                  onChange={(e) => setModalEditName(e.target.value)}
+                  placeholder="Option name"
+                  autoFocus
+                />
               </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Description</label>
+                <Textarea
+                  value={modalEditDescription}
+                  onChange={(e) => setModalEditDescription(e.target.value)}
+                  placeholder="Description (optional)"
+                  rows={3}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4 py-4">
+              {selectedOption?.description ? (
+                <div>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-1">Description</h4>
+                  <p className="text-sm">{selectedOption.description}</p>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">No description provided.</p>
+              )}
+              {activeOptionId === selectedOption?.id && (
+                <Badge className="bg-success text-success-foreground">
+                  <Check className="h-3 w-3 mr-1" />
+                  Active Option
+                </Badge>
+              )}
+            </div>
+          )}
+          
+          <DialogFooter className="flex-row gap-2 sm:justify-start flex-wrap">
+            {isEditingInModal ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditingInModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (selectedOption && modalEditName.trim()) {
+                      onUpdate(
+                        options.map((o) =>
+                          o.id === selectedOption.id
+                            ? { ...o, name: modalEditName.trim(), description: modalEditDescription.trim() || undefined }
+                            : o
+                        )
+                      );
+                      setSelectedOption({
+                        ...selectedOption,
+                        name: modalEditName.trim(),
+                        description: modalEditDescription.trim() || undefined,
+                      });
+                      setIsEditingInModal(false);
+                    }
+                  }}
+                  disabled={!modalEditName.trim()}
+                >
+                  <Check className="h-4 w-4 mr-2" />
+                  Save
+                </Button>
+              </>
             ) : (
-              <p className="text-sm text-muted-foreground italic">No description provided.</p>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (selectedOption) {
+                      setModalEditName(selectedOption.name);
+                      setModalEditDescription(selectedOption.description || "");
+                      setIsEditingInModal(true);
+                    }
+                  }}
+                >
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (selectedOption) {
+                      onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
+                    }
+                  }}
+                >
+                  <Star className={cn("h-4 w-4 mr-2", activeOptionId === selectedOption?.id && "fill-current")} />
+                  {activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    if (selectedOption) {
+                      handleDelete(selectedOption.id);
+                      setShowOptionModal(false);
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              </>
             )}
-            {activeOptionId === selectedOption?.id && (
-              <Badge className="bg-success text-success-foreground">
-                <Check className="h-3 w-3 mr-1" />
-                Active Option
-              </Badge>
-            )}
-          </div>
-          <DialogFooter className="flex-row gap-2 sm:justify-start">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                if (selectedOption) {
-                  handleEdit(selectedOption);
-                  setShowOptionModal(false);
-                }
-              }}
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                if (selectedOption) {
-                  onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
-                  setShowOptionModal(false);
-                }
-              }}
-            >
-              <Star className={cn("h-4 w-4 mr-2", activeOptionId === selectedOption?.id && "fill-current")} />
-              {activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => {
-                if (selectedOption) {
-                  handleDelete(selectedOption.id);
-                  setShowOptionModal(false);
-                }
-              }}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
