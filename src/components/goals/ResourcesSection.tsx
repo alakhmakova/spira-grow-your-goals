@@ -131,7 +131,8 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
   const handleAdd = async () => {
     const newErrors: Record<string, string> = {};
 
-    if (!name.trim()) {
+    // Name is required for all types except email
+    if (resourceType !== "email" && !name.trim()) {
       newErrors.name = "Name is required";
     }
 
@@ -178,10 +179,13 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
       mimeType = file.type;
     }
 
+    // For email type, use the email as the name
+    const resourceName = resourceType === "email" ? email.trim() : name.trim();
+
     const newResource: Resource = {
       id: Date.now().toString(),
       type: resourceType,
-      name: name.trim(),
+      name: resourceName,
       url: resourceType === "link" ? url.trim() : undefined,
       email: resourceType === "email" ? email.trim() : undefined,
       content: resourceType === "text" ? content.trim() : undefined,
@@ -399,20 +403,22 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                   </SelectContent>
                 </Select>
 
-                <div className="space-y-2">
-                  <Input
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
-                    }}
-                    className={cn(errors.name && "border-destructive")}
-                  />
-                  {errors.name && (
-                    <p className="text-xs text-destructive">{errors.name}</p>
-                  )}
-                </div>
+                {resourceType !== "email" && (
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Name"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                        if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
+                      }}
+                      className={cn(errors.name && "border-destructive")}
+                    />
+                    {errors.name && (
+                      <p className="text-xs text-destructive">{errors.name}</p>
+                    )}
+                  </div>
+                )}
 
                 {resourceType === "link" && (
                   <div className="space-y-2">
