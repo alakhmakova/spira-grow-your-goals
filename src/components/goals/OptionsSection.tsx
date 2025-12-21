@@ -251,20 +251,21 @@ export const OptionsSection = ({
     if (!draggingId || !dragStart.current) return;
     
     const touch = e.touches[0];
-    const deltaX = touch.clientX - dragStart.current.x;
-    const deltaY = touch.clientY - dragStart.current.y;
+    const startRef = dragStart.current;
+    const deltaX = touch.clientX - startRef.x;
+    const deltaY = touch.clientY - startRef.y;
     
     // Consider it a drag if moved more than 10px (higher threshold for touch)
     if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
       hasDragged.current = true;
     }
     
+    const newX = startRef.initialPos.x + deltaX;
+    const newY = startRef.initialPos.y + deltaY;
+    
     setPositions(prev => ({
       ...prev,
-      [draggingId]: {
-        x: dragStart.current!.initialPos.x + deltaX,
-        y: dragStart.current!.initialPos.y + deltaY,
-      },
+      [draggingId]: { x: newX, y: newY },
     }));
   }, [draggingId]);
 
