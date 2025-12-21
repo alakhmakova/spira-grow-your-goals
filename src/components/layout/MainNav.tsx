@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Target, 
   Info, 
@@ -42,7 +42,20 @@ const infoSubLinks = [
 
 export const MainNav = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleInfoLinkClick = (href: string) => {
+    navigate(href);
+    // Scroll to element after navigation
+    setTimeout(() => {
+      const hash = href.split('#')[1];
+      if (hash) {
+        const element = document.getElementById(hash);
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -81,24 +94,20 @@ export const MainNav = () => {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link to="/info" className="flex items-center gap-2">
-                    <BookOpen className="h-4 w-4" />
-                    Overview
-                  </Link>
+                <DropdownMenuItem onClick={() => handleInfoLinkClick('/info')}>
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Overview
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {infoSubLinks.map((link) => (
-                  <DropdownMenuItem key={link.href} asChild>
-                    <Link to={link.href}>{link.label}</Link>
+                  <DropdownMenuItem key={link.href} onClick={() => handleInfoLinkClick(link.href)}>
+                    {link.label}
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/info#contacts" className="flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4" />
-                    Contacts
-                  </Link>
+                <DropdownMenuItem onClick={() => handleInfoLinkClick('/info#contacts')}>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Contacts
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
