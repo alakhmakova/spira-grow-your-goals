@@ -301,15 +301,15 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto scrollbar-thin">
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl">Create New Target</DialogTitle>
+          <DialogTitle className="font-display text-xl sm:text-2xl">Create New Target</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
+        <form onSubmit={handleSubmit} className="space-y-5 py-2 sm:py-4">
           {/* Target Name */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Label htmlFor="target-name" className="text-base font-medium leading-none">
                   How would you break this goal down into smaller pieces? <span className="text-destructive">*</span>
@@ -380,21 +380,21 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
             <RadioGroup
               value={type}
               onValueChange={(v) => setType(v as typeof type)}
-              className="grid grid-cols-3 gap-3"
+              className="grid grid-cols-3 gap-2 sm:gap-3"
             >
               <div className="flex-1">
                 <RadioGroupItem value="number" id="type-number" className="peer sr-only" />
                 <Label
                   htmlFor="type-number"
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[88px]",
+                    "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
                     type === "number" 
                       ? "border-primary bg-primary/5" 
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <NumberIcon className="h-6 w-6 mb-1 text-foreground" />
-                  <span className="text-sm font-medium text-center">Number</span>
+                  <NumberIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-foreground" />
+                  <span className="text-xs sm:text-sm font-medium text-center">Number</span>
                 </Label>
               </div>
               <div className="flex-1">
@@ -402,14 +402,14 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
                 <Label
                   htmlFor="type-success"
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[88px]",
+                    "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
                     type === "success" 
                       ? "border-primary bg-primary/5" 
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <ToggleIcon className="h-6 w-6 mb-1" />
-                  <span className="text-sm font-medium text-center">Done/Not Done</span>
+                  <ToggleIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
+                  <span className="text-xs sm:text-sm font-medium text-center">Done/Not Done</span>
                 </Label>
               </div>
               <div className="flex-1">
@@ -417,14 +417,14 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
                 <Label
                   htmlFor="type-tasks"
                   className={cn(
-                    "flex flex-col items-center justify-center p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[88px]",
+                    "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
                     type === "tasks" 
                       ? "border-primary bg-primary/5" 
                       : "border-muted hover:border-primary/50"
                   )}
                 >
-                  <LeavesIcon className="h-6 w-6 mb-1" />
-                  <span className="text-sm font-medium text-center">Tasks</span>
+                  <LeavesIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
+                  <span className="text-xs sm:text-sm font-medium text-center">Tasks</span>
                 </Label>
               </div>
             </RadioGroup>
@@ -432,8 +432,8 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
 
           {/* Number Type Fields */}
           {type === "number" && (
-            <div className="space-y-4 p-4 rounded-lg bg-muted/50">
-              <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-4 p-3 sm:p-4 rounded-lg bg-muted/50">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 <div className="space-y-2">
                   <div className="flex items-center gap-1 h-5">
                     <Label htmlFor="start-value" className="leading-none">

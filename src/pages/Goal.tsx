@@ -170,7 +170,7 @@ const GoalPage = () => {
     <Layout>
       {showConfetti && <Confetti />}
       
-      <div className="container py-8">
+      <div className="container py-4 sm:py-8 px-4 sm:px-6">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/goals" className="hover:text-foreground transition-colors">
@@ -183,15 +183,15 @@ const GoalPage = () => {
         </nav>
 
         {/* Goal Header Section */}
-        <section className="mb-8 pb-8 border-b">
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Progress Circle */}
-            <div className="flex-shrink-0">
+        <section className="mb-6 sm:mb-8 pb-6 sm:pb-8 border-b">
+          <div className="flex flex-col gap-4 sm:gap-6">
+            {/* Progress Circle - centered on mobile */}
+            <div className="flex justify-center lg:justify-start">
               <CircularProgress
                 value={goal.progress}
-                size={120}
-                strokeWidth={10}
-                labelClassName="text-2xl"
+                size={100}
+                strokeWidth={8}
+                labelClassName="text-xl sm:text-2xl"
                 className={goal.progress === 100 ? "animate-pulse-soft [&_circle:last-child]:stroke-success" : "[&_circle:last-child]:stroke-foreground"}
               />
             </div>
@@ -261,7 +261,7 @@ const GoalPage = () => {
               </div>
 
               {/* Meta info */}
-              <div className="flex flex-wrap items-center gap-4 mb-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4">
                 {/* Goal Type Selector */}
                 <Select
                   value={goal.goalType || "none"}

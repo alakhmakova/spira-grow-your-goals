@@ -105,7 +105,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl">Create New Goal</DialogTitle>
         </DialogHeader>
@@ -148,7 +148,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
           {/* Goal Type */}
           <div className="space-y-2">
             <Label className="text-base font-medium">Goal Type</Label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {(Object.keys(goalTypeConfig) as GoalType[]).map((type) => {
                 const config = goalTypeConfig[type];
                 const isNorthStarDisabled = type === "north-star" && hasNorthStar;
@@ -211,13 +211,13 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
 
           {/* Achievability */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <Label className="text-base font-medium">
                 On a scale of 1–10, how confident are you that this goal is achievable right now? <span className="text-destructive">*</span>
               </Label>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                  <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help flex-shrink-0" />
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   On a scale of 1–10, if an ideal situation to achieve this goal is 10, 
@@ -225,7 +225,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
                 </TooltipContent>
               </Tooltip>
             </div>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                 <button
                   key={num}
