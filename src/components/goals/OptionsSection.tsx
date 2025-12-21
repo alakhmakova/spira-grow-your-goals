@@ -613,6 +613,7 @@ export const OptionsSection = ({
                   !showAddForm && "cursor-grab active:cursor-grabbing"
                 )}
                 onMouseDown={(e) => !showAddForm && handleMouseDown(e, addButtonId, pos)}
+                onTouchStart={(e) => !showAddForm && handleTouchStart(e, addButtonId, pos)}
                 >
 
                   {showAddForm ? (
