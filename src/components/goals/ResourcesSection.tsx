@@ -131,8 +131,8 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
   const handleAdd = async () => {
     const newErrors: Record<string, string> = {};
 
-    // Name is required for all types except email
-    if (resourceType !== "email" && !name.trim()) {
+    // Name is required for all types except email and text
+    if (resourceType !== "email" && resourceType !== "text" && !name.trim()) {
       newErrors.name = "Name is required";
     }
 
@@ -179,8 +179,8 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
       mimeType = file.type;
     }
 
-    // For email type, use the email as the name
-    const resourceName = resourceType === "email" ? email.trim() : name.trim();
+    // For email type, use the email as the name; for text type, use the content as the name
+    const resourceName = resourceType === "email" ? email.trim() : resourceType === "text" ? content.trim() : name.trim();
 
     const newResource: Resource = {
       id: Date.now().toString(),
@@ -403,7 +403,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                   </SelectContent>
                 </Select>
 
-                {resourceType !== "email" && (
+                {resourceType !== "email" && resourceType !== "text" && (
                   <div className="space-y-2">
                     <Input
                       placeholder="Name"
