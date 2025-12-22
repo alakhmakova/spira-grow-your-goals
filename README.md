@@ -68,7 +68,9 @@ This application comes with 3 predefined goals. To customize them:
 2. Find the section marked `PREDEFINED GOALS (MOCK DATA)`
 3. Edit the goal names and details as needed
 
-For detailed instructions, see [CUSTOMIZATION.md](CUSTOMIZATION.md)
+**Detailed guides:**
+- 🇬🇧 English: [CUSTOMIZATION.md](CUSTOMIZATION.md)
+- 🇷🇺 Russian: [RUSSIAN-GUIDE.md](RUSSIAN-GUIDE.md)
 
 ## How can I deploy this project?
 
