@@ -499,10 +499,18 @@ export const useGoals = () => {
       }
     });
 
-    // Pin North Star to the top
-    const northStarGoals = result.filter(g => g.goalType === "north-star");
-    const otherGoals = result.filter(g => g.goalType !== "north-star");
-    result = [...northStarGoals, ...otherGoals];
+    // Sort by goal type priority: north-star → short-term → long-term → dream
+    const typePriority: Record<string, number> = {
+      "north-star": 0,
+      "short-term": 1,
+      "long-term": 2,
+      "dream": 3,
+    };
+    result.sort((a, b) => {
+      const priorityA = typePriority[a.goalType] ?? 4;
+      const priorityB = typePriority[b.goalType] ?? 4;
+      return priorityA - priorityB;
+    });
 
     return result;
   }, [goals, searchQuery, sortOption, filters]);
