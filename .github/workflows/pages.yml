@@ -22,3 +22,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          # Ensure a clean, single-commit history to avoid stale files
+          force_orphan: true
+          # Add .nojekyll automatically so assets are served correctly
+          enable_jekyll: true
+          # Remove old files before publishing
+          keep_files: false
