@@ -9,7 +9,7 @@ const mockGoals: Goal[] = [
     goalType: "north-star",
     actions: [
       { id: "a1", name: "I am reviewing a job/internship application from Anastasiya Lakhmakova" },
-      { id: "a2", name: "I have learned that Spira application to set, track and achieve goals using GROW coaching model exists" },
+      { id: "a2", name: "I have learned that the Spira application to set, track and achieve goals using GROW coaching model exists" },
       { id: "a3", name: "I know that Spira was created by Jensen yrkeshögskola student Anastasiya Lakhmakova as a pet project" },
     ],
     obstacles: [
@@ -27,7 +27,7 @@ const mockGoals: Goal[] = [
     resources: [
       { id: "r1", type: "email", name: "Developer Email", email: "anastasiya.lakhmakova@gmail.com" },
       { id: "r2", type: "link", name: "GitHub Repository", url: "https://github.com/alakhmakova/spira-grow-your-goals" },
-      { id: "r3", type: "text", name: "About Developer", content: "The developer of this Application is Jensen yrkeshögskola student Anastasiya Lakhmakova" },
+      { id: "r3", type: "text", name: "About Developer", content: "The developer of this application is Jensen yrkeshögskola student Anastasiya Lakhmakova" },
       { id: "r4", type: "picture", name: "Grades during education at Jensen", fileData: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdyYWRlczogRXhjZWxsZW50PC90ZXh0Pjwvc3ZnPg==", fileName: "grades.svg" },
       { id: "r5", type: "document", name: "CV Anastasiya Lakhmakova", fileData: "data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0ZpbHRlci9GbGF0ZURlY29kZT4+CnN0cmVhbQp4nDPQM1Qo5ypUMFAw0DMwslAwtTTVMzIxV7AwMdSzMDNUKErlCtdSyOMyVAgpSlXIyU9P5QIAcKkKqgplbmRzdHJlYW0KZW5kb2JqCgozIDAgb2JqCjU3CmVuZG9iagoKNSAwIG9iago8PAovQ29udGVudHMgMiAwIFIKL01lZGlhQm94WzAgMCA1OTUgODQyXQovUGFyZW50IDEgMCBSCi9SZXNvdXJjZXM8PAovRm9udDw8Cj4+Cj4+Ci9UeXBlL1BhZ2UKPj4KZW5kb2JqCgoxIDAgb2JqCjw8L0NvdW50IDEvS2lkc1s1IDAgUl0vVHlwZS9QYWdlcz4+CmVuZG9iagoKNCAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMSAwIFI+PgplbmRvYmoKCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDMxOCAwMDAwMCBuIAowMDAwMDAwMDE5IDAwMDAwIG4gCjAwMDAwMDAxNDQgMDAwMDAgbiAKMDAwMDAwMDM2NyAwMDAwMCBuIAowMDAwMDAwMTYzIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSA2L1Jvb3QgNCAwIFI+PgpzdGFydHhyZWYKNDE2CiUlRU9G", fileName: "CV_Anastasiya_Lakhmakova.pdf" },
     ],
