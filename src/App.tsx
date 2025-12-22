@@ -19,7 +19,7 @@ const App = () => (
       <GoalsProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/goals" element={<GoalsPage />} />
@@ -28,7 +28,7 @@ const App = () => (
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </GoalsProvider>
     </TooltipProvider>
   </QueryClientProvider>
