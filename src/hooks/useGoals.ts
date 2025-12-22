@@ -72,6 +72,7 @@ const mockGoals: Goal[] = [
         name: "Schedule an interview with Anastasiya Lakhmakova",
         type: "success",
         createdAt: new Date("2024-01-05"),
+        deadline: (() => { const d = new Date(); d.setDate(d.getDate() + 3); return d; })(),
         progress: 0,
         isCompleted: false,
       },
@@ -277,7 +278,7 @@ const mockComments: Comment[] = [
   {
     id: "c1",
     goalId: "1",
-    content: "Welcome to Spira! This goal will guide you through evaluating the application. Start by exploring the targets section below.",
+    content: "Welcome to Spira! This goal will guide you through evaluating the application. Start by exploring the targets section above — they outline the key steps for your evaluation.",
     author: "System",
     createdAt: new Date("2024-01-01"),
     isNote: false,
@@ -289,6 +290,24 @@ const mockComments: Comment[] = [
     author: "System",
     createdAt: new Date("2024-01-02"),
     isNote: false,
+  },
+  {
+    id: "c3",
+    goalId: "1",
+    targetId: "t2",
+    content: "Check the Resources section to find Anastasiya's email address for scheduling the interview.",
+    author: "Schedule an interview with Anastasiya Lakhmakova",
+    createdAt: new Date("2024-01-01"),
+    isNote: true,
+  },
+  {
+    id: "c4",
+    goalId: "1",
+    targetId: "t1",
+    content: "Check the Resources section for the GitHub repository link to review the codebase.",
+    author: "Review code repositories to evaluate implementation quality",
+    createdAt: new Date("2024-01-01"),
+    isNote: true,
   },
 ];
 
