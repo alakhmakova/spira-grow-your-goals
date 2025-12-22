@@ -20,13 +20,13 @@ Look for the section with this header comment:
 
 ### The Three Predefined Goals
 
-1. **Goal 1: Public Speaking** (Lines ~19-60)
+1. **Goal 1: Public Speaking** (Lines ~20-60)
    - Default name: "I want to improve my public speaking skills by delivering a 10-minute presentation at work"
    
-2. **Goal 2: Learn Swedish** (Lines ~61-84)
+2. **Goal 2: Learn Swedish** (Lines ~62-84)
    - Default name: "Learn Swedish to B1 level"
    
-3. **Goal 3: Run a Marathon** (Lines ~85-91)
+3. **Goal 3: Run a Marathon** (Lines ~86-94)
    - Default name: "Run a marathon"
 
 ### How to Modify
