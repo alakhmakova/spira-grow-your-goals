@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
   Plus,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -64,10 +65,10 @@ const resourceTypeLabels: Record<ResourceType, string> = {
 
 const resourceTypeColors: Record<ResourceType, string> = {
   link: "bg-primary/15 text-primary-dark border-primary/40 hover:bg-primary/25",
-  email: "bg-warning/15 text-warning-foreground border-warning/40 hover:bg-warning/25",
-  text: "bg-forest/15 text-forest border-forest/40 hover:bg-forest/25",
-  picture: "bg-accent/15 text-accent-foreground border-accent/40 hover:bg-accent/25",
-  document: "bg-secondary text-secondary-foreground border-border hover:bg-secondary/80",
+  email: "bg-amber-800 text-amber-100 border-amber-700 hover:bg-amber-700",
+  text: "bg-emerald-800 text-emerald-100 border-emerald-700 hover:bg-emerald-700",
+  picture: "bg-violet-800 text-violet-100 border-violet-700 hover:bg-violet-700",
+  document: "bg-slate-700 text-slate-100 border-slate-600 hover:bg-slate-600",
 };
 
 const validateEmail = (email: string) => {
@@ -84,7 +85,7 @@ const validateUrl = (url: string) => {
 };
 
 export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false); // collapsed by default
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [editName, setEditName] = useState("");
@@ -131,8 +132,8 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
   const handleAdd = async () => {
     const newErrors: Record<string, string> = {};
 
-    // Name is required for all types except email and text
-    if (resourceType !== "email" && resourceType !== "text" && !name.trim()) {
+    // Name is required for all types
+    if (!name.trim()) {
       newErrors.name = "Name is required";
     }
 
@@ -152,12 +153,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
       }
     }
 
-    if (resourceType === "text") {
-      if (!content.trim()) {
-        newErrors.content = "Text content is required";
-      }
-    }
-
+    // Text content is optional
     if ((resourceType === "picture" || resourceType === "document") && !file) {
       newErrors.file = "Please select a file";
     }
@@ -179,16 +175,13 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
       mimeType = file.type;
     }
 
-    // For email type, use the email as the name; for text type, use the content as the name
-    const resourceName = resourceType === "email" ? email.trim() : resourceType === "text" ? content.trim() : name.trim();
-
     const newResource: Resource = {
       id: Date.now().toString(),
       type: resourceType,
-      name: resourceName,
+      name: name.trim(),
       url: resourceType === "link" ? url.trim() : undefined,
       email: resourceType === "email" ? email.trim() : undefined,
-      content: resourceType === "text" ? content.trim() : undefined,
+      content: resourceType === "text" ? content.trim() || undefined : undefined,
       fileData: file ? fileData : undefined,
       fileName: file ? file.name : undefined,
       fileSize: file ? file.size : undefined,
@@ -227,25 +220,19 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
 
     const newErrors: Record<string, string> = {};
 
+    // Name is required for all types
+    if (!editName.trim()) {
+      newErrors.editName = "Name is required";
+    }
+
     // Validate based on resource type
     if (editingResource.type === "link") {
-      if (!editName.trim()) {
-        newErrors.editName = "Name is required";
-      }
       if (!validateUrl(editUrl)) {
         newErrors.editUrl = "Invalid URL format";
       }
     } else if (editingResource.type === "email") {
       if (!validateEmail(editEmail)) {
         newErrors.editEmail = "Invalid email format";
-      }
-    } else if (editingResource.type === "text") {
-      if (!editContent.trim()) {
-        newErrors.editContent = "Content is required";
-      }
-    } else if (editingResource.type === "picture") {
-      if (!editName.trim()) {
-        newErrors.editName = "Name is required";
       }
     }
 
@@ -259,9 +246,9 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
         if (r.id !== editingResource.id) return r;
         
         if (r.type === "email") {
-          return { ...r, name: editEmail.trim(), email: editEmail.trim() };
+          return { ...r, name: editName.trim(), email: editEmail.trim() };
         } else if (r.type === "text") {
-          return { ...r, name: editContent.trim(), content: editContent.trim() };
+          return { ...r, name: editName.trim(), content: editContent.trim() || undefined };
         } else {
           return {
             ...r,
@@ -273,6 +260,15 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
     );
     setEditingResource(null);
     setErrors({});
+  };
+
+  const copyToClipboard = async (text: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   };
 
   const downloadFile = (resource: Resource) => {
@@ -324,6 +320,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
             <div className="flex flex-wrap gap-2 mb-3">
               {resources.map((resource) => {
                 const Icon = resourceTypeIcons[resource.type];
+                const copyableContent = resource.email || resource.content || resource.url;
 
                 return (
                   <button
@@ -342,6 +339,16 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                       <ExternalLink className="h-3 w-3 opacity-60" />
                     )}
                     <div className="flex items-center gap-1">
+                      {/* Copy button for email, text, link */}
+                      {copyableContent && (
+                        <button
+                          onClick={(e) => copyToClipboard(copyableContent, e)}
+                          className="p-1 hover:bg-background/50 rounded"
+                          title="Copy"
+                        >
+                          <Copy className="h-3 w-3" />
+                        </button>
+                      )}
                       {resource.type !== "document" && (
                         <button
                           onClick={(e) => startEdit(resource, e)}
@@ -402,22 +409,21 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                   </SelectContent>
                 </Select>
 
-                {resourceType !== "email" && resourceType !== "text" && (
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Name"
-                      value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
-                      }}
-                      className={cn(errors.name && "border-destructive")}
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-destructive">{errors.name}</p>
-                    )}
-                  </div>
-                )}
+                {/* Name field - always required */}
+                <div className="space-y-2">
+                  <Input
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
+                    }}
+                    className={cn(errors.name && "border-destructive")}
+                  />
+                  {errors.name && (
+                    <p className="text-xs text-destructive">{errors.name}</p>
+                  )}
+                </div>
 
                 {resourceType === "link" && (
                   <div className="space-y-2">
@@ -457,7 +463,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                 {resourceType === "text" && (
                   <div className="space-y-2">
                     <Textarea
-                      placeholder="Enter text content..."
+                      placeholder="Enter text content (optional)..."
                       value={content}
                       onChange={(e) => {
                         setContent(e.target.value);
@@ -465,11 +471,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                           setErrors((prev) => ({ ...prev, content: "" }));
                       }}
                       rows={3}
-                      className={cn(errors.content && "border-destructive")}
                     />
-                    {errors.content && (
-                      <p className="text-xs text-destructive">{errors.content}</p>
-                    )}
                   </div>
                 )}
 
@@ -645,28 +647,55 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
               )}
 
               {editingResource.type === "email" && (
-                <div className="space-y-2">
-                  <Label>Email</Label>
-                  <Input
-                    value={editEmail}
-                    onChange={(e) => setEditEmail(e.target.value)}
-                    className={cn(errors.editEmail && "border-destructive")}
-                  />
-                  {errors.editEmail && (
-                    <p className="text-xs text-destructive">{errors.editEmail}</p>
-                  )}
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label>Name</Label>
+                    <Input
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className={cn(errors.editName && "border-destructive")}
+                    />
+                    {errors.editName && (
+                      <p className="text-xs text-destructive">{errors.editName}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Email</Label>
+                    <Input
+                      value={editEmail}
+                      onChange={(e) => setEditEmail(e.target.value)}
+                      className={cn(errors.editEmail && "border-destructive")}
+                    />
+                    {errors.editEmail && (
+                      <p className="text-xs text-destructive">{errors.editEmail}</p>
+                    )}
+                  </div>
+                </>
               )}
 
               {editingResource.type === "text" && (
-                <div className="space-y-2">
-                  <Label>Content</Label>
-                  <Textarea
-                    value={editContent}
-                    onChange={(e) => setEditContent(e.target.value)}
-                    rows={4}
-                  />
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label>Name</Label>
+                    <Input
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className={cn(errors.editName && "border-destructive")}
+                    />
+                    {errors.editName && (
+                      <p className="text-xs text-destructive">{errors.editName}</p>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Content (optional)</Label>
+                    <Textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      rows={4}
+                      placeholder="Add additional text content..."
+                    />
+                  </div>
+                </>
               )}
 
               {editingResource.type === "picture" && (

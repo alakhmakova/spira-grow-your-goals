@@ -89,7 +89,8 @@ const GoalPage = () => {
   const [editingName, setEditingName] = useState(false);
   const [tempName, setTempName] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(["reality", "goalOptions", "options", "will", "resources"]);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]); // collapsed by default
+  const [growWarningDismissed, setGrowWarningDismissed] = useState(false);
 
   // Filter targets by active option
   const filteredTargets = useMemo(() => {
@@ -412,15 +413,18 @@ const GoalPage = () => {
             )}
           </h2>
 
-          {hasEmptyGrowFields && (
+          {hasEmptyGrowFields && !growWarningDismissed && (
             <div className="flex items-center gap-2 p-3 rounded-lg bg-warning/10 border border-warning/20 mb-4 text-sm">
               <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0" />
-              <p>
+              <p className="flex-1">
                 Working with all stages of the GROW model helps achieve your goal more effectively.
                 <Link to="/info#grow-model" className="text-primary hover:underline ml-1">
                   Learn more
                 </Link>
               </p>
+              <Button variant="ghost" size="sm" onClick={() => setGrowWarningDismissed(true)}>
+                Dismiss
+              </Button>
             </div>
           )}
 
@@ -445,9 +449,8 @@ const GoalPage = () => {
                 <div className="flex items-center gap-2">
                   <Lightbulb className="h-4 w-4" />
                   Options: What strategies could you use?
+                  {activeOption && <Badge variant="success" className="text-xs">Active option: {activeOption.name}</Badge>}
                 </div>
-                
-                {activeOption && <Badge variant="success" className="ml-2 text-xs">Active: {activeOption.name}</Badge>}
               </AccordionTrigger>
               <AccordionContent>
                 <OptionsSection
@@ -476,7 +479,7 @@ const GoalPage = () => {
 
             <AccordionItem value="will">
               <AccordionTrigger className="font-medium">
-                Will: How committed are you?
+                Why is this goal important?
               </AccordionTrigger>
               <AccordionContent>
                 <Textarea
