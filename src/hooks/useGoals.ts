@@ -1,8 +1,22 @@
 import { useState, useCallback, useMemo } from "react";
 import { Goal, Target, Task, Comment, SortOption, GoalFilters } from "@/types/goal";
 
-// Mock data for demonstration
+// ============================================================================
+// PREDEFINED GOALS (MOCK DATA)
+// ============================================================================
+// This section contains 3 predefined goals that appear when users first
+// open the application. You can modify the content of these goals below:
+// 
+// Goal 1: Public Speaking - Lines 10-46
+// Goal 2: Learn Swedish - Lines 47-69  
+// Goal 3: Run a Marathon - Lines 70-79
+//
+// To change goal names, edit the "name" field for each goal.
+// To change goal details, edit any of the fields (reality, options, will, resources, etc.)
+// ============================================================================
+
 const mockGoals: Goal[] = [
+  // Goal 1: Public Speaking
   {
     id: "1",
     name: "I want to improve my public speaking skills by delivering a 10-minute presentation at work",
@@ -44,6 +58,7 @@ const mockGoals: Goal[] = [
       },
     ],
   },
+  // Goal 2: Learn Swedish
   {
     id: "2",
     name: "Learn Swedish to B1 level",
@@ -67,6 +82,7 @@ const mockGoals: Goal[] = [
       },
     ],
   },
+  // Goal 3: Run a Marathon
   {
     id: "3",
     name: "Run a marathon",

@@ -60,6 +60,16 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## How to customize predefined goals?
+
+This application comes with 3 predefined goals. To customize them:
+
+1. Open the file: `src/hooks/useGoals.ts`
+2. Find the section marked `PREDEFINED GOALS (MOCK DATA)`
+3. Edit the goal names and details as needed
+
+For detailed instructions, see [CUSTOMIZATION.md](CUSTOMIZATION.md)
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
