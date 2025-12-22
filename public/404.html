@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting…</title>
+    <meta http-equiv="refresh" content="0;url=/spira-grow-your-goals/" />
+    <script>
+      (function () {
+        var base = "/spira-grow-your-goals";
+        var path = location.pathname.replace(base, "");
+        // If user hits a deep link like /spira-grow-your-goals/goal/123
+        // send them to the hash-based route so the SPA can handle it
+        if (path && path !== "/") {
+          var target = base + "/#/" + path.replace(/^\//, "");
+          location.replace(target + location.search + location.hash);
+        } else {
+          // Otherwise just go to the app root
+          location.replace(base + "/#/" + location.search + location.hash);
+        }
+      })();
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0;url=/spira-grow-your-goals/" />
+    </noscript>
+  </head>
+  <body></body>
+</html>
