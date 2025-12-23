@@ -402,11 +402,11 @@ const GoalPage = () => {
       </div>
 
       {/* Wave separator between Header and GROW Details/Targets */}
-      <div className="w-full overflow-hidden bg-background">
+      <div className="w-full overflow-hidden bg-background -mb-px">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1440 320"
-          className="w-full h-auto"
+          className="w-full h-auto block"
           preserveAspectRatio="none"
         >
           <path
@@ -573,12 +573,12 @@ const GoalPage = () => {
       </div>
 
       {/* Rounded separator between Targets and Comments */}
-      <div className="w-full overflow-hidden" style={{ backgroundColor: '#133844' }}>
+      <div className="w-full overflow-hidden -mt-px -mb-px" style={{ backgroundColor: '#133844' }}>
         <svg
           viewBox="0 0 1440 60"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto"
+          className="w-full h-auto block"
           preserveAspectRatio="none"
         >
           <path
