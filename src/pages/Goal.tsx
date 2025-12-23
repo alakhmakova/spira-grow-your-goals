@@ -402,13 +402,26 @@ const GoalPage = () => {
       </div>
 
       {/* Wave separator between Header and GROW Details/Targets */}
-      <WaveSeparator variant="primary" />
+      <div className="w-full overflow-hidden bg-background">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          className="w-full h-auto"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="#133844"
+            fillOpacity="1"
+            d="M0,160L80,176C160,192,320,224,480,197.3C640,171,800,85,960,58.7C1120,32,1280,64,1360,80L1440,96L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
+          />
+        </svg>
+      </div>
 
       {/* Section 2: GROW Details & Targets - on primary background */}
-      <div className="bg-primary text-primary-foreground py-8 sm:py-12">
+      <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[50px]" style={{ backgroundColor: '#133844' }}>
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
-          <div className="mb-8">
+          <div className="mb-8 pt-8 sm:pt-12">
             <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
               Goal Details
               {hasEmptyGrowFields && (
@@ -502,7 +515,7 @@ const GoalPage = () => {
           </div>
 
           {/* Targets */}
-          <div>
+          <div className="rounded-lg p-6" style={{ backgroundColor: '#d7fdf5' }}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-xl font-semibold flex items-center gap-2">
                 <TargetIcon className="h-5 w-5" />
@@ -560,7 +573,7 @@ const GoalPage = () => {
       </div>
 
       {/* Rounded separator between Targets and Comments */}
-      <div className="w-full overflow-hidden bg-primary">
+      <div className="w-full overflow-hidden" style={{ backgroundColor: '#133844' }}>
         <svg
           viewBox="0 0 1440 60"
           fill="none"
