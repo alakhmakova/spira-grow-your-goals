@@ -169,11 +169,11 @@ export const OptionsSection = ({
   };
 
   const optionColors = [
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
+    { bg: "bg-sky-100/80", border: "border-sky-400/50", text: "text-sky-700", glow: "shadow-sky-400/20" },
+    { bg: "bg-violet-100/80", border: "border-violet-400/50", text: "text-violet-700", glow: "shadow-violet-400/20" },
+    { bg: "bg-amber-100/80", border: "border-amber-400/50", text: "text-amber-700", glow: "shadow-amber-400/20" },
+    { bg: "bg-teal-100/80", border: "border-teal-400/50", text: "text-teal-700", glow: "shadow-teal-400/20" },
+    { bg: "bg-pink-100/80", border: "border-pink-400/50", text: "text-pink-700", glow: "shadow-pink-400/20" },
   ];
 
   // Calculate positions for radial layout

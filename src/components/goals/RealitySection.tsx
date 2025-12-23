@@ -130,18 +130,18 @@ const RealityList = ({
 
   const colors = {
     actions: {
-      bg: "bg-primary/10",
-      border: "border-primary/30",
-      text: "text-primary",
-      hoverBg: "hover:bg-primary/15",
-      buttonBg: "bg-primary/20 hover:bg-primary/30",
+      bg: "bg-emerald-100/80",
+      border: "border-emerald-400/50",
+      text: "text-emerald-700",
+      hoverBg: "hover:bg-emerald-200/60",
+      buttonBg: "bg-emerald-200/80 hover:bg-emerald-300/60",
     },
     obstacles: {
-      bg: "bg-destructive/10",
-      border: "border-destructive/30",
-      text: "text-destructive",
-      hoverBg: "hover:bg-destructive/15",
-      buttonBg: "bg-destructive/20 hover:bg-destructive/30",
+      bg: "bg-rose-100/80",
+      border: "border-rose-400/50",
+      text: "text-rose-700",
+      hoverBg: "hover:bg-rose-200/60",
+      buttonBg: "bg-rose-200/80 hover:bg-rose-300/60",
     },
   };
 

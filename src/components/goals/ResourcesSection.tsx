@@ -64,11 +64,11 @@ const resourceTypeLabels: Record<ResourceType, string> = {
 };
 
 const resourceTypeColors: Record<ResourceType, string> = {
-  link: "bg-primary/15 text-primary-dark border-primary/40 hover:bg-primary/25",
-  email: "bg-amber-800 text-amber-100 border-amber-700 hover:bg-amber-700",
-  text: "bg-emerald-800 text-emerald-100 border-emerald-700 hover:bg-emerald-700",
-  picture: "bg-violet-800 text-violet-100 border-violet-700 hover:bg-violet-700",
-  document: "bg-slate-700 text-slate-100 border-slate-600 hover:bg-slate-600",
+  link: "bg-sky-600 text-sky-50 border-sky-500 hover:bg-sky-500",
+  email: "bg-indigo-600 text-indigo-50 border-indigo-500 hover:bg-indigo-500",
+  text: "bg-emerald-600 text-emerald-50 border-emerald-500 hover:bg-emerald-500",
+  picture: "bg-violet-600 text-violet-50 border-violet-500 hover:bg-violet-500",
+  document: "bg-slate-600 text-slate-50 border-slate-500 hover:bg-slate-500",
 };
 
 const validateEmail = (email: string) => {
