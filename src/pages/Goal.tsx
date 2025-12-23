@@ -18,6 +18,7 @@ import {
   Clock,
   Lightbulb,
 } from "lucide-react";
+import { WaveSeparator, WaveSectionWrapper } from "@/components/ui/wave-separator";
 import { Layout } from "@/components/layout/Layout";
 import { useGoalsContext } from "@/context/GoalsContext";
 import { Button } from "@/components/ui/button";
@@ -171,22 +172,23 @@ const GoalPage = () => {
     <Layout>
       {showConfetti && <Confetti />}
       
-      <div className="container py-4 sm:py-8 px-4 sm:px-6">
-        {/* Breadcrumbs */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link to="/goals" className="hover:text-foreground transition-colors">
-            All Goals
-          </Link>
-          <ChevronRight className="h-4 w-4" />
-          <span className="text-foreground font-medium truncate max-w-[200px]">
-            {goal.name}
-          </span>
-        </nav>
+      {/* Section 1: Goal Header & Details - on background */}
+      <div className="bg-background">
+        <div className="container py-4 sm:py-8 px-4 sm:px-6">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+            <Link to="/goals" className="hover:text-foreground transition-colors">
+              All Goals
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-foreground font-medium truncate max-w-[200px]">
+              {goal.name}
+            </span>
+          </nav>
 
-        {/* Goal Header Section */}
-        <section className="mb-6 sm:mb-8 pb-6 sm:pb-8 border-b">
-          <div className="flex flex-col gap-4 sm:gap-6">
-            {/* Progress Circle - centered on mobile */}
+          {/* Goal Header */}
+          <div className="flex flex-col gap-4 sm:gap-6 mb-6">
+            {/* Progress Circle */}
             <div className="flex justify-center lg:justify-start">
               <CircularProgress
                 value={goal.progress}
@@ -312,7 +314,7 @@ const GoalPage = () => {
                   </SelectContent>
                 </Select>
 
-                {/* Achievability - Clickable to edit */}
+                {/* Achievability */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <button
@@ -320,7 +322,6 @@ const GoalPage = () => {
                         "flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all",
                         getAchievabilityColor(goal.achievability)
                       )}
-                      title="Click to change achievability"
                     >
                       <Gauge className="h-4 w-4" />
                       <span className="font-semibold">{goal.achievability}/10</span>
@@ -344,8 +345,6 @@ const GoalPage = () => {
                           </Button>
                         ))}
                       </div>
-                      
-                      {/* History button */}
                       <div className="pt-2 border-t">
                         <AchievabilityHistory 
                           history={goal.achievabilityHistory || []} 
@@ -362,13 +361,10 @@ const GoalPage = () => {
                   <span>Created {format(goal.createdAt, "MMM d, yyyy")}</span>
                 </div>
                 
-                {/* Due Date - Clickable to change */}
+                {/* Due Date */}
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button
-                      className="flex items-center gap-2 text-sm text-primary hover:underline cursor-pointer"
-                      title="Click to change due date"
-                    >
+                    <button className="flex items-center gap-2 text-sm text-primary hover:underline cursor-pointer">
                       <Calendar className="h-4 w-4" />
                       <span>{goal.dueDate ? `Due ${format(goal.dueDate, "MMM d, yyyy")}` : "Set due date"}</span>
                     </button>
@@ -402,171 +398,180 @@ const GoalPage = () => {
               )}
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
-        {/* GROW Description Section */}
-        <section className="mb-8 pb-8 border-b">
-          <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
-            Goal Details
-            {hasEmptyGrowFields && (
-              <Badge variant="warning" className="text-xs">Incomplete</Badge>
+      {/* Wave separator between Header and GROW Details/Targets */}
+      <WaveSeparator variant="primary" />
+
+      {/* Section 2: GROW Details & Targets - on primary background */}
+      <div className="bg-primary text-primary-foreground py-8 sm:py-12">
+        <div className="container px-4 sm:px-6">
+          {/* GROW Description Section */}
+          <div className="mb-8">
+            <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+              Goal Details
+              {hasEmptyGrowFields && (
+                <Badge variant="warning" className="text-xs">Incomplete</Badge>
+              )}
+            </h2>
+
+            {hasEmptyGrowFields && !growWarningDismissed && (
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-primary-foreground/10 border border-primary-foreground/20 mb-4 text-sm">
+                <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+                <p className="flex-1">
+                  Working with all stages of the GROW model helps achieve your goal more effectively.
+                  <Link to="/info#grow-model" className="text-primary-foreground/80 hover:text-primary-foreground underline ml-1">
+                    Learn more
+                  </Link>
+                </p>
+                <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setGrowWarningDismissed(true)}>
+                  Dismiss
+                </Button>
+              </div>
             )}
-          </h2>
 
-          {hasEmptyGrowFields && !growWarningDismissed && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-warning/10 border border-warning/20 mb-4 text-sm">
-              <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0" />
-              <p className="flex-1">
-                Working with all stages of the GROW model helps achieve your goal more effectively.
-                <Link to="/info#grow-model" className="text-primary hover:underline ml-1">
-                  Learn more
-                </Link>
-              </p>
-              <Button variant="ghost" size="sm" onClick={() => setGrowWarningDismissed(true)}>
-                Dismiss
+            <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections} className="space-y-2">
+              <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
+                <AccordionTrigger className="font-medium text-primary-foreground">
+                  Reality: Actions & Obstacles
+                </AccordionTrigger>
+                <AccordionContent className="space-y-4 text-primary-foreground">
+                  <RealitySection
+                    actions={goal.actions || []}
+                    obstacles={goal.obstacles || []}
+                    onUpdateActions={(actions) => updateGoal(goal.id, { actions })}
+                    onUpdateObstacles={(obstacles) => updateGoal(goal.id, { obstacles })}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
+                <AccordionTrigger className="font-medium text-primary-foreground">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4" />
+                    Options: What strategies could you use?
+                    {activeOption && <Badge variant="success" className="text-xs">Active option: {activeOption.name}</Badge>}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-primary-foreground">
+                  <OptionsSection
+                    options={goal.goalOptions || []}
+                    activeOptionId={goal.activeOptionId}
+                    goalName={goal.name}
+                    onUpdate={(options) => updateGoal(goal.id, { goalOptions: options })}
+                    onSetActiveOption={(optionId) => updateGoal(goal.id, { activeOptionId: optionId })}
+                    existingTargetsCount={goal.targets.filter(t => !t.optionId).length}
+                    onBindTargetsToOption={(optionId) => {
+                      const updatedTargets = goal.targets.map(t => 
+                        !t.optionId ? { ...t, optionId } : t
+                      );
+                      updateGoal(goal.id, { targets: updatedTargets });
+                    }}
+                    onDeleteUnboundTargets={() => {
+                      const updatedTargets = goal.targets.filter(t => t.optionId);
+                      updateGoal(goal.id, { targets: updatedTargets });
+                    }}
+                    onGoalNameChange={(name) => updateGoal(goal.id, { name })}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
+                <AccordionTrigger className="font-medium text-primary-foreground">
+                  Why is this goal important?
+                </AccordionTrigger>
+                <AccordionContent className="text-primary-foreground">
+                  <Textarea
+                    value={goal.will || ""}
+                    onChange={(e) => updateGoal(goal.id, { will: e.target.value })}
+                    placeholder="Describe your commitment and motivation..."
+                    className="min-h-[100px] resize-y bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            {/* Resources Section */}
+            <div className="mt-6">
+              <ResourcesSection
+                resources={goal.resources || []}
+                onUpdate={(resources) => updateGoal(goal.id, { resources })}
+              />
+            </div>
+          </div>
+
+          {/* Targets */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-display text-xl font-semibold flex items-center gap-2">
+                <TargetIcon className="h-5 w-5" />
+                Targets
+                <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">{filteredTargets.length}</Badge>
+                {activeOption && <Badge variant="outline" className="text-xs border-primary-foreground/30">{activeOption.name}</Badge>}
+              </h2>
+              <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                <Plus className="h-4 w-4" />
+                New Target
               </Button>
             </div>
-          )}
 
-          <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections}>
-            <AccordionItem value="reality">
-              <AccordionTrigger className="font-medium">
-                Reality: Actions & Obstacles
-              </AccordionTrigger>
-              <AccordionContent className="space-y-4">
-                {/* Actions & Obstacles */}
-                <RealitySection
-                  actions={goal.actions || []}
-                  obstacles={goal.obstacles || []}
-                  onUpdateActions={(actions) => updateGoal(goal.id, { actions })}
-                  onUpdateObstacles={(obstacles) => updateGoal(goal.id, { obstacles })}
-                />
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="goalOptions">
-              <AccordionTrigger className="font-medium">
-                <div className="flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4" />
-                  Options: What strategies could you use?
-                  {activeOption && <Badge variant="success" className="text-xs">Active option: {activeOption.name}</Badge>}
-                </div>
-              </AccordionTrigger>
-              <AccordionContent>
-                <OptionsSection
-                  options={goal.goalOptions || []}
-                  activeOptionId={goal.activeOptionId}
-                  goalName={goal.name}
-                  onUpdate={(options) => updateGoal(goal.id, { goalOptions: options })}
-                  onSetActiveOption={(optionId) => updateGoal(goal.id, { activeOptionId: optionId })}
-                  existingTargetsCount={goal.targets.filter(t => !t.optionId).length}
-                  onBindTargetsToOption={(optionId) => {
-                    // Bind all unbound targets to this option
-                    const updatedTargets = goal.targets.map(t => 
-                      !t.optionId ? { ...t, optionId } : t
-                    );
-                    updateGoal(goal.id, { targets: updatedTargets });
-                  }}
-                  onDeleteUnboundTargets={() => {
-                    // Delete all unbound targets
-                    const updatedTargets = goal.targets.filter(t => t.optionId);
-                    updateGoal(goal.id, { targets: updatedTargets });
-                  }}
-                  onGoalNameChange={(name) => updateGoal(goal.id, { name })}
-                />
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="will">
-              <AccordionTrigger className="font-medium">
-                Why is this goal important?
-              </AccordionTrigger>
-              <AccordionContent>
-                <Textarea
-                  value={goal.will || ""}
-                  onChange={(e) => updateGoal(goal.id, { will: e.target.value })}
-                  placeholder="Describe your commitment and motivation..."
-                  className="min-h-[100px] resize-y"
-                />
-              </AccordionContent>
-            </AccordionItem>
-
-          </Accordion>
-
-          {/* Resources Section - standalone */}
-          <div className="mt-6">
-            <ResourcesSection
-              resources={goal.resources || []}
-              onUpdate={(resources) => updateGoal(goal.id, { resources })}
-            />
-          </div>
-        </section>
-
-        {/* Targets Section */}
-        <section className="mb-8 pb-8 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-xl font-semibold flex items-center gap-2">
-              <TargetIcon className="h-5 w-5 text-primary" />
-              Targets
-              <Badge variant="muted">{filteredTargets.length}</Badge>
-              {activeOption && <Badge variant="outline" className="text-xs">{activeOption.name}</Badge>}
-            </h2>
-            <Button onClick={() => setShowCreateTarget(true)} variant="nature" size="sm" className="gap-2">
-              <Plus className="h-4 w-4" />
-              New Target
-            </Button>
-          </div>
-
-          {filteredTargets.length === 0 ? (
-            <Card variant="nature" className="text-center py-8">
-              <CardContent>
-                <TargetIcon className="h-12 w-12 text-primary/40 mx-auto mb-4" />
-                <h3 className="font-display text-lg font-semibold mb-2">No targets yet</h3>
-                <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                  Break down your goal into measurable targets. Without targets, 
-                  your goal lacks the "Will" part of the GROW model.
-                </p>
-                <Button onClick={() => setShowCreateTarget(true)} variant="nature" className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Create your first target
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              <div className="space-y-3">
-                {filteredTargets.map((target, index) => (
-                  <TargetCard 
-                    key={target.id} 
-                    target={target} 
-                    goalId={goal.id}
-                    goalOptions={goal.goalOptions || []}
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  />
-                ))}
-              </div>
-              
-              {filteredTargets.length > 3 && (
-                <div className="mt-4 flex justify-center">
-                  <Button onClick={() => setShowCreateTarget(true)} variant="soft" size="sm" className="gap-2">
+            {filteredTargets.length === 0 ? (
+              <Card className="text-center py-8 bg-primary-foreground/10 border-primary-foreground/20">
+                <CardContent>
+                  <TargetIcon className="h-12 w-12 opacity-40 mx-auto mb-4" />
+                  <h3 className="font-display text-lg font-semibold mb-2">No targets yet</h3>
+                  <p className="opacity-80 mb-4 max-w-md mx-auto">
+                    Break down your goal into measurable targets. Without targets, 
+                    your goal lacks the "Will" part of the GROW model.
+                  </p>
+                  <Button onClick={() => setShowCreateTarget(true)} variant="secondary" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90">
                     <Plus className="h-4 w-4" />
-                    Add another target
+                    Create your first target
                   </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                <div className="space-y-3">
+                  {filteredTargets.map((target, index) => (
+                    <TargetCard 
+                      key={target.id} 
+                      target={target} 
+                      goalId={goal.id}
+                      goalOptions={goal.goalOptions || []}
+                      style={{ animationDelay: `${index * 0.05}s` }}
+                    />
+                  ))}
                 </div>
-              )}
-            </>
-          )}
-        </section>
+                
+                {filteredTargets.length > 3 && (
+                  <div className="mt-4 flex justify-center">
+                    <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground/20 hover:bg-primary-foreground/30">
+                      <Plus className="h-4 w-4" />
+                      Add another target
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
 
-        {/* Comments Section */}
-        <section>
+      {/* Wave separator between Targets and Comments */}
+      <WaveSeparator variant="primary" flip />
+
+      {/* Section 3: Comments Section - back to background */}
+      <div className="bg-background">
+        <div className="container py-8 sm:py-12 px-4 sm:px-6">
           <h2 className="font-display text-xl font-semibold flex items-center gap-2 mb-4">
             <MessageSquare className="h-5 w-5 text-primary" />
             Comments & Notes
             <Badge variant="muted">{comments.length}</Badge>
           </h2>
           <CommentsSection goalId={goal.id} comments={comments} targets={goal.targets} />
-        </section>
+        </div>
       </div>
 
       {/* Create Target Dialog */}
