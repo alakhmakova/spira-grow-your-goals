@@ -570,7 +570,7 @@ const GoalPage = () => {
       {/* Separator between Targets and Comments - arch */}
       <WaveSeparator variant="background" shape="arch" flip />
 
-      {/* Section 3: Comments Section - back to background */}
+      {/* Section 4: Comments Section - back to background */}
       <div className="bg-background">
         <div className="container py-8 sm:py-12 px-4 sm:px-6">
           <h2 className="font-display text-xl font-semibold flex items-center gap-2 mb-4">
