@@ -573,23 +573,27 @@ const GoalPage = () => {
       </div>
 
       {/* Rounded separator between Targets and Comments */}
-      <div className="w-full overflow-hidden -mt-px -mb-px" style={{ backgroundColor: '#133844' }}>
-        <svg
-          viewBox="0 0 1440 60"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto block"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0,0 L0,50 Q720,-30 1440,50 L1440,60 L0,60 Z"
-            className="fill-background"
-          />
-        </svg>
-      </div>
+      <svg
+        viewBox="0 0 1440 80"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-auto block -mt-px"
+        preserveAspectRatio="none"
+        style={{ marginBottom: '-1px' }}
+      >
+        <rect x="0" y="0" width="1440" height="20" fill="#133844" />
+        <path
+          d="M0,20 L0,70 Q720,-10 1440,70 L1440,20 Z"
+          fill="#133844"
+        />
+        <path
+          d="M0,70 Q720,-10 1440,70 L1440,80 L0,80 Z"
+          className="fill-background"
+        />
+      </svg>
 
       {/* Section 3: Comments Section - back to background */}
-      <div className="bg-background">
+      <div className="bg-background -mt-px">
         <div className="container pt-4 pb-8 sm:pt-6 sm:pb-12 px-4 sm:px-6">
           <h2 className="font-display text-xl font-semibold flex items-center gap-2 mb-4">
             <MessageSquare className="h-5 w-5 text-primary" />
