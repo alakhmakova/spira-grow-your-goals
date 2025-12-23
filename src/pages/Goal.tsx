@@ -559,12 +559,25 @@ const GoalPage = () => {
         </div>
       </div>
 
-      {/* Wave separator between Targets and Comments */}
-      <WaveSeparator variant="primary" flip />
+      {/* Rounded separator between Targets and Comments */}
+      <div className="w-full overflow-hidden bg-primary">
+        <svg
+          viewBox="0 0 1440 60"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-auto"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,0 L0,50 Q720,-30 1440,50 L1440,60 L0,60 Z"
+            className="fill-background"
+          />
+        </svg>
+      </div>
 
       {/* Section 3: Comments Section - back to background */}
       <div className="bg-background">
-        <div className="container py-8 sm:py-12 px-4 sm:px-6">
+        <div className="container pt-4 pb-8 sm:pt-6 sm:pb-12 px-4 sm:px-6">
           <h2 className="font-display text-xl font-semibold flex items-center gap-2 mb-4">
             <MessageSquare className="h-5 w-5 text-primary" />
             Comments & Notes
