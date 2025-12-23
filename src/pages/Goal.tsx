@@ -401,11 +401,11 @@ const GoalPage = () => {
         </div>
       </div>
 
-      {/* Wave separator between Header and GROW Details/Targets */}
-      <WaveSeparator variant="primary" />
+      {/* Separator between Header and Goal Details - smooth curve with forest color */}
+      <WaveSeparator variant="forest" shape="curve" />
 
-      {/* Section 2: GROW Details & Targets - on primary background */}
-      <div className="bg-primary text-primary-foreground py-8 sm:py-12">
+      {/* Section 2: Goal Details - on forest background */}
+      <div className="bg-forest text-forest-foreground py-8 sm:py-12">
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
           <div className="mb-8">
@@ -417,26 +417,26 @@ const GoalPage = () => {
             </h2>
 
             {hasEmptyGrowFields && !growWarningDismissed && (
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-primary-foreground/10 border border-primary-foreground/20 mb-4 text-sm">
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-forest-foreground/10 border border-forest-foreground/20 mb-4 text-sm">
                 <AlertTriangle className="h-4 w-4 flex-shrink-0" />
                 <p className="flex-1">
                   Working with all stages of the GROW model helps achieve your goal more effectively.
-                  <Link to="/info#grow-model" className="text-primary-foreground/80 hover:text-primary-foreground underline ml-1">
+                  <Link to="/info#grow-model" className="text-forest-foreground/80 hover:text-forest-foreground underline ml-1">
                     Learn more
                   </Link>
                 </p>
-                <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setGrowWarningDismissed(true)}>
+                <Button variant="ghost" size="sm" className="text-forest-foreground hover:bg-forest-foreground/10" onClick={() => setGrowWarningDismissed(true)}>
                   Dismiss
                 </Button>
               </div>
             )}
 
             <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections} className="space-y-2">
-              <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
-                <AccordionTrigger className="font-medium text-primary-foreground">
+              <AccordionItem value="reality" className="bg-forest-foreground/10 border-forest-foreground/20 rounded-lg px-4">
+                <AccordionTrigger className="font-medium text-forest-foreground">
                   Reality: Actions & Obstacles
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 text-primary-foreground">
+                <AccordionContent className="space-y-4 text-forest-foreground">
                   <RealitySection
                     actions={goal.actions || []}
                     obstacles={goal.obstacles || []}
@@ -446,15 +446,15 @@ const GoalPage = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
-                <AccordionTrigger className="font-medium text-primary-foreground">
+              <AccordionItem value="goalOptions" className="bg-forest-foreground/10 border-forest-foreground/20 rounded-lg px-4">
+                <AccordionTrigger className="font-medium text-forest-foreground">
                   <div className="flex items-center gap-2">
                     <Lightbulb className="h-4 w-4" />
                     Options: What strategies could you use?
                     {activeOption && <Badge variant="success" className="text-xs">Active option: {activeOption.name}</Badge>}
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="text-primary-foreground">
+                <AccordionContent className="text-forest-foreground">
                   <OptionsSection
                     options={goal.goalOptions || []}
                     activeOptionId={goal.activeOptionId}
@@ -477,16 +477,16 @@ const GoalPage = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
-                <AccordionTrigger className="font-medium text-primary-foreground">
+              <AccordionItem value="will" className="bg-forest-foreground/10 border-forest-foreground/20 rounded-lg px-4">
+                <AccordionTrigger className="font-medium text-forest-foreground">
                   Why is this goal important?
                 </AccordionTrigger>
-                <AccordionContent className="text-primary-foreground">
+                <AccordionContent className="text-forest-foreground">
                   <Textarea
                     value={goal.will || ""}
                     onChange={(e) => updateGoal(goal.id, { will: e.target.value })}
                     placeholder="Describe your commitment and motivation..."
-                    className="min-h-[100px] resize-y bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
+                    className="min-h-[100px] resize-y bg-forest-foreground/10 border-forest-foreground/20 text-forest-foreground placeholder:text-forest-foreground/50"
                   />
                 </AccordionContent>
               </AccordionItem>
@@ -500,7 +500,15 @@ const GoalPage = () => {
               />
             </div>
           </div>
+        </div>
+      </div>
 
+      {/* Separator between Goal Details and Targets - zigzag with primary color */}
+      <WaveSeparator variant="primary" shape="zigzag" />
+
+      {/* Section 3: Targets - on primary background */}
+      <div className="bg-primary text-primary-foreground py-8 sm:py-12">
+        <div className="container px-4 sm:px-6">
           {/* Targets */}
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -559,8 +567,8 @@ const GoalPage = () => {
         </div>
       </div>
 
-      {/* Wave separator between Targets and Comments */}
-      <WaveSeparator variant="primary" flip />
+      {/* Separator between Targets and Comments - arch */}
+      <WaveSeparator variant="background" shape="arch" flip />
 
       {/* Section 3: Comments Section - back to background */}
       <div className="bg-background">
