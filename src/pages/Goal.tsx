@@ -383,32 +383,32 @@ const GoalPage = () => {
                   </PopoverContent>
                 </Popover>
               </div>
-
-              {/* Achievability reminder */}
-              {showAchievabilityReminder && (
-                <div className="flex items-center gap-3 p-5 rounded-lg mt-10 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgba(103, 232, 249, 0.5)', opacity: 0.7 }}>
-                  <Sparkles className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(103, 232, 249)', opacity: 1 }} />
-                  <p className="flex-1">
-                    Has anything changed about this goal? Consider updating your achievability rating.
-                  </p>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    style={{ color: 'rgb(29,41,86)', opacity: 1 }}
-                    onMouseEnter={(e) => { 
-                      e.currentTarget.style.backgroundColor = 'rgb(103, 232, 249)'; 
-                    }} 
-                    onMouseLeave={(e) => { 
-                      e.currentTarget.style.backgroundColor = 'transparent'; 
-                    }}
-                    onClick={() => setShowAchievabilityReminder(false)}
-                  >
-                    Dismiss
-                  </Button>
-                </div>
-              )}
             </div>
           </div>
+
+          {/* Achievability reminder - full width */}
+          {showAchievabilityReminder && (
+            <div className="flex items-center gap-3 p-5 rounded-lg mb-6 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgba(103, 232, 249, 0.5)', opacity: 0.7 }}>
+              <Sparkles className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(103, 232, 249)', opacity: 1 }} />
+              <p className="flex-1">
+                Has anything changed about this goal? Consider updating your achievability rating.
+              </p>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                style={{ color: 'rgb(29,41,86)', opacity: 1 }}
+                onMouseEnter={(e) => { 
+                  e.currentTarget.style.backgroundColor = 'rgb(103, 232, 249)'; 
+                }} 
+                onMouseLeave={(e) => { 
+                  e.currentTarget.style.backgroundColor = 'transparent'; 
+                }}
+                onClick={() => setShowAchievabilityReminder(false)}
+              >
+                Dismiss
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
