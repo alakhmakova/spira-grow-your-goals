@@ -432,7 +432,7 @@ const GoalPage = () => {
       <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[25px] sm:-mt-[45px]" style={{ backgroundColor: '#133844' }}>
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
-          <div className="mb-8 pt-2 sm:pt-4">
+          <div className="mb-8 pt-10 sm:pt-8">
             <h2 className="font-display text-xl font-semibold mb-6 flex items-center gap-2 -mt-2">
               Goal Details
               {hasEmptyGrowFields && (
