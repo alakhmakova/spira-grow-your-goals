@@ -187,9 +187,9 @@ const GoalPage = () => {
           </nav>
 
           {/* Goal Header */}
-          <div className="flex flex-col gap-4 sm:gap-6 mb-6">
+          <div className="flex flex-row gap-4 sm:gap-6 mb-6 items-start mt-4">
             {/* Progress Circle */}
-            <div className="flex justify-center lg:justify-start">
+            <div className="flex justify-center lg:justify-start flex-shrink-0">
               <CircularProgress
                 value={goal.progress}
                 size={100}
@@ -234,26 +234,30 @@ const GoalPage = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => {
-                      setTempName(goal.name);
-                      setEditingName(true);
-                    }}>
+                    <DropdownMenuItem 
+                      className="hover:bg-[rgb(103,232,249)] focus:bg-[rgb(103,232,249)] hover:text-[rgb(29,41,86)] focus:text-[rgb(29,41,86)]"
+                      onClick={() => {
+                        setTempName(goal.name);
+                        setEditingName(true);
+                      }}>
                       <Pencil className="h-4 w-4 mr-2" />
                       Rename
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {
-                      const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
-                      const num = parseInt(value || "");
-                      if (num >= 1 && num <= 10) {
-                        updateGoal(goal.id, { achievability: num });
-                      }
-                    }}>
+                    <DropdownMenuItem 
+                      className="hover:bg-[rgb(103,232,249)] focus:bg-[rgb(103,232,249)] hover:text-[rgb(29,41,86)] focus:text-[rgb(29,41,86)]"
+                      onClick={() => {
+                        const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
+                        const num = parseInt(value || "");
+                        if (num >= 1 && num <= 10) {
+                          updateGoal(goal.id, { achievability: num });
+                        }
+                      }}>
                       <Gauge className="h-4 w-4 mr-2" />
                       Change Achievability
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      className="text-destructive focus:text-destructive"
+                      className="text-destructive hover:bg-[rgb(103,232,249)] focus:bg-[rgb(103,232,249)] hover:text-[rgb(29,41,86)] focus:text-[rgb(29,41,86)]"
                       onClick={() => setShowDeleteConfirm(true)}
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
@@ -382,14 +386,21 @@ const GoalPage = () => {
 
               {/* Achievability reminder */}
               {showAchievabilityReminder && (
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20 mb-4">
-                  <Sparkles className="h-5 w-5 text-primary flex-shrink-0" />
-                  <p className="text-sm">
+                <div className="flex items-center gap-3 p-5 rounded-lg mt-10 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgba(103, 232, 249, 0.5)', opacity: 0.7 }}>
+                  <Sparkles className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(103, 232, 249)', opacity: 1 }} />
+                  <p className="flex-1">
                     Has anything changed about this goal? Consider updating your achievability rating.
                   </p>
                   <Button 
                     variant="ghost" 
                     size="sm"
+                    style={{ color: 'rgb(29,41,86)', opacity: 1 }}
+                    onMouseEnter={(e) => { 
+                      e.currentTarget.style.backgroundColor = 'rgb(103, 232, 249)'; 
+                    }} 
+                    onMouseLeave={(e) => { 
+                      e.currentTarget.style.backgroundColor = 'transparent'; 
+                    }}
                     onClick={() => setShowAchievabilityReminder(false)}
                   >
                     Dismiss
@@ -402,7 +413,7 @@ const GoalPage = () => {
       </div>
 
       {/* Wave separator between Header and GROW Details/Targets */}
-      <div className="w-full overflow-hidden bg-background -mb-px">
+      <div className="w-full overflow-hidden bg-background -mb-px -mt-12">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1440 320"
@@ -421,8 +432,8 @@ const GoalPage = () => {
       <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[50px]" style={{ backgroundColor: '#133844' }}>
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
-          <div className="mb-8 pt-8 sm:pt-12">
-            <h2 className="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+          <div className="mb-8 pt-2 sm:pt-4">
+            <h2 className="font-display text-xl font-semibold mb-6 flex items-center gap-2 -mt-2">
               Goal Details
               {hasEmptyGrowFields && (
                 <Badge variant="warning" className="text-xs">Incomplete</Badge>
@@ -430,22 +441,22 @@ const GoalPage = () => {
             </h2>
 
             {hasEmptyGrowFields && !growWarningDismissed && (
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-primary-foreground/10 border border-primary-foreground/20 mb-4 text-sm">
+              <div className="flex items-center gap-3 p-5 rounded-lg mb-6 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', border: '2px solid #D7FDF5', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AlertTriangle className="h-4 w-4 flex-shrink-0" />
                 <p className="flex-1">
                   Working with all stages of the GROW model helps achieve your goal more effectively.
-                  <Link to="/info#grow-model" className="text-primary-foreground/80 hover:text-primary-foreground underline ml-1">
+                  <Link to="/info#grow-model" className="underline ml-1" style={{ color: 'rgb(0, 112, 161)', opacity: 0.8 }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}>
                     Learn more
                   </Link>
                 </p>
-                <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/10" onClick={() => setGrowWarningDismissed(true)}>
+                <Button variant="ghost" size="sm" style={{ color: 'rgb(29,41,86)' }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgb(103, 232, 249)'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }} onClick={() => setGrowWarningDismissed(true)}>
                   Dismiss
                 </Button>
               </div>
             )}
 
-            <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections} className="space-y-2">
-              <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
+            <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections} className="space-y-4">
+              <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground">
                   Reality: Actions & Obstacles
                 </AccordionTrigger>
@@ -459,7 +470,7 @@ const GoalPage = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
+              <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground">
                   <div className="flex items-center gap-2">
                     <Lightbulb className="h-4 w-4" />
@@ -490,7 +501,7 @@ const GoalPage = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4">
+              <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground">
                   Why is this goal important?
                 </AccordionTrigger>
@@ -517,10 +528,10 @@ const GoalPage = () => {
           {/* Targets */}
           <div className="rounded-lg p-6" style={{ backgroundColor: '#d7fdf5' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl font-semibold flex items-center gap-2">
+              <h2 className="font-display text-xl font-semibold flex items-center gap-2" style={{ color: 'rgb(19, 56, 68)' }}>
                 <TargetIcon className="h-5 w-5" />
                 Targets
-                <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground">{filteredTargets.length}</Badge>
+                <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground" style={{ color: 'rgb(19, 56, 68)' }}>{filteredTargets.length}</Badge>
                 {activeOption && <Badge variant="outline" className="text-xs border-primary-foreground/30">{activeOption.name}</Badge>}
               </h2>
               <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90">
