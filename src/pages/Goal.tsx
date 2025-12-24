@@ -413,22 +413,23 @@ const GoalPage = () => {
       </div>
 
       {/* Wave separator between Header and GROW Details/Targets */}
-      <div className="w-full overflow-hidden bg-background -mb-px -mt-2 sm:-mt-12">
+      <div className="w-full overflow-hidden bg-background -mb-px -mt-12">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 160"
-          className="w-full block h-24 sm:h-28 md:h-32"
+          viewBox="0 0 1440 60"
+          className="w-full block h-[30px] sm:h-[50px] md:h-[70px]"
           preserveAspectRatio="none"
         >
           <path
-            className="fill-primary"
-            d="M0,70 C240,20 480,140 720,85 C960,30 1200,130 1440,75 L1440,160 L0,160 Z"
+            fill="#133844"
+            fillOpacity="1"
+            d="M0,20 C360,50 720,0 1080,30 C1260,45 1380,40 1440,35 L1440,60 L0,60 Z"
           />
         </svg>
       </div>
 
       {/* Section 2: GROW Details & Targets - on primary background */}
-      <div className="bg-primary text-primary-foreground pb-8 sm:pb-12 -mt-8 sm:-mt-[50px]">
+      <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[25px] sm:-mt-[45px]" style={{ backgroundColor: '#133844' }}>
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
           <div className="mb-8 pt-2 sm:pt-4">
