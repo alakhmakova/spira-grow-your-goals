@@ -416,14 +416,14 @@ const GoalPage = () => {
       <div className="w-full overflow-hidden bg-background -mb-px -mt-12">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 60"
-          className="w-full block h-[30px] sm:h-[50px] md:h-[70px]"
+          viewBox="0 0 1440 320"
+          className="w-full block h-[60px] sm:h-[80px] md:h-[100px]"
           preserveAspectRatio="none"
         >
           <path
             fill="#133844"
             fillOpacity="1"
-            d="M0,20 C360,50 720,0 1080,30 C1260,45 1380,40 1440,35 L1440,60 L0,60 Z"
+            d="M0,256L48,234.7C96,213,192,171,288,170.7C384,171,480,213,576,240C672,267,768,277,864,240C960,203,1056,117,1152,96C1248,75,1344,117,1392,138.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
           />
         </svg>
       </div>
