@@ -527,14 +527,14 @@ const GoalPage = () => {
 
           {/* Targets */}
           <div className="rounded-lg p-6" style={{ backgroundColor: '#d7fdf5' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl font-semibold flex items-center gap-2" style={{ color: 'rgb(19, 56, 68)' }}>
-                <TargetIcon className="h-5 w-5" />
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <h2 className="font-display text-xl font-semibold flex items-center gap-2 flex-wrap min-w-0" style={{ color: 'rgb(19, 56, 68)' }}>
+                <TargetIcon className="h-5 w-5 flex-shrink-0" />
                 Targets
                 <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground" style={{ color: 'rgb(19, 56, 68)' }}>{filteredTargets.length}</Badge>
                 {activeOption && <Badge variant="outline" className="text-xs border-primary-foreground/30">{activeOption.name}</Badge>}
               </h2>
-              <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+              <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90 flex-shrink-0">
                 <Plus className="h-4 w-4" />
                 New Target
               </Button>
