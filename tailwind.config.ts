@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        display: ['Raleway', 'sans-serif'],
+        display: ['Nunito', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
