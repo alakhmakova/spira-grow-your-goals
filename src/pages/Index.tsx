@@ -12,7 +12,7 @@ const Index = () => {
         <div className="container relative py-8">
           <nav className="flex items-center justify-between mb-16">
             <SpiraLogo size="lg" animated />
-            <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-4">
               <Link to="/info">
                 <Button variant="ghost">Learn More</Button>
               </Link>
