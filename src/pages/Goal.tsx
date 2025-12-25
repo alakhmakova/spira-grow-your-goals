@@ -429,7 +429,7 @@ const GoalPage = () => {
       </div>
 
       {/* Section 2: GROW Details & Targets - on primary background */}
-      <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[25px] sm:-mt-[45px]" style={{ backgroundColor: '#133844' }}>
+      <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[10px] sm:-mt-[15px]" style={{ backgroundColor: '#133844' }}>
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
           <div className="mb-8 pt-10 sm:pt-8">
