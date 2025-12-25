@@ -55,7 +55,7 @@ export const SpiraLogo = ({
           </radialGradient>
         </defs>
 
-        {/* Outer spiral arm - flowing from center outward */}
+        {/* Outer spiral arm - flows clockwise from center outward, creating expanding growth pattern */}
         <path
           d="M32 32
              C32 28, 34 24, 38 22
@@ -72,7 +72,7 @@ export const SpiraLogo = ({
           fill="none"
         />
 
-        {/* Inner spiral arm - creating depth */}
+        {/* Inner spiral arm - creates visual depth and emphasizes the center */}
         <path
           d="M32 32
              C32 30, 30 28, 28 28
@@ -132,7 +132,7 @@ export const SpiraSproutIcon = ({ className, size = 18 }: { className?: string; 
       </linearGradient>
     </defs>
     
-    {/* Mini spiral path */}
+    {/* Compact spiral path - flows outward from center in a clockwise pattern */}
     <path
       d="M12 12
          C12 10, 13 9, 14 9
@@ -147,7 +147,7 @@ export const SpiraSproutIcon = ({ className, size = 18 }: { className?: string; 
       fill="none"
     />
     
-    {/* Center point */}
+    {/* Center growth point */}
     <circle
       cx="12"
       cy="12"
