@@ -351,58 +351,17 @@ export const OptionsSection = ({
             Add different strategies or approaches to achieve your goal. You can then select an active option to focus on.
           </p>
         </div>
-        
-        {showAddForm ? (
-          <div className="p-4 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-3">
-            <Input
-              value={newName}
-              onChange={(e) => {
-                setNewName(e.target.value);
-                setError("");
-              }}
-              placeholder="Option name *"
-              className={cn(error && "border-destructive")}
-              autoFocus
-            />
-            {error && <p className="text-xs text-destructive">{error}</p>}
-            <Textarea
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              placeholder="Description (optional)"
-              rows={2}
-              className="resize-none"
-            />
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleAdd}>
-                Add Option
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => {
-                  setShowAddForm(false);
-                  setNewName("");
-                  setNewDescription("");
-                  setError("");
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowAddForm(true)}
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              Add First Option
-            </Button>
-          </div>
-        )}
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowAddForm(true)}
+            className="gap-2 text-[rgb(103,232,249)] border-[rgb(103,232,249)] hover:bg-[rgb(103,232,249)] hover:text-black"
+          >
+            <Plus className="h-4 w-4" />
+            Add First Option
+          </Button>
+        </div>
 
         <AlertDialog open={showBindConfirm} onOpenChange={setShowBindConfirm}>
           <AlertDialogContent>
@@ -433,6 +392,70 @@ export const OptionsSection = ({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Add Option Modal when empty */}
+        <Dialog
+          open={showAddForm}
+          onOpenChange={(open) => {
+            setShowAddForm(open);
+            if (!open) {
+              setNewName("");
+              setNewDescription("");
+              setError("");
+            }
+          }}
+        >
+          <DialogContent className="sm:max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-4 py-2 sm:py-4">
+              <div className="space-y-2">
+                <Input
+                  value={newName}
+                  onChange={(e) => {
+                    setNewName(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Option name *"
+                  className={cn("focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2", error && "border-destructive")}
+                  autoFocus
+                />
+                {error && <p className="text-sm text-destructive">{error}</p>}
+              </div>
+
+              <Textarea
+                value={newDescription}
+                onChange={(e) => setNewDescription(e.target.value)}
+                placeholder="Description (optional)"
+                rows={4}
+                className="resize-none focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2"
+              />
+
+              <div className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  className="border-[rgb(244,77,97)] text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
+                  onClick={() => {
+                    setShowAddForm(false);
+                    setNewName("");
+                    setNewDescription("");
+                    setError("");
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAdd}
+                  className="bg-[rgb(19,56,68)] hover:bg-[hsl(95,75%,45%)] text-white"
+                >
+                  Add Option
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   }

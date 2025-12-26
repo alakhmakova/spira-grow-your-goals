@@ -200,7 +200,11 @@ export const OptionInput = ({ options, onChange }: OptionInputProps) => {
           variant="outline"
           size="sm"
           onClick={() => setShowAddForm(true)}
-          className="gap-2"
+          className={cn(
+            "gap-2",
+            options.length === 0 &&
+              "text-[rgb(103,232,249)] border-[rgb(103,232,249)] hover:bg-[rgb(103,232,249)] hover:text-black"
+          )}
         >
           <Plus className="h-4 w-4" />
           Add Option
