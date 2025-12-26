@@ -534,7 +534,7 @@ const GoalPage = () => {
                 <TargetIcon className="h-5 w-5 flex-shrink-0" />
                 Targets
                 <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground" style={{ color: 'rgb(19, 56, 68)' }}>{filteredTargets.length}</Badge>
-                {activeOption && <Badge variant="outline" className="text-xs border-primary-foreground/30">{activeOption.name}</Badge>}
+                {activeOption && <Badge variant="outline" className="text-xs border-transparent bg-success text-success-foreground no-underline" style={{ backgroundColor: 'rgb(103, 232, 249)' }}>Active option: {activeOption.name}</Badge>}
               </h2>
               <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90 flex-shrink-0">
                 <Plus className="h-4 w-4" />

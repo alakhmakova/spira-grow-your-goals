@@ -30,7 +30,7 @@
 
     /* Muted: neutral gray with slight warmth */
     --muted: 40 10% 92%;
-    --muted-foreground: 220 10% 50%;
+    --muted-foreground: 40 100% 15%;
 
     /* Accent: vibrant emerald */
     --accent: 155 70% 45%;
@@ -122,7 +122,7 @@
 
     /* Muted */
     --muted: 220 15% 20%;
-    --muted-foreground: 220 10% 60%;
+    --muted-foreground: 40 100% 15%;
 
     /* Accent */
     --accent: 155 60% 50%;

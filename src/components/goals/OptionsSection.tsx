@@ -169,11 +169,11 @@ export const OptionsSection = ({
   };
 
   const optionColors = [
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
-    { bg: "bg-primary/10", border: "border-primary/40", text: "text-primary", glow: "shadow-primary/20" },
+    { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
+    { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
+    { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
+    { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
+    { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
   ];
 
   // Calculate positions for radial layout
@@ -196,6 +196,14 @@ export const OptionsSection = ({
     return getOptionPosition(index, total);
   };
 
+  // Trim a line so it ends near the edge of a card instead of its center
+  const trimLineToCardEdge = (point: DragPosition, trim: number): DragPosition => {
+    const len = Math.hypot(point.x, point.y);
+    if (len <= trim) return point;
+    const factor = (len - trim) / len;
+    return { x: point.x * factor, y: point.y * factor };
+  };
+
   // Drag handlers - mouse
   const handleMouseDown = useCallback((e: React.MouseEvent, optionId: string, currentPos: DragPosition) => {
     if (editingId) return;
@@ -210,7 +218,7 @@ export const OptionsSection = ({
   }, [editingId]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!draggingId || !dragStart.current) return;
+    if (!draggingId || !dragStart.current || !containerRef.current) return;
     
     const deltaX = e.clientX - dragStart.current.x;
     const deltaY = e.clientY - dragStart.current.y;
@@ -220,11 +228,31 @@ export const OptionsSection = ({
       hasDragged.current = true;
     }
     
+    // Get container bounds
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const containerHeight = containerRect.height;
+    
+    // Option card dimensions (approximate)
+    const optionWidth = 140;
+    const optionHeight = 120;
+    
+    // Calculate new position
+    let newX = dragStart.current.initialPos.x + deltaX;
+    let newY = dragStart.current.initialPos.y + deltaY;
+    
+    // Apply boundary constraints (positions are relative to center)
+    const maxX = containerWidth / 2 - optionWidth / 2;
+    const maxY = containerHeight / 2 - optionHeight / 2;
+    
+    newX = Math.max(-maxX, Math.min(maxX, newX));
+    newY = Math.max(-maxY, Math.min(maxY, newY));
+    
     setPositions(prev => ({
       ...prev,
       [draggingId]: {
-        x: dragStart.current!.initialPos.x + deltaX,
-        y: dragStart.current!.initialPos.y + deltaY,
+        x: newX,
+        y: newY,
       },
     }));
   }, [draggingId]);
@@ -248,7 +276,7 @@ export const OptionsSection = ({
   }, [editingId]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!draggingId || !dragStart.current) return;
+    if (!draggingId || !dragStart.current || !containerRef.current) return;
     
     const touch = e.touches[0];
     const startRef = dragStart.current;
@@ -260,8 +288,25 @@ export const OptionsSection = ({
       hasDragged.current = true;
     }
     
-    const newX = startRef.initialPos.x + deltaX;
-    const newY = startRef.initialPos.y + deltaY;
+    // Get container bounds
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const containerHeight = containerRect.height;
+    
+    // Option card dimensions (approximate)
+    const optionWidth = 140;
+    const optionHeight = 120;
+    
+    // Calculate new position
+    let newX = startRef.initialPos.x + deltaX;
+    let newY = startRef.initialPos.y + deltaY;
+    
+    // Apply boundary constraints (positions are relative to center)
+    const maxX = containerWidth / 2 - optionWidth / 2;
+    const maxY = containerHeight / 2 - optionHeight / 2;
+    
+    newX = Math.max(-maxX, Math.min(maxX, newX));
+    newY = Math.max(-maxY, Math.min(maxY, newY));
     
     setPositions(prev => ({
       ...prev,
@@ -416,7 +461,7 @@ export const OptionsSection = ({
       >
         {/* Central goal node - clickable to edit */}
         <div 
-          className="absolute z-10 px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm shadow-lg max-w-[160px] text-center cursor-pointer hover:ring-2 hover:ring-primary/50 hover:ring-offset-2 transition-all"
+          className="absolute z-10 px-6 py-3 rounded-full bg-white text-[#4D3300] font-semibold text-sm shadow-lg max-w-[160px] text-center cursor-pointer hover:ring-2 hover:ring-primary/50 hover:ring-offset-2 transition-all"
           onClick={handleGoalNameClick}
         >
           <span className="line-clamp-2">{goalName}</span>
@@ -430,15 +475,16 @@ export const OptionsSection = ({
           <g style={{ transform: 'translate(50%, 50%)' }}>
             {options.map((option, index) => {
               const pos = getActualPosition(option.id, index, totalItems);
+              const end = trimLineToCardEdge(pos, 70); // approx half card width
               return (
                 <line
                   key={`line-${index}`}
                   x1="0"
                   y1="0"
-                  x2={pos.x}
-                  y2={pos.y}
+                  x2={end.x}
+                  y2={end.y}
                   stroke="currentColor"
-                  className="text-border"
+                  className="text-white"
                   strokeWidth="2"
                   strokeDasharray="4 4"
                 />
@@ -447,14 +493,15 @@ export const OptionsSection = ({
             {/* Line to add button */}
             {(() => {
               const pos = getActualPosition('add-button', options.length, totalItems);
+              const end = trimLineToCardEdge(pos, 50); // add button ~100px wide
               return (
                 <line
                   x1="0"
                   y1="0"
-                  x2={pos.x}
-                  y2={pos.y}
+                  x2={end.x}
+                  y2={end.y}
                   stroke="currentColor"
-                  className="text-border/50"
+                  className="text-white/80"
                   strokeWidth="2"
                   strokeDasharray="4 4"
                 />
@@ -490,14 +537,15 @@ export const OptionsSection = ({
                     "relative group p-3 rounded-xl border-2 transition-all w-[140px]",
                     colors.bg,
                     isActive
-                      ? cn(colors.border, "ring-2 ring-offset-2", colors.glow, "shadow-lg")
+                      ? cn(colors.border, "ring-2 ring-offset-2")
                       : "border-transparent hover:border-border",
-                    isDragging && "shadow-xl scale-105",
+                    isDragging && "scale-105",
                     !isEditing && "cursor-grab active:cursor-grabbing"
                   )}
                   onMouseDown={(e) => !isEditing && handleMouseDown(e, option.id, pos)}
                   onTouchStart={(e) => !isEditing && handleTouchStart(e, option.id, pos)}
                   onClick={(e) => !isEditing && handleOptionClick(option, e)}
+                  style={{ backgroundColor: "rgb(236,168,5)" }}
                 >
                   {/* Active indicator */}
                   {isActive && (
@@ -617,57 +665,17 @@ export const OptionsSection = ({
                 onTouchStart={(e) => !showAddForm && handleTouchStart(e, addButtonId, pos)}
                 >
 
-                  {showAddForm ? (
-                    <div
-                      className="p-3 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 space-y-2 w-[140px]"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Input
-                        value={newName}
-                        onChange={(e) => {
-                          setNewName(e.target.value);
-                          setError("");
-                        }}
-                        placeholder="Name *"
-                        className={cn("text-xs h-7", error && "border-destructive")}
-                        autoFocus
-                      />
-                      {error && <p className="text-xs text-destructive">{error}</p>}
-                      <Textarea
-                        value={newDescription}
-                        onChange={(e) => setNewDescription(e.target.value)}
-                        placeholder="Description"
-                        rows={2}
-                        className="resize-none text-xs"
-                      />
-                      <div className="flex gap-1">
-                        <Button size="sm" onClick={handleAdd} className="h-6 text-xs px-2">
-                          Add
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => {
-                            setShowAddForm(false);
-                            setNewName("");
-                            setNewDescription("");
-                            setError("");
-                          }}
-                          className="h-6 text-xs px-2"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
                     <button
-                      onClick={() => setShowAddForm(true)}
-                      className="p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-primary/50 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 w-[100px] h-[80px]"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (hasDragged.current) return;
+                        setShowAddForm(true);
+                      }}
+                      className="group p-3 rounded-xl border-2 border-dashed border-primary/50 hover:border-white hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 w-[100px] h-[80px] opacity-50 hover:opacity-80"
                     >
-                      <Plus className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">Add Option</span>
+                      <Plus className="h-5 w-5 text-primary group-hover:text-white" />
+                      <span className="text-xs text-primary group-hover:text-white">Add Option</span>
                     </button>
-                  )}
                 </div>
               </div>
             );
@@ -705,6 +713,70 @@ export const OptionsSection = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Add Option Modal (full-width similar to create target form) */}
+      <Dialog
+        open={showAddForm}
+        onOpenChange={(open) => {
+          setShowAddForm(open);
+          if (!open) {
+            setNewName("");
+            setNewDescription("");
+            setError("");
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2 sm:py-4">
+            <div className="space-y-2">
+              <Input
+                value={newName}
+                onChange={(e) => {
+                  setNewName(e.target.value);
+                  setError("");
+                }}
+                placeholder="Option name *"
+                className={cn("focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2", error && "border-destructive")}
+                autoFocus
+              />
+              {error && <p className="text-sm text-destructive">{error}</p>}
+            </div>
+
+            <Textarea
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+              placeholder="Description (optional)"
+              rows={4}
+              className="resize-none focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2"
+            />
+
+            <div className="flex gap-2 justify-end">
+              <Button
+                variant="outline"
+                className="border-[rgb(244,77,97)] text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
+                onClick={() => {
+                  setShowAddForm(false);
+                  setNewName("");
+                  setNewDescription("");
+                  setError("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAdd}
+                className="bg-[rgb(19,56,68)] hover:bg-[hsl(95,75%,45%)] text-white"
+              >
+                Add Option
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Option Details Modal */}
       <Dialog open={showOptionModal} onOpenChange={(open) => {
