@@ -10,8 +10,10 @@ const Index = () => {
       <header className="relative overflow-hidden">
         <div className="absolute inset-0 nature-gradient opacity-10" />
         <div className="container relative py-8">
-          <nav className="flex items-center justify-between mb-16">
-            <SpiraLogo size="lg" animated />
+          <nav className="flex flex-col sm:flex-row items-center justify-between mb-16 gap-4">
+            <div className="w-full sm:w-auto flex justify-center sm:justify-start">
+              <SpiraLogo size="lg" animated />
+            </div>
             <div className="hidden sm:flex items-center gap-4">
               <Link to="/info">
                 <Button variant="ghost">Learn More</Button>
