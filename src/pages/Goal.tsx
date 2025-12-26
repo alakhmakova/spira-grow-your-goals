@@ -221,7 +221,9 @@ const GoalPage = () => {
                       setTempName(goal.name);
                       setEditingName(true);
                     }}
-                    className="font-display text-2xl lg:text-3xl font-bold cursor-pointer hover:text-primary transition-colors leading-tight"
+                    className="font-display text-2xl lg:text-3xl font-bold cursor-pointer transition-colors leading-tight"
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'rgb(19, 56, 68)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
                   >
                     {goal.name}
                   </h1>
@@ -235,7 +237,7 @@ const GoalPage = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem 
-                      className="hover:bg-[rgb(103,232,249)] focus:bg-[rgb(103,232,249)] hover:text-[rgb(29,41,86)] focus:text-[rgb(29,41,86)]"
+                      className="hover:bg-[rgb(93,47,193)] focus:bg-[rgb(93,47,193)]"
                       onClick={() => {
                         setTempName(goal.name);
                         setEditingName(true);
@@ -244,7 +246,7 @@ const GoalPage = () => {
                       Rename
                     </DropdownMenuItem>
                     <DropdownMenuItem 
-                      className="hover:bg-[rgb(103,232,249)] focus:bg-[rgb(103,232,249)] hover:text-[rgb(29,41,86)] focus:text-[rgb(29,41,86)]"
+                      className="hover:bg-[rgb(93,47,193)] focus:bg-[rgb(93,47,193)]"
                       onClick={() => {
                         const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
                         const num = parseInt(value || "");
@@ -257,7 +259,7 @@ const GoalPage = () => {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      className="text-destructive hover:bg-[rgb(103,232,249)] focus:bg-[rgb(103,232,249)] hover:text-[rgb(29,41,86)] focus:text-[rgb(29,41,86)]"
+                      className="text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white focus:bg-[rgb(244,77,97)] focus:text-white"
                       onClick={() => setShowDeleteConfirm(true)}
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
@@ -388,20 +390,22 @@ const GoalPage = () => {
 
           {/* Achievability reminder - full width */}
           {showAchievabilityReminder && (
-            <div className="flex items-center gap-3 p-5 rounded-lg mb-12 sm:mb-6 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgba(103, 232, 249, 0.5)', opacity: 0.7 }}>
-              <Sparkles className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(103, 232, 249)', opacity: 1 }} />
+            <div className="flex items-center gap-3 p-5 rounded-lg mb-12 sm:mb-6 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgb(93,47,193)', opacity: 0.7 }}>
+              <Sparkles className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(93,47,193)', opacity: 1 }} />
               <p className="flex-1">
                 Has anything changed about this goal? Consider updating your achievability rating.
               </p>
               <Button 
                 variant="ghost" 
                 size="sm"
-                style={{ color: 'rgb(29,41,86)', opacity: 1 }}
+                style={{ color: 'rgb(93,47,193)', opacity: 1 }}
                 onMouseEnter={(e) => { 
-                  e.currentTarget.style.backgroundColor = 'rgb(103, 232, 249)'; 
+                  e.currentTarget.style.backgroundColor = 'rgb(93,47,193)';
+                  e.currentTarget.style.color = 'white';
                 }} 
                 onMouseLeave={(e) => { 
-                  e.currentTarget.style.backgroundColor = 'transparent'; 
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = 'rgb(93,47,193)';
                 }}
                 onClick={() => setShowAchievabilityReminder(false)}
               >
@@ -472,12 +476,12 @@ const GoalPage = () => {
 
               <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground text-left">
-                  <div className="flex flex-col items-start gap-1">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2 gap-1 items-start w-full">
                     <div className="flex items-center gap-2">
                       <Lightbulb className="h-4 w-4" />
                       Options: What strategies could you use?
                     </div>
-                    {activeOption && <Badge variant="success" className="text-xs no-underline">Active option: {activeOption.name}</Badge>}
+                    {activeOption && <Badge variant="success" className="text-xs no-underline lg:ml-auto">Active option: {activeOption.name}</Badge>}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="text-primary-foreground">

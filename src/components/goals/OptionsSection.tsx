@@ -470,7 +470,7 @@ export const OptionsSection = ({
             backgroundColor: "rgba(245, 245, 245, 0.9)",
             border: "2px solid rgb(215, 253, 245)",
             color: "rgb(29, 41, 86)",
-            boxShadow: "rgba(0, 0, 0, 0.1) 4px -4px 12px",
+            boxShadow: "rgb(93,47,193) 4px -4px 12px",
           }}
         >
           <Sparkles className="h-5 w-5 flex-shrink-0" />
@@ -480,111 +480,47 @@ export const OptionsSection = ({
         </div>
       )}
 
-      {/* Mind Map Visualization - Radial Layout */}
+      {/* Options Grid Layout */}
       <div 
         ref={containerRef}
-        className="relative min-h-[420px] flex items-center justify-center select-none touch-none"
+        className="relative select-none touch-none"
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Central goal node - clickable to edit */}
-        <div 
-          className="absolute z-10 px-6 py-3 rounded-full bg-white text-[#4D3300] font-semibold text-sm shadow-lg max-w-[160px] text-center cursor-pointer hover:ring-2 hover:ring-primary/50 hover:ring-offset-2 transition-all"
-          onClick={handleGoalNameClick}
-        >
-          <span className="line-clamp-2">{goalName}</span>
-        </div>
-
-        {/* SVG for connection lines - full size overlay */}
-        <svg 
-          className="absolute inset-0 w-full h-full pointer-events-none z-0" 
-          style={{ overflow: 'visible' }}
-        >
-          <g style={{ transform: 'translate(50%, 50%)' }}>
-            {options.map((option, index) => {
-              const pos = getActualPosition(option.id, index, totalItems);
-              const end = trimLineToCardEdge(pos, 70); // approx half card width
-              return (
-                <line
-                  key={`line-${index}`}
-                  x1="0"
-                  y1="0"
-                  x2={end.x}
-                  y2={end.y}
-                  stroke="currentColor"
-                  className="text-white"
-                  strokeWidth="2"
-                  strokeDasharray="4 4"
-                />
-              );
-            })}
-            {/* Line to add button */}
-            {(() => {
-              const pos = getActualPosition('add-button', options.length, totalItems);
-              const end = trimLineToCardEdge(pos, 50); // add button ~100px wide
-              return (
-                <line
-                  x1="0"
-                  y1="0"
-                  x2={end.x}
-                  y2={end.y}
-                  stroke="currentColor"
-                  className="text-white/80"
-                  strokeWidth="2"
-                  strokeDasharray="4 4"
-                />
-              );
-            })()}
-          </g>
-        </svg>
-
-        {/* Options arranged radially */}
-        <div className="relative w-full h-full" style={{ minWidth: '400px', minHeight: '400px' }}>
+        {/* Options arranged in grid layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
           {options.map((option, index) => {
             const colors = optionColors[index % optionColors.length];
             const isActive = activeOptionId === option.id;
             const isEditing = editingId === option.id;
             const isDragging = draggingId === option.id;
-            const pos = getActualPosition(option.id, index, totalItems);
 
             return (
               <div
                 key={option.id}
                 className={cn(
-                  "absolute z-20",
+                  "z-20 h-full",
                   isDragging && "z-30"
                 )}
-                style={{
-                  left: `calc(50% + ${pos.x}px)`,
-                  top: `calc(50% + ${pos.y}px)`,
-                  transform: 'translate(-50%, -50%)',
-                }}
               >
                 <div
                   className={cn(
-                    "relative group p-3 rounded-xl border-2 transition-all w-[140px]",
-                    colors.bg,
+                    "relative group p-3 rounded-xl border-2 transition-all h-full",
                     isActive
-                      ? cn(colors.border, "ring-2 ring-offset-2")
-                      : "border-transparent hover:border-border",
-                    isDragging && "scale-105",
-                    !isEditing && "cursor-grab active:cursor-grabbing"
+                      ? "ring-2 ring-primary/20"
+                      : "hover:border-gray-300",
+                    isDragging && "scale-105 shadow-lg"
                   )}
-                  onMouseDown={(e) => !isEditing && handleMouseDown(e, option.id, pos)}
-                  onTouchStart={(e) => !isEditing && handleTouchStart(e, option.id, pos)}
                   onClick={(e) => !isEditing && handleOptionClick(option, e)}
-                  style={{ backgroundColor: "rgb(236,168,5)" }}
+                  style={{ 
+                    color: isActive ? "white" : "rgb(29, 41, 86)", 
+                    borderColor: isActive ? "hsl(95, 75%, 45%)" : "rgb(93,47,193)", 
+                    backgroundColor: isActive ? "hsl(95, 75%, 45%)" : "#fff" 
+                  }}
                 >
-                  {/* Active indicator */}
-                  {isActive && (
-                    <Badge className="absolute -top-2 -right-2 bg-success text-success-foreground text-xs px-1.5">
-                      <Check className="h-3 w-3" />
-                    </Badge>
-                  )}
-
                   {isEditing ? (
                     <div className="space-y-2" onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
                       <Input
@@ -592,17 +528,17 @@ export const OptionsSection = ({
                         onChange={(e) => setEditName(e.target.value)}
                         placeholder="Name"
                         autoFocus
-                        className="text-xs h-7"
+                        className="text-xs h-7 focus-visible:ring-[rgb(93,47,193)] focus-visible:ring-2"
                       />
                       <Textarea
                         value={editDescription}
                         onChange={(e) => setEditDescription(e.target.value)}
                         placeholder="Description"
                         rows={2}
-                        className="resize-none text-xs"
+                        className="resize-none text-xs focus-visible:ring-[rgb(93,47,193)] focus-visible:ring-2"
                       />
                       <div className="flex gap-1">
-                        <Button size="sm" onClick={handleSaveEdit} className="h-6 text-xs px-2">
+                        <Button size="sm" onClick={handleSaveEdit} className="h-6 text-xs px-2 bg-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)]/90 text-white">
                           Save
                         </Button>
                         <Button
@@ -618,11 +554,11 @@ export const OptionsSection = ({
                   ) : (
                     <div>
                       <div className="flex items-start gap-1.5 mb-1">
-                        <Lightbulb className={cn("h-4 w-4 flex-shrink-0 mt-0.5", colors.text)} />
-                        <h4 className="font-semibold text-sm line-clamp-2">{option.name}</h4>
+                        <Lightbulb className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: isActive ? "white" : "rgb(93,47,193)" }} />
+                        <h4 className="font-semibold text-sm line-clamp-2" style={{ color: isActive ? "white" : "rgb(29, 41, 86)" }}>{option.name}</h4>
                       </div>
                       {option.description && (
-                        <p className="text-xs text-muted-foreground pl-5 line-clamp-2">
+                        <p className="text-xs pl-5 line-clamp-2" style={{ color: isActive ? "white" : "rgb(75, 80, 87)" }}>
                           {option.description}
                         </p>
                       )}
@@ -639,15 +575,19 @@ export const OptionsSection = ({
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="p-1 hover:bg-background/50 rounded">
-                            <MoreVertical className="h-3 w-3" />
+                            <MoreVertical className="h-3 w-3" style={{ color: "rgb(93,47,193)" }} />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem onClick={() => handleEdit(option)}>
+                          <DropdownMenuItem
+                            className="hover:bg-[rgb(93,47,193)] focus:bg-[rgb(93,47,193)]"
+                            onClick={() => handleEdit(option)}
+                          >
                             <Pencil className="h-4 w-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem 
+                            className="hover:bg-[rgb(93,47,193)] focus:bg-[rgb(93,47,193)]"
                             onClick={() => onSetActiveOption(isActive ? undefined : option.id)}
                           >
                             <Star className={cn("h-4 w-4 mr-2", isActive && "fill-current")} />
@@ -655,7 +595,7 @@ export const OptionsSection = ({
                           </DropdownMenuItem>
                           <DropdownMenuItem 
                             onClick={() => handleDelete(option.id)}
-                            className="text-destructive focus:text-destructive"
+                            className="text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white focus:bg-[rgb(244,77,97)] focus:text-white"
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete
@@ -670,47 +610,16 @@ export const OptionsSection = ({
           })}
 
           {/* Add new option card */}
-          {(() => {
-            const addButtonId = 'add-button';
-            const pos = getActualPosition(addButtonId, options.length, totalItems);
-            const isDragging = draggingId === addButtonId;
-            
-            return (
-              <div
-                className={cn(
-                  "absolute z-20",
-                  isDragging && "z-30"
-                )}
-                style={{
-                  left: `calc(50% + ${pos.x}px)`,
-                  top: `calc(50% + ${pos.y}px)`,
-                  transform: 'translate(-50%, -50%)',
-                }}
-              >
-                <div className={cn(
-                  "relative group",
-                  isDragging && "shadow-xl scale-105",
-                  !showAddForm && "cursor-grab active:cursor-grabbing"
-                )}
-                onMouseDown={(e) => !showAddForm && handleMouseDown(e, addButtonId, pos)}
-                onTouchStart={(e) => !showAddForm && handleTouchStart(e, addButtonId, pos)}
-                >
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (hasDragged.current) return;
-                        setShowAddForm(true);
-                      }}
-                      className="group p-3 rounded-xl border-2 border-dashed border-primary/50 hover:border-white hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-1 w-[100px] h-[80px] opacity-50 hover:opacity-80"
-                    >
-                      <Plus className="h-5 w-5 text-primary group-hover:text-white" />
-                      <span className="text-xs text-primary group-hover:text-white">Add Option</span>
-                    </button>
-                </div>
-              </div>
-            );
-          })()}
+          <div className="z-20 h-full">
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="group p-3 rounded-xl border-2 border-dashed transition-all flex flex-col items-center justify-center gap-1 w-full h-full hover:!border-white"
+              style={{ borderColor: "rgb(100, 201, 29)" }}
+            >
+              <Plus className="h-5 w-5 group-hover:!text-white" style={{ color: "rgb(100, 201, 29)" }} />
+              <span className="text-xs group-hover:!text-white" style={{ color: "rgb(100, 201, 29)" }}>Add Option</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -771,7 +680,7 @@ export const OptionsSection = ({
                   setError("");
                 }}
                 placeholder="Option name *"
-                className={cn("focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2", error && "border-destructive")}
+                className={cn("focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2", error && "border-destructive")}
                 autoFocus
               />
               {error && <p className="text-sm text-destructive">{error}</p>}
@@ -782,7 +691,7 @@ export const OptionsSection = ({
               onChange={(e) => setNewDescription(e.target.value)}
               placeholder="Description (optional)"
               rows={4}
-              className="resize-none focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2"
+              className="resize-none focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
             />
 
             <div className="flex gap-2 justify-end">
@@ -816,10 +725,10 @@ export const OptionsSection = ({
           setIsEditingInModal(false);
         }
       }}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Lightbulb className="h-5 w-5 text-primary" />
+              <Lightbulb className="h-5 w-5" style={{ color: 'rgb(93,47,193)' }} />
               {isEditingInModal ? "Edit Option" : selectedOption?.name}
             </DialogTitle>
           </DialogHeader>
@@ -832,6 +741,7 @@ export const OptionsSection = ({
                   value={modalEditName}
                   onChange={(e) => setModalEditName(e.target.value)}
                   placeholder="Option name"
+                  className="focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
                   autoFocus
                 />
               </div>
@@ -841,7 +751,8 @@ export const OptionsSection = ({
                   value={modalEditDescription}
                   onChange={(e) => setModalEditDescription(e.target.value)}
                   placeholder="Description (optional)"
-                  rows={3}
+                  rows={6}
+                  className="resize-y focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
                 />
               </div>
             </div>
@@ -849,14 +760,13 @@ export const OptionsSection = ({
             <div className="space-y-4 py-4">
               {selectedOption?.description ? (
                 <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-1">Description</h4>
                   <p className="text-sm">{selectedOption.description}</p>
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground italic">No description provided.</p>
               )}
               {activeOptionId === selectedOption?.id && (
-                <Badge className="bg-success text-success-foreground">
+                <Badge style={{ backgroundColor: "rgb(93,47,193)", color: "white" }}>
                   <Check className="h-3 w-3 mr-1" />
                   Active Option
                 </Badge>
@@ -870,12 +780,14 @@ export const OptionsSection = ({
                 <Button
                   variant="outline"
                   size="sm"
+                  className="border-[rgb(244,77,97)] text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
                   onClick={() => setIsEditingInModal(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   size="sm"
+                  className="bg-[rgb(19,56,68)] hover:bg-[hsl(95,75%,45%)] text-white"
                   onClick={() => {
                     if (selectedOption && modalEditName.trim()) {
                       onUpdate(
@@ -904,6 +816,7 @@ export const OptionsSection = ({
                 <Button
                   variant="outline"
                   size="sm"
+                  className="border-[rgb(93,47,193)] text-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)] hover:text-white"
                   onClick={() => {
                     if (selectedOption) {
                       setModalEditName(selectedOption.name);
@@ -918,6 +831,7 @@ export const OptionsSection = ({
                 <Button
                   variant="outline"
                   size="sm"
+                  className="border-[rgb(93,47,193)] text-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)] hover:text-white"
                   onClick={() => {
                     if (selectedOption) {
                       onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
@@ -928,8 +842,9 @@ export const OptionsSection = ({
                   {activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
                 </Button>
                 <Button
-                  variant="destructive"
+                  variant="outline"
                   size="sm"
+                  className="text-[rgb(244,77,97)] border-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
                   onClick={() => {
                     if (selectedOption) {
                       handleDelete(selectedOption.id);
