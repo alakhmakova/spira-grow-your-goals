@@ -27,90 +27,26 @@ export const SpiraLogo = ({
       <svg
         width={icon}
         height={icon}
-        viewBox="0 0 64 64"
+        viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={cn(animated && "animate-float")}
       >
         <defs>
-          {/* Main gradient - matching app theme: teal to emerald to lime */}
-          <linearGradient id="spiraGreen" x1="50%" y1="100%" x2="50%" y2="0%">
+          <linearGradient id="spiraTreeGradient" x1="50%" y1="100%" x2="50%" y2="0%">
             <stop offset="0%" stopColor="hsl(170, 50%, 22%)" />
             <stop offset="40%" stopColor="hsl(175, 60%, 35%)" />
             <stop offset="70%" stopColor="hsl(155, 70%, 45%)" />
             <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
           </linearGradient>
-          
-          {/* Left leaf gradient */}
-          <linearGradient id="leftLeafGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
-            <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
-            <stop offset="100%" stopColor="hsl(155, 70%, 45%)" />
-          </linearGradient>
-
-          {/* Right leaf gradient */}
-          <linearGradient id="rightLeafGradient" x1="100%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="hsl(175, 55%, 45%)" />
-            <stop offset="50%" stopColor="hsl(155, 60%, 50%)" />
-            <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
-          </linearGradient>
         </defs>
-
-        {/* Curved soil/stem base line */}
-        <path
-          d="M12 50 Q32 44, 52 50"
-          stroke="url(#spiraGreen)"
-          strokeWidth="4"
-          strokeLinecap="round"
-          fill="none"
-        />
-
-        {/* Main stem - growing up from center */}
-        <path
-          d="M32 48 C32 42, 32 36, 32 30"
-          stroke="url(#spiraGreen)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-
-        {/* Left leaf - larger, flowing curve */}
-        <path
-          d="M32 32
-             C28 28, 18 22, 10 14
-             C16 12, 22 14, 26 18
-             C30 22, 31 28, 32 32"
-          fill="url(#leftLeafGradient)"
-        />
-        
-        {/* Left leaf center vein */}
-        <path
-          d="M31 30 C26 24, 18 18, 13 14"
-          stroke="hsl(170, 50%, 22%)"
-          strokeWidth="1"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.4"
-        />
-
-        {/* Right leaf - smaller, angled */}
-        <path
-          d="M33 28
-             C37 24, 46 18, 54 12
-             C50 10, 44 12, 40 16
-             C36 20, 34 25, 33 28"
-          fill="url(#rightLeafGradient)"
-        />
-
-        {/* Right leaf center vein */}
-        <path
-          d="M34 26 C40 20, 48 14, 52 12"
-          stroke="hsl(175, 60%, 35%)"
-          strokeWidth="0.8"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.35"
-        />
+        <g transform="translate(10, 5) scale(0.8)" fill="url(#spiraTreeGradient)">
+          {/* Person figure */}
+          <circle cx="26.4" cy="53.7" r="4.2"/>
+          <path d="M18,71.8c0.2,0,0.4,0.1,0.5,0.1c0.9,0,1.7-0.6,1.9-1.5l0.1-0.4c0.4-1.6,1.1-3.2,1.9-4.6v6.4L19,85.5c1.6-0.5,3.2-1,4.9-1.4l2.4-9.2l0.6,8.5c1.4-0.3,2.9-0.6,4.3-0.8l-0.7-10.6v-9.4c0.4-0.1,0.8-0.3,1.2-0.4c3.2-1.5,5.5-4.4,6.4-7.8l0.5-1.8c0.3-1.1-0.4-2.2-1.4-2.4c-1.1-0.3-2.2,0.4-2.4,1.4l-0.5,1.8c-0.6,2.3-2.1,4.2-4.2,5.2c-0.5,0.2-1,0.4-1.6,0.4h-3.9c-1.3,0-2.5,0.6-3.4,1.6c-2,2.5-3.5,5.4-4.3,8.5l-0.1,0.4C16.4,70.4,17,71.5,18,71.8z"/>
+          {/* Tree with circles */}
+          <path d="M84.5,91c-5.6-2.7-12.5-4.8-20.1-6V53.4c1.4,0.6,2.9,0.9,4.5,0.9c5.5,0,10.1-3.5,11.8-8.4c5.3-1.4,9.2-6.3,9.2-12c0-4.2-2.1-7.9-5.2-10.1c0.1-0.5,0.1-1,0.1-1.5c0-6.9-5.6-12.5-12.5-12.5c-0.2,0-0.4,0-0.6,0c-2-4.3-6.3-7.3-11.3-7.3S51,5.5,49,9.8c-0.2,0-0.4,0-0.6,0C41.6,9.7,36,15.3,36,22.2c0,0.5,0,1,0.1,1.5c-3.2,2.3-5.2,6-5.2,10.1c0,5.8,3.9,10.6,9.2,12c1.7,4.9,6.3,8.4,11.8,8.4c1.6,0,3.1-0.3,4.5-0.9v30.6c-2.7-0.2-5.4-0.3-8.1-0.3c-14,0-26.8,2.8-36.2,7.3c-3.5,1.7-2,6.9,1.9,6.5c10.5-1.2,22.1-1.9,34.3-1.9c12.2,0,23.8,0.7,34.3,1.9C86.4,97.9,87.9,92.7,84.5,91z M74.9,30.7c1.4,0,2.6,1.2,2.6,2.6c0,1.4-1.2,2.6-2.6,2.6c-1.4,0-2.6-1.2-2.6-2.6C72.3,31.8,73.5,30.7,74.9,30.7z M68.3,17.5c1.4,0,2.6,1.2,2.6,2.6c0,1.4-1.2,2.6-2.6,2.6c-1.4,0-2.6-1.2-2.6-2.6C65.7,18.7,66.9,17.5,68.3,17.5z M45.9,37.3c-1.4,0-2.6-1.2-2.6-2.6c0,1.4,1.2-2.6,2.6-2.6c1.4,0,2.6,1.2,2.6,2.6C48.5,36.2,47.4,37.3,45.9,37.3z M51.9,24c-1.4,0-2.6-1.2-2.6-2.6c0-1.4,1.2-2.6,2.6-2.6c1.4,0,2.6,1.2,2.6,2.6C54.5,22.8,53.3,24,51.9,24z M61.4,44c-1.4,0-2.6-1.2-2.6-2.6c0-1.4,1.2-2.6,2.6-2.6S64,40,64,41.4C64,42.8,62.9,44,61.4,44z"/>
+        </g>
       </svg>
       
       {showText && (
@@ -131,53 +67,22 @@ export const SpiraSproutIcon = ({ className, size = 18 }: { className?: string; 
   <svg
     width={size}
     height={size}
-    viewBox="0 0 24 24"
+    viewBox="0 0 100 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
     <defs>
-      <linearGradient id="miniSpira" x1="50%" y1="100%" x2="50%" y2="0%">
+      <linearGradient id="miniTreeGradient" x1="50%" y1="100%" x2="50%" y2="0%">
         <stop offset="0%" stopColor="hsl(170, 50%, 22%)" />
         <stop offset="50%" stopColor="hsl(165, 60%, 50%)" />
         <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
       </linearGradient>
-      <linearGradient id="miniLeafLeft" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="hsl(175, 60%, 35%)" />
-        <stop offset="100%" stopColor="hsl(155, 70%, 45%)" />
-      </linearGradient>
-      <linearGradient id="miniLeafRight" x1="100%" y1="100%" x2="0%" y2="0%">
-        <stop offset="0%" stopColor="hsl(175, 55%, 45%)" />
-        <stop offset="100%" stopColor="hsl(85, 70%, 50%)" />
-      </linearGradient>
     </defs>
-    
-    {/* Curved base */}
-    <path
-      d="M5 19 Q12 17, 19 19"
-      stroke="url(#miniSpira)"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
-    
-    {/* Stem */}
-    <path
-      d="M12 18 C12 15, 12 12, 12 10"
-      stroke="url(#miniSpira)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    
-    {/* Left leaf */}
-    <path
-      d="M12 11 C10 9, 6 6, 4 4 C6 3, 8 4, 10 6 C11 8, 12 10, 12 11"
-      fill="url(#miniLeafLeft)"
-    />
-    
-    {/* Right leaf */}
-    <path
-      d="M12 9 C14 7, 17 5, 20 3 C18 2, 16 3, 14 5 C13 7, 12 8, 12 9"
-      fill="url(#miniLeafRight)"
-    />
+    <g transform="translate(10, 5) scale(0.8)" fill="url(#miniTreeGradient)">
+      <circle cx="26.4" cy="53.7" r="4.2"/>
+      <path d="M18,71.8c0.2,0,0.4,0.1,0.5,0.1c0.9,0,1.7-0.6,1.9-1.5l0.1-0.4c0.4-1.6,1.1-3.2,1.9-4.6v6.4L19,85.5c1.6-0.5,3.2-1,4.9-1.4l2.4-9.2l0.6,8.5c1.4-0.3,2.9-0.6,4.3-0.8l-0.7-10.6v-9.4c0.4-0.1,0.8-0.3,1.2-0.4c3.2-1.5,5.5-4.4,6.4-7.8l0.5-1.8c0.3-1.1-0.4-2.2-1.4-2.4c-1.1-0.3-2.2,0.4-2.4,1.4l-0.5,1.8c-0.6,2.3-2.1,4.2-4.2,5.2c-0.5,0.2-1,0.4-1.6,0.4h-3.9c-1.3,0-2.5,0.6-3.4,1.6c-2,2.5-3.5,5.4-4.3,8.5l-0.1,0.4C16.4,70.4,17,71.5,18,71.8z"/>
+      <path d="M84.5,91c-5.6-2.7-12.5-4.8-20.1-6V53.4c1.4,0.6,2.9,0.9,4.5,0.9c5.5,0,10.1-3.5,11.8-8.4c5.3-1.4,9.2-6.3,9.2-12c0-4.2-2.1-7.9-5.2-10.1c0.1-0.5,0.1-1,0.1-1.5c0-6.9-5.6-12.5-12.5-12.5c-0.2,0-0.4,0-0.6,0c-2-4.3-6.3-7.3-11.3-7.3S51,5.5,49,9.8c-0.2,0-0.4,0-0.6,0C41.6,9.7,36,15.3,36,22.2c0,0.5,0,1,0.1,1.5c-3.2,2.3-5.2,6-5.2,10.1c0,5.8,3.9,10.6,9.2,12c1.7,4.9,6.3,8.4,11.8,8.4c1.6,0,3.1-0.3,4.5-0.9v30.6c-2.7-0.2-5.4-0.3-8.1-0.3c-14,0-26.8,2.8-36.2,7.3c-3.5,1.7-2,6.9,1.9,6.5c10.5-1.2,22.1-1.9,34.3-1.9c12.2,0,23.8,0.7,34.3,1.9C86.4,97.9,87.9,92.7,84.5,91z M74.9,30.7c1.4,0,2.6,1.2,2.6,2.6c0,1.4-1.2,2.6-2.6,2.6c-1.4,0-2.6-1.2-2.6-2.6C72.3,31.8,73.5,30.7,74.9,30.7z M68.3,17.5c1.4,0,2.6,1.2,2.6,2.6c0,1.4-1.2,2.6-2.6,2.6c-1.4,0-2.6-1.2-2.6-2.6C65.7,18.7,66.9,17.5,68.3,17.5z M45.9,37.3c-1.4,0-2.6-1.2-2.6-2.6c0,1.4,1.2-2.6,2.6-2.6c1.4,0,2.6,1.2,2.6,2.6C48.5,36.2,47.4,37.3,45.9,37.3z M51.9,24c-1.4,0-2.6-1.2-2.6-2.6c0-1.4,1.2-2.6,2.6-2.6c1.4,0,2.6,1.2,2.6,2.6C54.5,22.8,53.3,24,51.9,24z M61.4,44c-1.4,0-2.6-1.2-2.6-2.6c0-1.4,1.2-2.6,2.6-2.6S64,40,64,41.4C64,42.8,62.9,44,61.4,44z"/>
+    </g>
   </svg>
 );
