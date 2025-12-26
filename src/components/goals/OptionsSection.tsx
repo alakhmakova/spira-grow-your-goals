@@ -344,10 +344,10 @@ export const OptionsSection = ({
   if (options.length === 0) {
     return (
       <div className="space-y-4">
-        <div className="text-center py-6 text-muted-foreground">
-          <Lightbulb className="h-10 w-10 mx-auto mb-3 opacity-40" />
-          <p className="text-sm mb-3">No options defined yet.</p>
-          <p className="text-xs mb-4 max-w-md mx-auto">
+        <div className="text-center py-6">
+          <Lightbulb className="h-10 w-10 mx-auto mb-3 text-white" />
+          <p className="text-sm mb-3 text-white">No options defined yet.</p>
+          <p className="text-xs mb-4 max-w-md mx-auto text-white">
             Add different strategies or approaches to achieve your goal. You can then select an active option to focus on.
           </p>
         </div>
