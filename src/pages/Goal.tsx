@@ -471,11 +471,13 @@ const GoalPage = () => {
               </AccordionItem>
 
               <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AccordionTrigger className="font-medium text-primary-foreground">
-                  <div className="flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4" />
-                    Options: What strategies could you use?
-                    {activeOption && <Badge variant="success" className="text-xs">Active option: {activeOption.name}</Badge>}
+                <AccordionTrigger className="font-medium text-primary-foreground text-left">
+                  <div className="flex flex-col items-start gap-1">
+                    <div className="flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4" />
+                      Options: What strategies could you use?
+                    </div>
+                    {activeOption && <Badge variant="success" className="text-xs no-underline">Active option: {activeOption.name}</Badge>}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="text-primary-foreground">
