@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -196,12 +196,12 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Nunito', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
     letter-spacing: 0.02em;
   }
 }
