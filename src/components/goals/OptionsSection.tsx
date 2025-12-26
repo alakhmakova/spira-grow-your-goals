@@ -464,9 +464,17 @@ export const OptionsSection = ({
     <div className="space-y-4">
       {/* Encouragement message if no active option */}
       {!activeOptionId && options.length > 0 && (
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
-          <Sparkles className="h-5 w-5 text-primary flex-shrink-0" />
-          <p className="text-sm">
+        <div
+          className="flex items-center gap-3 p-5 rounded-lg mb-6 text-sm"
+          style={{
+            backgroundColor: "rgba(245, 245, 245, 0.9)",
+            border: "2px solid rgb(215, 253, 245)",
+            color: "rgb(29, 41, 86)",
+            boxShadow: "rgba(0, 0, 0, 0.1) 4px -4px 12px",
+          }}
+        >
+          <Sparkles className="h-5 w-5 flex-shrink-0" />
+          <p>
             <strong>Choose an active option</strong> to focus on. Your targets and progress will be tracked for the selected option.
           </p>
         </div>
