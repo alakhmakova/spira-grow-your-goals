@@ -282,7 +282,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
       <CollapsibleTrigger asChild>
-        <button className="flex items-center justify-between w-full py-3 text-left font-medium hover:text-primary transition-colors">
+        <button className="flex items-center justify-between w-full py-3 text-left font-medium text-white transition-colors">
           <span className="flex items-center gap-2">
             Resources
             {resources.length > 0 && (
@@ -308,7 +308,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
               variant="outline"
               size="sm"
               onClick={() => setShowAddForm(true)}
-              className="gap-2"
+              className="gap-2 text-[rgb(103,232,249)] border-[rgb(103,232,249)] hover:bg-[rgb(103,232,249)] hover:text-black"
             >
               <Plus className="h-4 w-4" />
               Add Resource
@@ -512,7 +512,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAddForm(true)}
-                className="gap-2"
+                className="gap-2 text-[rgb(103,232,249)] border-[rgb(103,232,249)] hover:bg-[rgb(103,232,249)] hover:text-black"
               >
                 <Plus className="h-4 w-4" />
                 Add Resource
