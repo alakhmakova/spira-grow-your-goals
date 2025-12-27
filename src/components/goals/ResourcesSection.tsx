@@ -10,8 +10,6 @@ import {
   Check,
   ExternalLink,
   Download,
-  ChevronDown,
-  ChevronUp,
   Plus,
   Copy,
 } from "lucide-react";
@@ -32,11 +30,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
 import { Resource, ResourceType } from "@/types/goal";
 
@@ -84,7 +77,6 @@ const validateUrl = (url: string) => {
 };
 
 export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps) => {
-  const [isOpen, setIsOpen] = useState(false); // collapsed by default
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
   const [editingResource, setEditingResource] = useState<Resource | null>(null);
   const [editName, setEditName] = useState("");
@@ -280,26 +272,19 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
-      <CollapsibleTrigger asChild>
-        <button className="flex items-center justify-between w-full py-3 text-left font-medium text-white transition-colors">
-          <span className="flex items-center gap-2">
-            Resources
-            {resources.length > 0 && (
-              <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                {resources.length}
-              </span>
-            )}
-          </span>
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
+    <div className="w-full">
+      <div className="flex items-center justify-between w-full py-3 text-left font-medium text-white">
+        <span className="flex items-center gap-2">
+          Resources
+          {resources.length > 0 && (
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+              {resources.length}
+            </span>
           )}
-        </button>
-      </CollapsibleTrigger>
+        </span>
+      </div>
 
-      <CollapsibleContent className="pt-2 pb-4">
+      <div className="pt-2 pb-4">
         {resources.length === 0 && !showAddForm ? (
           <div className="text-center py-6 text-muted-foreground">
             <File className="h-10 w-10 mx-auto mb-2 opacity-40" />
@@ -520,7 +505,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
             )}
           </>
         )}
-      </CollapsibleContent>
+      </div>
 
       {/* View Resource Modal */}
       <Dialog open={!!viewingResource} onOpenChange={() => setViewingResource(null)}>
@@ -722,6 +707,6 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
           )}
         </DialogContent>
       </Dialog>
-    </Collapsible>
+    </div>
   );
 };
