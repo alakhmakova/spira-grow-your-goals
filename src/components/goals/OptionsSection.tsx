@@ -400,8 +400,8 @@ export const OptionsSection = ({
             }
           }}
         >
-          <DialogContent className="sm:max-w-xl max-w-[95vw] flex flex-col h-full sm:h-auto">
-            <div className="flex-1 flex flex-col gap-1">
+          <DialogContent className="sm:max-w-xl max-w-[95vw]">
+            <div className="flex flex-col gap-1">
               <Input
                 value={newName}
                 onChange={(e) => {
@@ -409,7 +409,7 @@ export const OptionsSection = ({
                   setError("");
                 }}
                 placeholder="Option name *"
-                className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+                className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none bg-transparent"
                 autoFocus
               />
               {error && <p className="text-sm text-destructive px-0">{error}</p>}
@@ -422,7 +422,7 @@ export const OptionsSection = ({
                   autoResizeTextarea(e.target);
                 }}
                 placeholder="Description (optional)"
-                className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+                className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px] bg-transparent"
               />
             </div>
           </DialogContent>
@@ -611,8 +611,8 @@ export const OptionsSection = ({
           }
         }}
       >
-        <DialogContent className="sm:max-w-xl max-w-[95vw] flex flex-col h-full sm:h-auto">
-          <div className="flex-1 flex flex-col gap-1">
+        <DialogContent className="sm:max-w-xl max-w-[95vw]">
+          <div className="flex flex-col gap-1">
             <Input
               value={newName}
               onChange={(e) => {
@@ -620,7 +620,7 @@ export const OptionsSection = ({
                 setError("");
               }}
               placeholder="Option name *"
-              className="flex-1 border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+              className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none bg-transparent"
               autoFocus
             />
             {error && <p className="text-sm text-destructive px-0">{error}</p>}
@@ -633,7 +633,7 @@ export const OptionsSection = ({
                 autoResizeTextarea(e.target);
               }}
               placeholder="Description (optional)"
-              className="resize-none border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+              className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px] bg-transparent"
             />
           </div>
         </DialogContent>
@@ -661,14 +661,14 @@ export const OptionsSection = ({
           setModalEditDescription(selectedOption.description || "");
         }
       }}>
-        <DialogContent className="sm:max-w-xl max-w-[95vw] flex flex-col h-full sm:h-auto">
+        <DialogContent className="sm:max-w-xl max-w-[95vw]">
           {/* Content - Name and Description at top left */}
-          <div className="flex-1 flex flex-col gap-1">
+          <div className="flex flex-col gap-1">
             <Input
               value={modalEditName}
               onChange={(e) => setModalEditName(e.target.value)}
               placeholder="Option name"
-              className="flex-1 border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+              className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none bg-transparent"
               autoFocus
             />
             <Textarea
@@ -679,7 +679,7 @@ export const OptionsSection = ({
                 autoResizeTextarea(e.target);
               }}
               placeholder="Description (optional)"
-              className="resize-none border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+              className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px] bg-transparent"
             />
           </div>
 
