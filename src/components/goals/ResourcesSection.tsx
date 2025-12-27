@@ -63,12 +63,12 @@ const resourceTypeLabels: Record<ResourceType, string> = {
   document: "Document",
 };
 
-const resourceTypeColors: Record<ResourceType, string> = {
-  link: "bg-primary/15 text-primary-dark border-primary/40 hover:bg-primary/25",
-  email: "bg-amber-800 text-amber-100 border-amber-700 hover:bg-amber-700",
-  text: "bg-emerald-800 text-emerald-100 border-emerald-700 hover:bg-emerald-700",
-  picture: "bg-violet-800 text-violet-100 border-violet-700 hover:bg-violet-700",
-  document: "bg-slate-700 text-slate-100 border-slate-600 hover:bg-slate-600",
+// Unified style for all resource types - matching the achievability reminder style
+const unifiedResourceStyle = {
+  backgroundColor: 'rgba(245, 245, 245, 0.9)',
+  color: 'white',
+  boxShadow: '4px -4px 12px rgb(93,47,193)',
+  opacity: 0.7
 };
 
 const validateEmail = (email: string) => {
@@ -326,17 +326,15 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                   <button
                     key={resource.id}
                     onClick={() => handleResourceClick(resource)}
-                    className={cn(
-                      "group flex items-center gap-2 px-3 py-2 rounded-lg border transition-all cursor-pointer",
-                      resourceTypeColors[resource.type]
-                    )}
+                    className="group flex items-center gap-2 px-3 py-2 rounded-lg border transition-all cursor-pointer"
+                    style={unifiedResourceStyle}
                   >
-                    <Icon className="h-4 w-4 flex-shrink-0" />
-                    <span className="text-sm font-medium truncate max-w-[150px]">
+                    <Icon className="h-4 w-4 flex-shrink-0" style={{ color: 'white' }} />
+                    <span className="text-sm font-medium truncate max-w-[150px]" style={{ color: 'white' }}>
                       {resource.name}
                     </span>
                     {resource.type === "link" && (
-                      <ExternalLink className="h-3 w-3 opacity-60" />
+                      <ExternalLink className="h-3 w-3 opacity-60" style={{ color: 'white' }} />
                     )}
                     <div className="flex items-center gap-1">
                       {/* Copy button for email, text, link */}
@@ -346,7 +344,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                           className="p-1 hover:bg-background/50 rounded"
                           title="Copy"
                         >
-                          <Copy className="h-3 w-3" />
+                          <Copy className="h-3 w-3" style={{ color: 'white' }} />
                         </button>
                       )}
                       {resource.type !== "document" && (
@@ -354,14 +352,14 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                           onClick={(e) => startEdit(resource, e)}
                           className="p-1 hover:bg-background/50 rounded"
                         >
-                          <Pencil className="h-3 w-3" />
+                          <Pencil className="h-3 w-3" style={{ color: 'white' }} />
                         </button>
                       )}
                       <button
                         onClick={(e) => handleDelete(resource.id, e)}
                         className="p-1 hover:bg-background/50 rounded"
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-3 w-3" style={{ color: 'white' }} />
                       </button>
                     </div>
                   </button>
