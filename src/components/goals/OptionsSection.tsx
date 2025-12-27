@@ -76,6 +76,7 @@ export const OptionsSection = ({
   const [modalEditDescription, setModalEditDescription] = useState("");
   const [showGoalNameModal, setShowGoalNameModal] = useState(false);
   const [editingGoalName, setEditingGoalName] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   
   // Drag state
   const [positions, setPositions] = useState<Record<string, DragPosition>>({});
@@ -725,98 +726,29 @@ export const OptionsSection = ({
           setIsEditingInModal(false);
         }
       }}>
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Lightbulb className="h-5 w-5" style={{ color: 'rgb(93,47,193)' }} />
-              {isEditingInModal ? "Edit Option" : selectedOption?.name}
-            </DialogTitle>
-          </DialogHeader>
-          
-          {isEditingInModal ? (
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Name</label>
+        <DialogContent className="sm:max-w-xl max-w-[95vw]">
+          {/* Header with name and action icons */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <Lightbulb className="h-5 w-5 flex-shrink-0" style={{ color: 'rgb(93,47,193)' }} />
+              {isEditingInModal ? (
                 <Input
                   value={modalEditName}
                   onChange={(e) => setModalEditName(e.target.value)}
                   placeholder="Option name"
-                  className="focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
+                  className="flex-1 focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
                   autoFocus
                 />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Description</label>
-                <Textarea
-                  value={modalEditDescription}
-                  onChange={(e) => setModalEditDescription(e.target.value)}
-                  placeholder="Description (optional)"
-                  rows={6}
-                  className="resize-y focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4 py-4">
-              {selectedOption?.description ? (
-                <div>
-                  <p className="text-sm">{selectedOption.description}</p>
-                </div>
               ) : (
-                <p className="text-sm text-muted-foreground italic">No description provided.</p>
-              )}
-              {activeOptionId === selectedOption?.id && (
-                <Badge style={{ backgroundColor: "rgb(93,47,193)", color: "white" }}>
-                  <Check className="h-3 w-3 mr-1" />
-                  Active Option
-                </Badge>
+                <h2 className="font-semibold text-lg truncate">{selectedOption?.name}</h2>
               )}
             </div>
-          )}
-          
-          <DialogFooter className="flex-row gap-2 sm:justify-start flex-wrap">
-            {isEditingInModal ? (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[rgb(244,77,97)] text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
-                  onClick={() => setIsEditingInModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  size="sm"
-                  className="bg-[rgb(19,56,68)] hover:bg-[hsl(95,75%,45%)] text-white"
-                  onClick={() => {
-                    if (selectedOption && modalEditName.trim()) {
-                      onUpdate(
-                        options.map((o) =>
-                          o.id === selectedOption.id
-                            ? { ...o, name: modalEditName.trim(), description: modalEditDescription.trim() || undefined }
-                            : o
-                        )
-                      );
-                      setSelectedOption({
-                        ...selectedOption,
-                        name: modalEditName.trim(),
-                        description: modalEditDescription.trim() || undefined,
-                      });
-                      setIsEditingInModal(false);
-                    }
-                  }}
-                  disabled={!modalEditName.trim()}
-                >
-                  <Check className="h-4 w-4 mr-2" />
-                  Save
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[rgb(93,47,193)] text-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)] hover:text-white"
+            
+            {/* Action icons */}
+            {!isEditingInModal && (
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <button
+                  className="p-2 rounded-lg hover:bg-muted transition-colors"
                   onClick={() => {
                     if (selectedOption) {
                       setModalEditName(selectedOption.name);
@@ -824,42 +756,133 @@ export const OptionsSection = ({
                       setIsEditingInModal(true);
                     }
                   }}
+                  title="Edit"
                 >
-                  <Pencil className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-[rgb(93,47,193)] text-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)] hover:text-white"
+                  <Pencil className="h-4 w-4" style={{ color: 'rgb(93,47,193)' }} />
+                </button>
+                <button
+                  className="p-2 rounded-lg hover:bg-muted transition-colors"
                   onClick={() => {
                     if (selectedOption) {
                       onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
                     }
                   }}
+                  title={activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
                 >
-                  <Star className={cn("h-4 w-4 mr-2", activeOptionId === selectedOption?.id && "fill-current")} />
-                  {activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-[rgb(244,77,97)] border-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
-                  onClick={() => {
-                    if (selectedOption) {
-                      handleDelete(selectedOption.id);
-                      setShowOptionModal(false);
-                    }
-                  }}
+                  <Star 
+                    className={cn("h-4 w-4", activeOptionId === selectedOption?.id && "fill-current")} 
+                    style={{ color: activeOptionId === selectedOption?.id ? 'hsl(95, 75%, 45%)' : 'rgb(93,47,193)' }} 
+                  />
+                </button>
+                <button
+                  className="p-2 rounded-lg hover:bg-destructive/10 transition-colors"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  title="Delete"
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
-                </Button>
-              </>
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </button>
+              </div>
             )}
-          </DialogFooter>
+          </div>
+          
+          {/* Content */}
+          <div className="mt-4">
+            {isEditingInModal ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Description</label>
+                  <Textarea
+                    value={modalEditDescription}
+                    onChange={(e) => setModalEditDescription(e.target.value)}
+                    placeholder="Description (optional)"
+                    rows={6}
+                    className="resize-y focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div className="flex gap-2 justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-muted-foreground text-muted-foreground hover:bg-muted"
+                    onClick={() => setIsEditingInModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="bg-[hsl(95,75%,45%)] hover:bg-[hsl(95,75%,40%)] text-white"
+                    onClick={() => {
+                      if (selectedOption && modalEditName.trim()) {
+                        onUpdate(
+                          options.map((o) =>
+                            o.id === selectedOption.id
+                              ? { ...o, name: modalEditName.trim(), description: modalEditDescription.trim() || undefined }
+                              : o
+                          )
+                        );
+                        setSelectedOption({
+                          ...selectedOption,
+                          name: modalEditName.trim(),
+                          description: modalEditDescription.trim() || undefined,
+                        });
+                        setIsEditingInModal(false);
+                      }
+                    }}
+                    disabled={!modalEditName.trim()}
+                  >
+                    <Check className="h-4 w-4 mr-2" />
+                    Save
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {selectedOption?.description ? (
+                  <p className="text-sm text-muted-foreground">{selectedOption.description}</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic">No description provided.</p>
+                )}
+                {activeOptionId === selectedOption?.id && (
+                  <Badge style={{ backgroundColor: "hsl(95, 75%, 45%)", color: "white" }}>
+                    <Check className="h-3 w-3 mr-1" />
+                    Active Option
+                  </Badge>
+                )}
+              </div>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              Delete Option
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedOption?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+              onClick={() => {
+                if (selectedOption) {
+                  handleDelete(selectedOption.id);
+                  setShowDeleteConfirm(false);
+                  setShowOptionModal(false);
+                }
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Goal Name Edit Modal */}
       <Dialog open={showGoalNameModal} onOpenChange={setShowGoalNameModal}>
