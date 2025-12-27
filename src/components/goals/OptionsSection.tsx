@@ -406,13 +406,13 @@ export const OptionsSection = ({
             }
           }}
         >
-          <DialogContent className="sm:max-w-xl">
+          <DialogContent className="sm:max-w-xl w-full max-w-full sm:max-w-xl overflow-x-hidden">
             <DialogHeader>
               <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-4 py-2 sm:py-4">
-              <div className="space-y-2">
+            <div className="space-y-3 py-2 sm:py-4">
+              <div className="space-y-1">
                 <Input
                   value={newName}
                   onChange={(e) => {
@@ -420,7 +420,7 @@ export const OptionsSection = ({
                     setError("");
                   }}
                   placeholder="Option name *"
-                  className={cn("focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2", error && "border-destructive")}
+                  className={cn("focus-visible:ring-0 focus-visible:ring-offset-0 border-input", error && "border-destructive")}
                   autoFocus
                 />
                 {error && <p className="text-sm text-destructive">{error}</p>}
@@ -428,10 +428,15 @@ export const OptionsSection = ({
 
               <Textarea
                 value={newDescription}
-                onChange={(e) => setNewDescription(e.target.value)}
+                onChange={(e) => {
+                  setNewDescription(e.target.value);
+                  // Auto-resize
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+                }}
                 placeholder="Description (optional)"
-                rows={4}
-                className="resize-none focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2"
+                className="resize-none focus-visible:ring-0 focus-visible:ring-offset-0 border-input min-h-[100px] overflow-hidden"
+                style={{ height: 'auto' }}
               />
 
               <div className="flex gap-2 justify-end">
@@ -529,14 +534,19 @@ export const OptionsSection = ({
                         onChange={(e) => setEditName(e.target.value)}
                         placeholder="Name"
                         autoFocus
-                        className="text-xs h-7 focus-visible:ring-[rgb(93,47,193)] focus-visible:ring-2"
+                        className="text-xs h-7 focus-visible:ring-0 focus-visible:ring-offset-0 border-input"
                       />
                       <Textarea
                         value={editDescription}
-                        onChange={(e) => setEditDescription(e.target.value)}
+                        onChange={(e) => {
+                          setEditDescription(e.target.value);
+                          // Auto-resize
+                          e.target.style.height = 'auto';
+                          e.target.style.height = e.target.scrollHeight + 'px';
+                        }}
                         placeholder="Description"
-                        rows={2}
-                        className="resize-none text-xs focus-visible:ring-[rgb(93,47,193)] focus-visible:ring-2"
+                        className="resize-none text-xs focus-visible:ring-0 focus-visible:ring-offset-0 border-input min-h-[40px] overflow-hidden"
+                        style={{ height: 'auto' }}
                       />
                       <div className="flex gap-1">
                         <Button size="sm" onClick={handleSaveEdit} className="h-6 text-xs px-2 bg-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)]/90 text-white">
@@ -667,13 +677,13 @@ export const OptionsSection = ({
           }
         }}
       >
-        <DialogContent className="sm:max-w-xl">
+        <DialogContent className="sm:max-w-xl w-full max-w-full sm:max-w-xl overflow-x-hidden">
           <DialogHeader>
             <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4 py-2 sm:py-4">
-            <div className="space-y-2">
+          <div className="space-y-3 py-2 sm:py-4">
+            <div className="space-y-1">
               <Input
                 value={newName}
                 onChange={(e) => {
@@ -681,7 +691,7 @@ export const OptionsSection = ({
                   setError("");
                 }}
                 placeholder="Option name *"
-                className={cn("focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2", error && "border-destructive")}
+                className={cn("focus-visible:ring-0 focus-visible:ring-offset-0 border-input", error && "border-destructive")}
                 autoFocus
               />
               {error && <p className="text-sm text-destructive">{error}</p>}
@@ -689,10 +699,15 @@ export const OptionsSection = ({
 
             <Textarea
               value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
+              onChange={(e) => {
+                setNewDescription(e.target.value);
+                // Auto-resize
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
               placeholder="Description (optional)"
-              rows={4}
-              className="resize-none focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
+              className="resize-none focus-visible:ring-0 focus-visible:ring-offset-0 border-input min-h-[100px] overflow-hidden"
+              style={{ height: 'auto' }}
             />
 
             <div className="flex gap-2 justify-end">
@@ -726,27 +741,67 @@ export const OptionsSection = ({
           setIsEditingInModal(false);
         }
       }}>
-        <DialogContent className="sm:max-w-xl max-w-[95vw]">
-          {/* Header with name and action icons */}
+        <DialogContent className="sm:max-w-xl w-full max-w-full sm:max-w-xl overflow-x-hidden">
+          {/* Action icons - positioned vertically under close button on mobile */}
+          {!isEditingInModal && (
+            <div className="absolute right-4 top-16 flex flex-col gap-1 sm:hidden z-10">
+              <button
+                className="p-2 rounded-lg hover:bg-muted transition-colors bg-background/80 backdrop-blur"
+                onClick={() => {
+                  if (selectedOption) {
+                    setModalEditName(selectedOption.name);
+                    setModalEditDescription(selectedOption.description || "");
+                    setIsEditingInModal(true);
+                  }
+                }}
+                title="Edit"
+              >
+                <Pencil className="h-4 w-4" style={{ color: 'rgb(93,47,193)' }} />
+              </button>
+              <button
+                className="p-2 rounded-lg hover:bg-muted transition-colors bg-background/80 backdrop-blur"
+                onClick={() => {
+                  if (selectedOption) {
+                    onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
+                  }
+                }}
+                title={activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
+              >
+                <Star 
+                  className={cn("h-4 w-4", activeOptionId === selectedOption?.id && "fill-current")} 
+                  style={{ color: activeOptionId === selectedOption?.id ? 'hsl(95, 75%, 45%)' : 'rgb(93,47,193)' }} 
+                />
+              </button>
+              <button
+                className="p-2 rounded-lg hover:bg-destructive/10 transition-colors bg-background/80 backdrop-blur"
+                onClick={() => setShowDeleteConfirm(true)}
+                title="Delete"
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </button>
+            </div>
+          )}
+
+          {/* Header with name - mobile: top right */}
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <Lightbulb className="h-5 w-5 flex-shrink-0" style={{ color: 'rgb(93,47,193)' }} />
+            <div className="flex items-start gap-2 flex-1 min-w-0 flex-col sm:flex-row sm:items-center">
+              <Lightbulb className="h-5 w-5 flex-shrink-0 sm:mt-0" style={{ color: 'rgb(93,47,193)' }} />
               {isEditingInModal ? (
                 <Input
                   value={modalEditName}
                   onChange={(e) => setModalEditName(e.target.value)}
                   placeholder="Option name"
-                  className="flex-1 focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
+                  className="flex-1 focus-visible:ring-0 focus-visible:ring-offset-0 border-input"
                   autoFocus
                 />
               ) : (
-                <h2 className="font-semibold text-lg truncate">{selectedOption?.name}</h2>
+                <h2 className="font-semibold text-lg break-words">{selectedOption?.name}</h2>
               )}
             </div>
             
-            {/* Action icons */}
+            {/* Action icons - desktop only */}
             {!isEditingInModal && (
-              <div className="flex items-center gap-1 flex-shrink-0">
+              <div className="hidden sm:flex items-center gap-1 flex-shrink-0">
                 <button
                   className="p-2 rounded-lg hover:bg-muted transition-colors"
                   onClick={() => {
@@ -786,17 +841,22 @@ export const OptionsSection = ({
           </div>
           
           {/* Content */}
-          <div className="mt-4">
+          <div className="mt-2">
             {isEditingInModal ? (
-              <div className="space-y-4">
-                <div className="space-y-2">
+              <div className="space-y-3">
+                <div className="space-y-1">
                   <label className="text-sm font-medium">Description</label>
                   <Textarea
                     value={modalEditDescription}
-                    onChange={(e) => setModalEditDescription(e.target.value)}
+                    onChange={(e) => {
+                      setModalEditDescription(e.target.value);
+                      // Auto-resize
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
                     placeholder="Description (optional)"
-                    rows={6}
-                    className="resize-y focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
+                    className="resize-none focus-visible:ring-0 focus-visible:ring-offset-0 border-input min-h-[100px] overflow-hidden"
+                    style={{ height: 'auto' }}
                   />
                 </div>
                 <div className="flex gap-2 justify-end">
@@ -836,17 +896,20 @@ export const OptionsSection = ({
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 pb-16 sm:pb-0">
                 {selectedOption?.description ? (
-                  <p className="text-sm text-muted-foreground">{selectedOption.description}</p>
+                  <p className="text-sm text-muted-foreground break-words">{selectedOption.description}</p>
                 ) : (
                   <p className="text-sm text-muted-foreground italic">No description provided.</p>
                 )}
+                {/* Active badge - positioned bottom left on mobile */}
                 {activeOptionId === selectedOption?.id && (
-                  <Badge style={{ backgroundColor: "hsl(95, 75%, 45%)", color: "white" }}>
-                    <Check className="h-3 w-3 mr-1" />
-                    Active Option
-                  </Badge>
+                  <div className="fixed bottom-4 left-4 sm:static">
+                    <Badge style={{ backgroundColor: "hsl(95, 75%, 45%)", color: "white" }}>
+                      <Check className="h-3 w-3 mr-1" />
+                      Active Option
+                    </Badge>
+                  </div>
                 )}
               </div>
             )}
