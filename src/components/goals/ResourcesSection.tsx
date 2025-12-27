@@ -63,10 +63,10 @@ const resourceTypeLabels: Record<ResourceType, string> = {
   document: "Document",
 };
 
-// Unified style for all resource types - matching the achievability reminder style
+// Unified style for all resource types - white background with gray text
 const unifiedResourceStyle = {
-  backgroundColor: 'rgba(245, 245, 245, 0.9)',
-  color: 'white',
+  backgroundColor: 'white',
+  color: 'rgb(107, 114, 128)', // gray text
   boxShadow: '4px -4px 12px rgb(93,47,193)',
   opacity: 0.7
 };
@@ -329,12 +329,12 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                     className="group flex items-center gap-2 px-3 py-2 rounded-lg border transition-all cursor-pointer"
                     style={unifiedResourceStyle}
                   >
-                    <Icon className="h-4 w-4 flex-shrink-0" style={{ color: 'white' }} />
-                    <span className="text-sm font-medium truncate max-w-[150px]" style={{ color: 'white' }}>
+                    <Icon className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(107, 114, 128)' }} />
+                    <span className="text-sm font-medium truncate max-w-[150px]" style={{ color: 'rgb(107, 114, 128)' }}>
                       {resource.name}
                     </span>
                     {resource.type === "link" && (
-                      <ExternalLink className="h-3 w-3 opacity-60" style={{ color: 'white' }} />
+                      <ExternalLink className="h-3 w-3 opacity-60" style={{ color: 'rgb(107, 114, 128)' }} />
                     )}
                     <div className="flex items-center gap-1">
                       {/* Copy button for email, text, link */}
@@ -344,7 +344,7 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                           className="p-1 hover:bg-background/50 rounded"
                           title="Copy"
                         >
-                          <Copy className="h-3 w-3" style={{ color: 'white' }} />
+                          <Copy className="h-3 w-3" style={{ color: 'rgb(107, 114, 128)' }} />
                         </button>
                       )}
                       {resource.type !== "document" && (
@@ -352,14 +352,14 @@ export const ResourcesSection = ({ resources, onUpdate }: ResourcesSectionProps)
                           onClick={(e) => startEdit(resource, e)}
                           className="p-1 hover:bg-background/50 rounded"
                         >
-                          <Pencil className="h-3 w-3" style={{ color: 'white' }} />
+                          <Pencil className="h-3 w-3" style={{ color: 'rgb(107, 114, 128)' }} />
                         </button>
                       )}
                       <button
                         onClick={(e) => handleDelete(resource.id, e)}
                         className="p-1 hover:bg-background/50 rounded"
                       >
-                        <X className="h-3 w-3" style={{ color: 'white' }} />
+                        <X className="h-3 w-3" style={{ color: 'rgb(107, 114, 128)' }} />
                       </button>
                     </div>
                   </button>
