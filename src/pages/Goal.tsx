@@ -17,6 +17,8 @@ import {
   ChevronUp,
   Clock,
   Lightbulb,
+  Compass,
+  Heart,
 } from "lucide-react";
 import { WaveSeparator, WaveSectionWrapper } from "@/components/ui/wave-separator";
 import { Layout } from "@/components/layout/Layout";
@@ -461,8 +463,11 @@ const GoalPage = () => {
 
             <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections} className="space-y-4">
               <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AccordionTrigger className="font-medium text-primary-foreground">
-                  Reality: Actions & Obstacles
+                <AccordionTrigger className="font-medium text-primary-foreground text-left">
+                  <div className="flex items-center gap-2">
+                    <Compass className="h-4 w-4" />
+                    Reality: Actions & Obstacles
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 text-primary-foreground">
                   <RealitySection
@@ -508,8 +513,11 @@ const GoalPage = () => {
               </AccordionItem>
 
               <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AccordionTrigger className="font-medium text-primary-foreground">
-                  Why is this goal important?
+                <AccordionTrigger className="font-medium text-primary-foreground text-left">
+                  <div className="flex items-center gap-2">
+                    <Heart className="h-4 w-4" />
+                    Why is this goal important?
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent className="text-primary-foreground">
                   <Textarea
