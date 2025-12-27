@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, Skull } from "lucide-react";
+import { Plus, X, Pencil, Check, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -12,16 +12,29 @@ interface RealitySectionProps {
   onUpdateObstacles: (obstacles: RealityItem[]) => void;
 }
 
-// Mini leaf bullet icon matching the Spira logo style
+// Tree bullet icon from Spira logo (tree only, no person)
 const LeafBullet = ({ className }: { className?: string }) => (
   <svg
-    width="24"
-    height="24"
+    width="48"
+    height="48"
     viewBox="0 0 100 100"
+    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    <path d="M50.8973514,89.911873 L50.8973514,70.2743515 L57.4299246,70.2743515 C70.0594214,70.2743515 80.3340945,59.9996784 80.3340945,47.3701816 L80.3340945,43.4638084 L68.7018156,43.4638084 C61.2928775,43.4638084 54.7508965,47.2413682 50.8973514,52.9706672 L50.8973514,48.8768635 L50.8973514,48.4911471 L50.8879437,48.4911471 C50.6802502,36.8458421 41.1487866,27.4337842 29.4542721,27.4337842 L24.0868083,27.4337842 L24.0868083,31.3401573 C24.0868083,43.5803194 33.7391248,53.6089446 45.8316582,54.2146567 L45.8316582,89.716482 C25.7635527,87.6250744 10.0656932,70.6123056 10.0656932,50 C10.0656932,27.9801553 27.9801553,10.0656932 50,10.0656932 C72.0198447,10.0656932 89.9343068,27.9801553 89.9343068,50 C89.9343068,71.7195214 72.5032565,89.4313558 50.8973514,89.911873 M50,5 C25.1867874,5 5,25.1867874 5,50 C5,74.8132126 25.1867874,95 50,95 C74.8132126,95 95,74.8132126 95,50 C95,25.1867874 74.8132126,5 50,5" fill="currentColor" stroke="none"/>
+    <defs>
+      <linearGradient id="treeBulletGradient" x1="50%" y1="100%" x2="50%" y2="0%">
+        <stop offset="0%" stopColor="currentColor" />
+        <stop offset="40%" stopColor="currentColor" />
+        <stop offset="70%" stopColor="currentColor" />
+        <stop offset="100%" stopColor="currentColor" />
+      </linearGradient>
+    </defs>
+    {/* Tree only - circles arranged in tree pattern */}
+    <g transform="translate(15, 10) scale(0.6)" fill="url(#treeBulletGradient)">
+      {/* Main trunk and branching structure */}
+      <path d="M84.5,91c-5.6-2.7-12.5-4.8-20.1-6V53.4c1.4,0.6,2.9,0.9,4.5,0.9c5.5,0,10.1-3.5,11.8-8.4c5.3-1.4,9.2-6.3,9.2-12c0-4.2-2.1-7.9-5.2-10.1c0.1-0.5,0.1-1,0.1-1.5c0-6.9-5.6-12.5-12.5-12.5c-0.2,0-0.4,0-0.6,0c-2-4.3-6.3-7.3-11.3-7.3S51,5.5,49,9.8c-0.2,0-0.4,0-0.6,0C41.6,9.7,36,15.3,36,22.2c0,0.5,0,1,0.1,1.5c-3.2,2.3-5.2,6-5.2,10.1c0,5.8,3.9,10.6,9.2,12c1.7,4.9,6.3,8.4,11.8,8.4c1.6,0,3.1-0.3,4.5-0.9v30.6c-2.7-0.2-5.4-0.3-8.1-0.3c-14,0-26.8,2.8-36.2,7.3c-3.5,1.7-2,6.9,1.9,6.5c10.5-1.2,22.1-1.9,34.3-1.9c12.2,0,23.8,0.7,34.3,1.9C86.4,97.9,87.9,92.7,84.5,91z M74.9,30.7c1.4,0,2.6,1.2,2.6,2.6c0,1.4-1.2,2.6-2.6,2.6c-1.4,0-2.6-1.2-2.6-2.6C72.3,31.8,73.5,30.7,74.9,30.7z M68.3,17.5c1.4,0,2.6,1.2,2.6,2.6c0,1.4-1.2,2.6-2.6,2.6c-1.4,0-2.6-1.2-2.6-2.6C65.7,18.7,66.9,17.5,68.3,17.5z M45.9,37.3c-1.4,0-2.6-1.2-2.6-2.6c0,1.4,1.2-2.6,2.6-2.6c1.4,0,2.6,1.2,2.6,2.6C48.5,36.2,47.4,37.3,45.9,37.3z M51.9,24c-1.4,0-2.6-1.2-2.6-2.6c0-1.4,1.2-2.6,2.6-2.6c1.4,0,2.6,1.2,2.6,2.6C54.5,22.8,53.3,24,51.9,24z M61.4,44c-1.4,0-2.6-1.2-2.6-2.6c0-1.4,1.2-2.6,2.6-2.6S64,40,64,41.4C64,42.8,62.9,44,61.4,44z"/>
+    </g>
   </svg>
 );
 
@@ -38,15 +51,41 @@ const CrossedBonesBullet = ({ className }: { className?: string }) => (
     {/* Crossed bones */}
     <path
       d="M4 4L20 20M4 20L20 4"
-      stroke="hsl(0, 70%, 55%)"
+      stroke="currentColor"
       strokeWidth="3"
       strokeLinecap="round"
     />
     {/* Bone ends */}
-    <circle cx="4" cy="4" r="2" fill="hsl(0, 70%, 55%)" />
-    <circle cx="20" cy="4" r="2" fill="hsl(0, 70%, 55%)" />
-    <circle cx="4" cy="20" r="2" fill="hsl(0, 70%, 55%)" />
-    <circle cx="20" cy="20" r="2" fill="hsl(0, 70%, 55%)" />
+    <circle cx="4" cy="4" r="2" fill="currentColor" />
+    <circle cx="20" cy="4" r="2" fill="currentColor" />
+    <circle cx="4" cy="20" r="2" fill="currentColor" />
+    <circle cx="20" cy="20" r="2" fill="currentColor" />
+  </svg>
+);
+
+const ObstaclesBurstIcon = ({ className }: { className?: string }) => (
+  <svg
+    width="34"
+    height="34"
+    viewBox="0 5 100 100"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    className={className}
+  >
+    <g transform="matrix(1.3586955394997358,0,0,1.3586955394997358,-17.934780862245905,-9.934780862245905)" fill="currentColor">
+      <g>
+        <path d="M50,68.4c10.1,0,18.4-8.2,18.4-18.4S60.1,31.6,50,31.6S31.6,39.9,31.6,50S39.9,68.4,50,68.4z M50,34.6   c8.5,0,15.4,6.9,15.4,15.4S58.5,65.4,50,65.4S34.6,58.5,34.6,50S41.5,34.6,50,34.6z" />
+        <path d="M50,60c5.5,0,10-4.5,10-10c0-5.5-4.5-10-10-10s-10,4.5-10,10C40,55.5,44.5,60,50,60z M50,43c3.9,0,7,3.2,7,7s-3.2,7-7,7   s-7-3.2-7-7S46.1,43,50,43z" />
+        <path d="M50,26c0.8,0,1.5-0.7,1.5-1.5v-9.8c0-0.8-0.7-1.5-1.5-1.5s-1.5,0.7-1.5,1.5v9.8C48.5,25.3,49.2,26,50,26z" />
+        <path d="M51.5,85.3v-9.8c0-0.8-0.7-1.5-1.5-1.5s-1.5,0.7-1.5,1.5v9.8c0,0.8,0.7,1.5,1.5,1.5S51.5,86.1,51.5,85.3z" />
+        <path d="M74,50c0,0.8,0.7,1.5,1.5,1.5h9.8c0.8,0,1.5-0.7,1.5-1.5s-0.7-1.5-1.5-1.5h-9.8C74.7,48.5,74,49.2,74,50z" />
+        <path d="M14.7,51.5h9.8c0.8,0,1.5-0.7,1.5-1.5s-0.7-1.5-1.5-1.5h-9.8c-0.8,0-1.5,0.7-1.5,1.5S13.9,51.5,14.7,51.5z" />
+        <path d="M75,76.5c0.4,0,0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L69.1,67c-0.6-0.6-1.5-0.6-2.1,0s-0.6,1.5,0,2.1l6.9,6.9   C74.2,76.3,74.6,76.5,75,76.5z" />
+        <path d="M30.9,33c0.3,0.3,0.7,0.4,1.1,0.4s0.8-0.1,1.1-0.4c0.6-0.6,0.6-1.5,0-2.1L26.1,24c-0.6-0.6-1.5-0.6-2.1,0s-0.6,1.5,0,2.1   L30.9,33z" />
+        <path d="M68.1,33.4c0.4,0,0.8-0.1,1.1-0.4l6.9-6.9c0.6-0.6,0.6-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0L67,30.9c-0.6,0.6-0.6,1.5,0,2.1   C67.3,33.3,67.7,33.4,68.1,33.4z" />
+        <path d="M26.1,76l6.9-6.9c0.6-0.6,0.6-1.5,0-2.1s-1.5-0.6-2.1,0L24,73.9c-0.6,0.6-0.6,1.5,0,2.1c0.3,0.3,0.7,0.4,1.1,0.4   S25.8,76.3,26.1,76z" />
+      </g>
+    </g>
   </svg>
 );
 
@@ -62,7 +101,7 @@ export const RealitySection = ({
       <RealityList
         title="Actions"
         icon={
-          <svg width="54" height="54" viewBox="0 0 80 45" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <svg width="51" height="51" viewBox="5 6 65 30" xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="h-[51px] w-[51px]">
             <defs id="SvgjsDefs1001"></defs>
             <g id="SvgjsG1007" featurekey="symbolFeature-0" transform="matrix(1,0,0,1,0,0)" fill="currentColor">
               <title xmlns="http://www.w3.org/2000/svg">glyph finish</title>
@@ -87,7 +126,7 @@ export const RealitySection = ({
       {/* Obstacles - Destructive/Red theme */}
       <RealityList
         title="Obstacles"
-        icon={<Skull className="h-6 w-6" />}
+        icon={<ObstaclesBurstIcon className="h-[34px] w-[34px]" />}
         items={obstacles}
         onUpdate={onUpdateObstacles}
         colorScheme="obstacles"
@@ -135,7 +174,7 @@ const RealityList = ({
       customBorder: "rgb(215, 253, 245)",
       customBg: "rgb(215, 253, 245)",
       customHover: "rgba(103, 232, 249, 0.15)",
-      customButton: "rgb(103, 232, 249)",
+      customButton: "hsl(187, 92%, 63%)",
     },
     obstacles: {
       bg: "",
@@ -205,7 +244,7 @@ const RealityList = ({
       style={colorScheme === "actions" ? { borderColor: "rgb(215, 253, 245)", backgroundColor: "rgb(215, 253, 245)" } : { borderColor: "#fccfd7", backgroundColor: "#fccfd7" }}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-3 font-semibold" style={colorScheme === "actions" ? { color: "rgb(19, 56, 68)" } : { color: "rgb(244, 77, 97)" }}>
+      <div className="flex items-center gap-2 mb-3 font-semibold" style={colorScheme === "actions" ? { color: "rgb(19, 56, 68)" } : { color: "rgb(127, 9, 29)" }}>
         {icon}
         <span>{title}</span>
         <span className="text-xs font-normal opacity-70">({items.length})</span>
@@ -259,7 +298,7 @@ const RealityList = ({
             ) : (
               <>
                 {/* Styled bullet icon */}
-                <div className="flex-shrink-0 mt-0.5" style={colorScheme === "actions" ? { color: "rgb(19, 56, 68)" } : {}}>
+                <div className="flex-shrink-0 mt-0.5" style={colorScheme === "actions" ? { color: "rgb(19, 56, 68)" } : { color: "rgb(127, 9, 29)" }}>
                   <BulletIcon />
                 </div>
                 <span className="flex-1 text-sm text-foreground">{item.name}</span>
