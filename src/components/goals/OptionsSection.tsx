@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Lightbulb, Check, Plus, Sparkles, AlertTriangle, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +71,28 @@ export const OptionsSection = ({
   const dragStart = useRef<{ x: number; y: number; initialPos: DragPosition } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const hasDragged = useRef(false);
+  
+  // Textarea refs for auto-resize
+  const modalDescriptionRef = useRef<HTMLTextAreaElement>(null);
+  const addDescriptionRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-resize textarea helper
+  const autoResizeTextarea = (textarea: HTMLTextAreaElement | null) => {
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+  };
+
+  // Auto-resize modal textarea when content changes
+  useEffect(() => {
+    autoResizeTextarea(modalDescriptionRef.current);
+  }, [modalEditDescription]);
+
+  // Auto-resize add form textarea when content changes
+  useEffect(() => {
+    autoResizeTextarea(addDescriptionRef.current);
+  }, [newDescription]);
 
   const handleAdd = () => {
     if (!newName.trim()) {
@@ -391,19 +413,13 @@ export const OptionsSection = ({
               
               <Textarea
                 value={newDescription}
+                ref={addDescriptionRef}
                 onChange={(e) => {
                   setNewDescription(e.target.value);
-                  // Auto-resize
-                  e.target.style.height = 'auto';
-                  e.target.style.height = e.target.scrollHeight + 'px';
+                  autoResizeTextarea(e.target);
                 }}
                 placeholder="Description (optional)"
                 className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
-                onInput={(e) => {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = 'auto';
-                  target.style.height = target.scrollHeight + 'px';
-                }}
               />
             </div>
           </DialogContent>
@@ -486,32 +502,43 @@ export const OptionsSection = ({
                       )}
                     </div>
                     
-                    {/* Icons at bottom right */}
-                    <div className="flex items-center justify-end gap-1 mt-auto">
-                      <button
-                        className="p-1 hover:bg-background/20 rounded transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onSetActiveOption(isActive ? undefined : option.id);
-                        }}
-                        title={isActive ? "Unset Active" : "Make Active"}
-                      >
-                        <Star 
-                          className={cn("h-4 w-4", isActive && "fill-current")} 
-                          style={{ color: isActive ? "white" : "rgb(93,47,193)" }} 
-                        />
-                      </button>
-                      <button
-                        className="p-1 hover:bg-background/20 rounded transition-colors"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedOption(option);
-                          setShowDeleteConfirm(true);
-                        }}
-                        title="Delete"
-                      >
-                        <Trash2 className="h-4 w-4" style={{ color: isActive ? "white" : "rgb(244,77,97)" }} />
-                      </button>
+                    {/* Bottom row: Active badge on left, icons on right */}
+                    <div className="flex items-center justify-between gap-2 mt-auto">
+                      {/* Active badge at bottom left */}
+                      {isActive && (
+                        <Badge style={{ backgroundColor: "hsl(95, 75%, 45%)", color: "white" }} className="text-xs px-2 py-0.5 flex-shrink-0">
+                          <Check className="h-3 w-3 mr-1" />
+                          Active
+                        </Badge>
+                      )}
+                      
+                      {/* Icons at bottom right */}
+                      <div className="flex items-center gap-1 ml-auto">
+                        <button
+                          className="p-1 hover:bg-background/20 rounded transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onSetActiveOption(isActive ? undefined : option.id);
+                          }}
+                          title={isActive ? "Unset Active" : "Make Active"}
+                        >
+                          <Star 
+                            className={cn("h-4 w-4", isActive && "fill-current")} 
+                            style={{ color: isActive ? "white" : "rgb(93,47,193)" }} 
+                          />
+                        </button>
+                        <button
+                          className="p-1 hover:bg-background/20 rounded transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedOption(option);
+                            setShowDeleteConfirm(true);
+                          }}
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" style={{ color: isActive ? "white" : "rgb(244,77,97)" }} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -597,19 +624,13 @@ export const OptionsSection = ({
             
             <Textarea
               value={newDescription}
+              ref={addDescriptionRef}
               onChange={(e) => {
                 setNewDescription(e.target.value);
-                // Auto-resize
-                e.target.style.height = 'auto';
-                e.target.style.height = e.target.scrollHeight + 'px';
+                autoResizeTextarea(e.target);
               }}
               placeholder="Description (optional)"
               className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
-              onInput={(e) => {
-                const target = e.target as HTMLTextAreaElement;
-                target.style.height = 'auto';
-                target.style.height = target.scrollHeight + 'px';
-              }}
             />
           </div>
         </DialogContent>
@@ -650,19 +671,13 @@ export const OptionsSection = ({
             />
             <Textarea
               value={modalEditDescription}
+              ref={modalDescriptionRef}
               onChange={(e) => {
                 setModalEditDescription(e.target.value);
-                // Auto-resize
-                e.target.style.height = 'auto';
-                e.target.style.height = e.target.scrollHeight + 'px';
+                autoResizeTextarea(e.target);
               }}
               placeholder="Description (optional)"
               className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
-              onInput={(e) => {
-                const target = e.target as HTMLTextAreaElement;
-                target.style.height = 'auto';
-                target.style.height = target.scrollHeight + 'px';
-              }}
             />
           </div>
 
