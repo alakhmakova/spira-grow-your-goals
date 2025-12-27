@@ -406,7 +406,7 @@ export const OptionsSection = ({
             }
           }}
         >
-          <DialogContent className="sm:max-w-xl w-full max-w-full sm:max-w-xl overflow-x-hidden">
+          <DialogContent className="w-full max-w-full sm:max-w-xl overflow-x-hidden">
             <DialogHeader>
               <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
             </DialogHeader>
@@ -677,7 +677,7 @@ export const OptionsSection = ({
           }
         }}
       >
-        <DialogContent className="sm:max-w-xl w-full max-w-full sm:max-w-xl overflow-x-hidden">
+        <DialogContent className="w-full max-w-full sm:max-w-xl overflow-x-hidden">
           <DialogHeader>
             <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
           </DialogHeader>
@@ -741,7 +741,7 @@ export const OptionsSection = ({
           setIsEditingInModal(false);
         }
       }}>
-        <DialogContent className="sm:max-w-xl w-full max-w-full sm:max-w-xl overflow-x-hidden">
+        <DialogContent className="w-full max-w-full sm:max-w-xl overflow-x-hidden">
           {/* Action icons - positioned vertically under close button on mobile */}
           {!isEditingInModal && (
             <div className="absolute right-4 top-16 flex flex-col gap-1 sm:hidden z-10">
