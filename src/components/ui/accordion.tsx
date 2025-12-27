@@ -28,9 +28,10 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
+      {/* White circle background as per design requirements */}
       <div className="ml-2 flex-shrink-0 h-6 w-6 rounded-full bg-white flex items-center justify-center transition-all">
-        <Plus className="h-4 w-4 text-gray-700 block group-data-[state=open]:hidden" />
-        <Minus className="h-4 w-4 text-gray-700 hidden group-data-[state=open]:block" />
+        <Plus className="h-4 w-4 text-gray-700 block group-data-[state=open]:hidden" aria-hidden="true" />
+        <Minus className="h-4 w-4 text-gray-700 hidden group-data-[state=open]:block" aria-hidden="true" />
       </div>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
