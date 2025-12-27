@@ -620,7 +620,7 @@ export const OptionsSection = ({
                 setError("");
               }}
               placeholder="Option name *"
-              className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+              className="flex-1 border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
               autoFocus
             />
             {error && <p className="text-sm text-destructive px-0">{error}</p>}
@@ -633,7 +633,7 @@ export const OptionsSection = ({
                 autoResizeTextarea(e.target);
               }}
               placeholder="Description (optional)"
-              className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+              className="resize-none border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
             />
           </div>
         </DialogContent>
@@ -668,7 +668,7 @@ export const OptionsSection = ({
               value={modalEditName}
               onChange={(e) => setModalEditName(e.target.value)}
               placeholder="Option name"
-              className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+              className="flex-1 border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
               autoFocus
             />
             <Textarea
@@ -679,7 +679,7 @@ export const OptionsSection = ({
                 autoResizeTextarea(e.target);
               }}
               placeholder="Description (optional)"
-              className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+              className="resize-none border-none focus-visible:ring-1 focus-visible:ring-gray-300 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
             />
           </div>
 
