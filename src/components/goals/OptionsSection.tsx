@@ -19,6 +19,9 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 
 interface OptionsSectionProps {
@@ -640,7 +643,6 @@ export const OptionsSection = ({
       <Dialog open={showOptionModal} onOpenChange={(open) => {
         setShowOptionModal(open);
         if (!open) {
-          setIsEditingInModal(false);
           // Auto-save on close
           if (selectedOption && (modalEditName.trim() !== selectedOption.name || modalEditDescription.trim() !== (selectedOption.description || ""))) {
             if (modalEditName.trim()) {
