@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { Lightbulb, Check, Plus, Pencil, X, Sparkles, AlertTriangle, MoreVertical, Trash2, Star } from "lucide-react";
+import { Lightbulb, Check, Plus, Sparkles, AlertTriangle, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,17 +17,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 
 interface OptionsSectionProps {
@@ -61,9 +52,6 @@ export const OptionsSection = ({
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
   const [error, setError] = useState("");
   const [showBindConfirm, setShowBindConfirm] = useState(false);
   const [pendingOption, setPendingOption] = useState<GoalOption | null>(null);
@@ -71,7 +59,6 @@ export const OptionsSection = ({
   // Modal states
   const [selectedOption, setSelectedOption] = useState<GoalOption | null>(null);
   const [showOptionModal, setShowOptionModal] = useState(false);
-  const [isEditingInModal, setIsEditingInModal] = useState(false);
   const [modalEditName, setModalEditName] = useState("");
   const [modalEditDescription, setModalEditDescription] = useState("");
   const [showGoalNameModal, setShowGoalNameModal] = useState(false);
@@ -148,27 +135,6 @@ export const OptionsSection = ({
     }
   };
 
-  const handleEdit = (option: GoalOption) => {
-    setEditingId(option.id);
-    setEditName(option.name);
-    setEditDescription(option.description || "");
-  };
-
-  const handleSaveEdit = () => {
-    if (!editName.trim()) return;
-
-    onUpdate(
-      options.map((o) =>
-        o.id === editingId
-          ? { ...o, name: editName.trim(), description: editDescription.trim() || undefined }
-          : o
-      )
-    );
-    setEditingId(null);
-    setEditName("");
-    setEditDescription("");
-  };
-
   const optionColors = [
     { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
     { bg: "bg-warning/10", border: "border-warning/40", text: "text-white" },
@@ -207,7 +173,6 @@ export const OptionsSection = ({
 
   // Drag handlers - mouse
   const handleMouseDown = useCallback((e: React.MouseEvent, optionId: string, currentPos: DragPosition) => {
-    if (editingId) return;
     e.preventDefault();
     setDraggingId(optionId);
     hasDragged.current = false;
@@ -216,7 +181,7 @@ export const OptionsSection = ({
       y: e.clientY,
       initialPos: currentPos,
     };
-  }, [editingId]);
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!draggingId || !dragStart.current || !containerRef.current) return;
@@ -265,7 +230,6 @@ export const OptionsSection = ({
 
   // Touch handlers for mobile
   const handleTouchStart = useCallback((e: React.TouchEvent, optionId: string, currentPos: DragPosition) => {
-    if (editingId) return;
     const touch = e.touches[0];
     setDraggingId(optionId);
     hasDragged.current = false;
@@ -274,7 +238,7 @@ export const OptionsSection = ({
       y: touch.clientY,
       initialPos: currentPos,
     };
-  }, [editingId]);
+  }, []);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     if (!draggingId || !dragStart.current || !containerRef.current) return;
@@ -398,62 +362,49 @@ export const OptionsSection = ({
         <Dialog
           open={showAddForm}
           onOpenChange={(open) => {
-            setShowAddForm(open);
-            if (!open) {
-              setNewName("");
-              setNewDescription("");
-              setError("");
+            if (!open && newName.trim()) {
+              // Auto-save when closing with content
+              handleAdd();
+            } else {
+              setShowAddForm(open);
+              if (!open) {
+                setNewName("");
+                setNewDescription("");
+                setError("");
+              }
             }
           }}
         >
-          <DialogContent className="sm:max-w-xl">
-            <DialogHeader>
-              <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
-            </DialogHeader>
-
-            <div className="space-y-4 py-2 sm:py-4">
-              <div className="space-y-2">
-                <Input
-                  value={newName}
-                  onChange={(e) => {
-                    setNewName(e.target.value);
-                    setError("");
-                  }}
-                  placeholder="Option name *"
-                  className={cn("focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2", error && "border-destructive")}
-                  autoFocus
-                />
-                {error && <p className="text-sm text-destructive">{error}</p>}
-              </div>
-
+          <DialogContent className="sm:max-w-xl max-w-[95vw] flex flex-col h-full sm:h-auto">
+            <div className="flex-1 flex flex-col gap-1">
+              <Input
+                value={newName}
+                onChange={(e) => {
+                  setNewName(e.target.value);
+                  setError("");
+                }}
+                placeholder="Option name *"
+                className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+                autoFocus
+              />
+              {error && <p className="text-sm text-destructive px-0">{error}</p>}
+              
               <Textarea
                 value={newDescription}
-                onChange={(e) => setNewDescription(e.target.value)}
+                onChange={(e) => {
+                  setNewDescription(e.target.value);
+                  // Auto-resize
+                  e.target.style.height = 'auto';
+                  e.target.style.height = e.target.scrollHeight + 'px';
+                }}
                 placeholder="Description (optional)"
-                rows={4}
-                className="resize-none focus-visible:ring-[rgb(19,56,68)] focus-visible:ring-2"
+                className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = 'auto';
+                  target.style.height = target.scrollHeight + 'px';
+                }}
               />
-
-              <div className="flex gap-2 justify-end">
-                <Button
-                  variant="outline"
-                  className="border-[rgb(244,77,97)] text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setNewName("");
-                    setNewDescription("");
-                    setError("");
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleAdd}
-                  className="bg-[rgb(19,56,68)] hover:bg-[hsl(95,75%,45%)] text-white"
-                >
-                  Add Option
-                </Button>
-              </div>
             </div>
           </DialogContent>
         </Dialog>
@@ -484,7 +435,7 @@ export const OptionsSection = ({
       {/* Options Grid Layout */}
       <div 
         ref={containerRef}
-        className="relative select-none touch-none"
+        className="relative select-none touch-none overflow-x-hidden"
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
@@ -492,11 +443,10 @@ export const OptionsSection = ({
         onTouchEnd={handleTouchEnd}
       >
         {/* Options arranged in grid layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch max-w-full">
           {options.map((option, index) => {
             const colors = optionColors[index % optionColors.length];
             const isActive = activeOptionId === option.id;
-            const isEditing = editingId === option.id;
             const isDragging = draggingId === option.id;
 
             return (
@@ -515,46 +465,17 @@ export const OptionsSection = ({
                       : "hover:border-gray-300",
                     isDragging && "scale-105 shadow-lg"
                   )}
-                  onClick={(e) => !isEditing && handleOptionClick(option, e)}
+                  onClick={(e) => handleOptionClick(option, e)}
                   style={{ 
                     color: isActive ? "white" : "rgb(29, 41, 86)", 
                     borderColor: isActive ? "hsl(95, 75%, 45%)" : "rgb(93,47,193)", 
                     backgroundColor: isActive ? "hsl(95, 75%, 45%)" : "#fff" 
                   }}
                 >
-                  {isEditing ? (
-                    <div className="space-y-2" onClick={(e) => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
-                      <Input
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        placeholder="Name"
-                        autoFocus
-                        className="text-xs h-7 focus-visible:ring-[rgb(93,47,193)] focus-visible:ring-2"
-                      />
-                      <Textarea
-                        value={editDescription}
-                        onChange={(e) => setEditDescription(e.target.value)}
-                        placeholder="Description"
-                        rows={2}
-                        className="resize-none text-xs focus-visible:ring-[rgb(93,47,193)] focus-visible:ring-2"
-                      />
-                      <div className="flex gap-1">
-                        <Button size="sm" onClick={handleSaveEdit} className="h-6 text-xs px-2 bg-[rgb(93,47,193)] hover:bg-[rgb(93,47,193)]/90 text-white">
-                          Save
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setEditingId(null)}
-                          className="h-6 text-xs px-2"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="flex items-start gap-1.5 mb-1">
+                  <div className="flex flex-col h-full">
+                    {/* Content at top left */}
+                    <div className="flex-1 mb-2">
+                      <div className="flex items-start gap-1.5 mb-0.5">
                         <Lightbulb className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: isActive ? "white" : "rgb(93,47,193)" }} />
                         <h4 className="font-semibold text-sm line-clamp-2" style={{ color: isActive ? "white" : "rgb(29, 41, 86)" }}>{option.name}</h4>
                       </div>
@@ -564,47 +485,35 @@ export const OptionsSection = ({
                         </p>
                       )}
                     </div>
-                  )}
-
-                  {/* Dropdown menu for actions */}
-                  {!isEditing && (
-                    <div
-                      className="absolute top-1 right-1"
-                      onClick={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="p-1 hover:bg-background/50 rounded">
-                            <MoreVertical className="h-3 w-3" style={{ color: "rgb(93,47,193)" }} />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem
-                            className="hover:bg-[rgb(93,47,193)] focus:bg-[rgb(93,47,193)]"
-                            onClick={() => handleEdit(option)}
-                          >
-                            <Pencil className="h-4 w-4 mr-2" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            className="hover:bg-[rgb(93,47,193)] focus:bg-[rgb(93,47,193)]"
-                            onClick={() => onSetActiveOption(isActive ? undefined : option.id)}
-                          >
-                            <Star className={cn("h-4 w-4 mr-2", isActive && "fill-current")} />
-                            {isActive ? "Unset Active" : "Make Active"}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem 
-                            onClick={() => handleDelete(option.id)}
-                            className="text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white focus:bg-[rgb(244,77,97)] focus:text-white"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    
+                    {/* Icons at bottom right */}
+                    <div className="flex items-center justify-end gap-1 mt-auto">
+                      <button
+                        className="p-1 hover:bg-background/20 rounded transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSetActiveOption(isActive ? undefined : option.id);
+                        }}
+                        title={isActive ? "Unset Active" : "Make Active"}
+                      >
+                        <Star 
+                          className={cn("h-4 w-4", isActive && "fill-current")} 
+                          style={{ color: isActive ? "white" : "rgb(93,47,193)" }} 
+                        />
+                      </button>
+                      <button
+                        className="p-1 hover:bg-background/20 rounded transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedOption(option);
+                          setShowDeleteConfirm(true);
+                        }}
+                        title="Delete"
+                      >
+                        <Trash2 className="h-4 w-4" style={{ color: isActive ? "white" : "rgb(244,77,97)" }} />
+                      </button>
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             );
@@ -659,62 +568,49 @@ export const OptionsSection = ({
       <Dialog
         open={showAddForm}
         onOpenChange={(open) => {
-          setShowAddForm(open);
-          if (!open) {
-            setNewName("");
-            setNewDescription("");
-            setError("");
+          if (!open && newName.trim()) {
+            // Auto-save when closing with content
+            handleAdd();
+          } else {
+            setShowAddForm(open);
+            if (!open) {
+              setNewName("");
+              setNewDescription("");
+              setError("");
+            }
           }
         }}
       >
-        <DialogContent className="sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle className="font-display text-xl sm:text-2xl">Create New Option</DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4 py-2 sm:py-4">
-            <div className="space-y-2">
-              <Input
-                value={newName}
-                onChange={(e) => {
-                  setNewName(e.target.value);
-                  setError("");
-                }}
-                placeholder="Option name *"
-                className={cn("focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2", error && "border-destructive")}
-                autoFocus
-              />
-              {error && <p className="text-sm text-destructive">{error}</p>}
-            </div>
-
+        <DialogContent className="sm:max-w-xl max-w-[95vw] flex flex-col h-full sm:h-auto">
+          <div className="flex-1 flex flex-col gap-1">
+            <Input
+              value={newName}
+              onChange={(e) => {
+                setNewName(e.target.value);
+                setError("");
+              }}
+              placeholder="Option name *"
+              className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+              autoFocus
+            />
+            {error && <p className="text-sm text-destructive px-0">{error}</p>}
+            
             <Textarea
               value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
+              onChange={(e) => {
+                setNewDescription(e.target.value);
+                // Auto-resize
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
               placeholder="Description (optional)"
-              rows={4}
-              className="resize-none focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
+              className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = target.scrollHeight + 'px';
+              }}
             />
-
-            <div className="flex gap-2 justify-end">
-              <Button
-                variant="outline"
-                className="border-[rgb(244,77,97)] text-[rgb(244,77,97)] hover:bg-[rgb(244,77,97)] hover:text-white"
-                onClick={() => {
-                  setShowAddForm(false);
-                  setNewName("");
-                  setNewDescription("");
-                  setError("");
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleAdd}
-                className="bg-[rgb(19,56,68)] hover:bg-[hsl(95,75%,45%)] text-white"
-              >
-                Add Option
-              </Button>
-            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -724,132 +620,86 @@ export const OptionsSection = ({
         setShowOptionModal(open);
         if (!open) {
           setIsEditingInModal(false);
+          // Auto-save on close
+          if (selectedOption && (modalEditName.trim() !== selectedOption.name || modalEditDescription.trim() !== (selectedOption.description || ""))) {
+            if (modalEditName.trim()) {
+              onUpdate(
+                options.map((o) =>
+                  o.id === selectedOption.id
+                    ? { ...o, name: modalEditName.trim(), description: modalEditDescription.trim() || undefined }
+                    : o
+                )
+              );
+            }
+          }
+        } else if (selectedOption) {
+          // Initialize edit state when opening
+          setModalEditName(selectedOption.name);
+          setModalEditDescription(selectedOption.description || "");
         }
       }}>
-        <DialogContent className="sm:max-w-xl max-w-[95vw]">
-          {/* Header with name and action icons */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <Lightbulb className="h-5 w-5 flex-shrink-0" style={{ color: 'rgb(93,47,193)' }} />
-              {isEditingInModal ? (
-                <Input
-                  value={modalEditName}
-                  onChange={(e) => setModalEditName(e.target.value)}
-                  placeholder="Option name"
-                  className="flex-1 focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
-                  autoFocus
-                />
-              ) : (
-                <h2 className="font-semibold text-lg truncate">{selectedOption?.name}</h2>
-              )}
-            </div>
-            
-            {/* Action icons */}
-            {!isEditingInModal && (
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <button
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
-                  onClick={() => {
-                    if (selectedOption) {
-                      setModalEditName(selectedOption.name);
-                      setModalEditDescription(selectedOption.description || "");
-                      setIsEditingInModal(true);
-                    }
-                  }}
-                  title="Edit"
-                >
-                  <Pencil className="h-4 w-4" style={{ color: 'rgb(93,47,193)' }} />
-                </button>
-                <button
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
-                  onClick={() => {
-                    if (selectedOption) {
-                      onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
-                    }
-                  }}
-                  title={activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
-                >
-                  <Star 
-                    className={cn("h-4 w-4", activeOptionId === selectedOption?.id && "fill-current")} 
-                    style={{ color: activeOptionId === selectedOption?.id ? 'hsl(95, 75%, 45%)' : 'rgb(93,47,193)' }} 
-                  />
-                </button>
-                <button
-                  className="p-2 rounded-lg hover:bg-destructive/10 transition-colors"
-                  onClick={() => setShowDeleteConfirm(true)}
-                  title="Delete"
-                >
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </button>
-              </div>
-            )}
+        <DialogContent className="sm:max-w-xl max-w-[95vw] flex flex-col h-full sm:h-auto">
+          {/* Content - Name and Description at top left */}
+          <div className="flex-1 flex flex-col gap-1">
+            <Input
+              value={modalEditName}
+              onChange={(e) => setModalEditName(e.target.value)}
+              placeholder="Option name"
+              className="flex-1 border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-lg font-semibold px-0 shadow-none"
+              autoFocus
+            />
+            <Textarea
+              value={modalEditDescription}
+              onChange={(e) => {
+                setModalEditDescription(e.target.value);
+                // Auto-resize
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+              }}
+              placeholder="Description (optional)"
+              className="resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 shadow-none min-h-[100px]"
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = target.scrollHeight + 'px';
+              }}
+            />
           </div>
-          
-          {/* Content */}
-          <div className="mt-4">
-            {isEditingInModal ? (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Description</label>
-                  <Textarea
-                    value={modalEditDescription}
-                    onChange={(e) => setModalEditDescription(e.target.value)}
-                    placeholder="Description (optional)"
-                    rows={6}
-                    className="resize-y focus-visible:ring-2 focus-visible:ring-[hsl(95,75%,45%)] focus-visible:ring-offset-2"
-                  />
-                </div>
-                <div className="flex gap-2 justify-end">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-muted-foreground text-muted-foreground hover:bg-muted"
-                    onClick={() => setIsEditingInModal(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="bg-[hsl(95,75%,45%)] hover:bg-[hsl(95,75%,40%)] text-white"
-                    onClick={() => {
-                      if (selectedOption && modalEditName.trim()) {
-                        onUpdate(
-                          options.map((o) =>
-                            o.id === selectedOption.id
-                              ? { ...o, name: modalEditName.trim(), description: modalEditDescription.trim() || undefined }
-                              : o
-                          )
-                        );
-                        setSelectedOption({
-                          ...selectedOption,
-                          name: modalEditName.trim(),
-                          description: modalEditDescription.trim() || undefined,
-                        });
-                        setIsEditingInModal(false);
-                      }
-                    }}
-                    disabled={!modalEditName.trim()}
-                  >
-                    <Check className="h-4 w-4 mr-2" />
-                    Save
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {selectedOption?.description ? (
-                  <p className="text-sm text-muted-foreground">{selectedOption.description}</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground italic">No description provided.</p>
-                )}
-                {activeOptionId === selectedOption?.id && (
-                  <Badge style={{ backgroundColor: "hsl(95, 75%, 45%)", color: "white" }}>
-                    <Check className="h-3 w-3 mr-1" />
-                    Active Option
-                  </Badge>
-                )}
-              </div>
+
+          {/* Fixed positioning for icons and badge */}
+          <div className="flex justify-between items-end mt-auto pt-4">
+            {/* Active badge at bottom left */}
+            {activeOptionId === selectedOption?.id && (
+              <Badge style={{ backgroundColor: "hsl(95, 75%, 45%)", color: "white" }} className="flex-shrink-0">
+                <Check className="h-3 w-3 mr-1" />
+                Active
+              </Badge>
             )}
+            
+            {/* Action icons at bottom right */}
+            <div className="flex items-center gap-1 flex-shrink-0 ml-auto">
+              <button
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
+                onClick={() => {
+                  if (selectedOption) {
+                    onSetActiveOption(activeOptionId === selectedOption.id ? undefined : selectedOption.id);
+                  }
+                }}
+                title={activeOptionId === selectedOption?.id ? "Unset Active" : "Make Active"}
+              >
+                <Star 
+                  className={cn("h-5 w-5", activeOptionId === selectedOption?.id && "fill-current")} 
+                  style={{ color: activeOptionId === selectedOption?.id ? 'hsl(95, 75%, 45%)' : 'rgb(93,47,193)' }} 
+                />
+              </button>
+              <button
+                className="p-2 rounded-lg hover:bg-destructive/10 transition-colors"
+                onClick={() => setShowDeleteConfirm(true)}
+                title="Delete"
+              >
+                <Trash2 className="h-5 w-5 text-destructive" />
+              </button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
