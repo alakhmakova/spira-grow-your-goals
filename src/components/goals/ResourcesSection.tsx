@@ -63,12 +63,11 @@ const resourceTypeLabels: Record<ResourceType, string> = {
   document: "Document",
 };
 
-// Unified style for all resource types - white background with gray text
+// Unified style for all resource types - white background with gray text, no shadow, full opacity
 const unifiedResourceStyle = {
   backgroundColor: 'white',
   color: 'rgb(107, 114, 128)', // gray text
-  boxShadow: '4px -4px 12px rgb(93,47,193)',
-  opacity: 0.7
+  opacity: 1
 };
 
 const validateEmail = (email: string) => {
