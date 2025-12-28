@@ -11,7 +11,6 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { Goal } from "@/types/goal";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CircularProgress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,6 @@ export const GoalCard = ({
   onChangeAchievability,
   onDragStart,
 }: GoalCardProps) => {
-  const [isFlipped, setIsFlipped] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   
   const notStartedCount = goal.targets.filter(t => t.progress === 0).length;
@@ -71,86 +69,66 @@ export const GoalCard = ({
     t.deadline && getOverdueStatus(t.deadline) === "overdue" && t.progress < 100
   );
 
+  // Get header color based on goal type or status
+  const getHeaderColor = () => {
+    if (goal.progress === 100) return "bg-success/20";
+    if (goalOverdueStatus === "overdue" && goal.progress < 100) return "bg-destructive/20";
+    if (goal.goalType === "north-star") return "bg-amber-100 dark:bg-amber-900/30";
+    if (goal.goalType === "dream") return "bg-purple-100 dark:bg-purple-900/30";
+    if (goal.goalType === "long-term") return "bg-blue-100 dark:bg-blue-900/30";
+    if (goal.goalType === "short-term") return "bg-emerald-100 dark:bg-emerald-900/30";
+    return "bg-primary/10";
+  };
+
   const cardContent = (
-    <Card 
-      variant="interactive"
+    <div 
       className={cn(
-        "relative h-full min-h-[280px] transition-all duration-500 cursor-grab active:cursor-grabbing",
-        goal.progress === 100 && "border-success/30 shadow-success-glow",
-        goal.goalType === "north-star" && "ring-2 ring-amber-400/50",
-        goalOverdueStatus === "overdue" && goal.progress < 100 && "border-destructive/50 shadow-[0_0_20px_-5px_hsl(var(--destructive)/0.3)]",
-        goalOverdueStatus === "due-today" && goal.progress < 100 && "border-warning/50",
-        goalOverdueStatus === "due-soon" && goal.progress < 100 && "border-amber-500/30"
+        "relative h-full min-h-[200px] bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-grab active:cursor-grabbing border border-border/50",
+        goal.progress === 100 && "border-success/30",
+        goal.goalType === "north-star" && "ring-1 ring-amber-400/50",
+        goalOverdueStatus === "overdue" && goal.progress < 100 && "border-destructive/40"
       )}
     >
-      {/* Menu overlay on hover */}
-      <div className={cn(
-        "absolute top-3 right-3 z-10 transition-opacity duration-200",
-        showMenu ? "opacity-100" : "opacity-0"
-      )}>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
-            <Button variant="ghost" size="icon-sm" className="h-8 w-8 bg-card/80 backdrop-blur-sm">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" onClick={(e) => e.preventDefault()}>
-            <DropdownMenuItem onClick={() => {
-              const newName = prompt("Enter new goal name:", goal.name);
-              if (newName) onRename(goal.id, newName);
-            }}>
-              <Pencil className="h-4 w-4 mr-2" />
-              Rename
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => {
-              const dateStr = prompt("Enter due date (YYYY-MM-DD):", goal.dueDate ? format(goal.dueDate, "yyyy-MM-dd") : "");
-              if (dateStr) {
-                const date = new Date(dateStr);
-                if (!isNaN(date.getTime())) {
-                  onChangeDueDate(goal.id, date);
-                }
-              }
-            }}>
-              <Calendar className="h-4 w-4 mr-2" />
-              Change Due Date
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => {
-              const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
-              const num = parseInt(value || "");
-              if (num >= 1 && num <= 10) {
-                onChangeAchievability(goal.id, num);
-              }
-            }}>
-              <Gauge className="h-4 w-4 mr-2" />
-              Change Achievability
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem 
-              className="text-destructive focus:text-destructive"
-              onClick={() => onDelete(goal.id)}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {/* Rounded Header Section */}
+      <div 
+        className={cn(
+          "relative h-24 transition-all duration-500 ease-out",
+          getHeaderColor(),
+          "group-hover:h-28"
+        )}
+        style={{
+          borderBottomLeftRadius: "50% 30px",
+          borderBottomRightRadius: "50% 30px",
+        }}
+      >
+        {/* Progress Circle in Header */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 transition-transform duration-500 group-hover:scale-110">
+          <CircularProgress 
+            value={goal.progress} 
+            size={56} 
+            strokeWidth={5}
+            labelClassName="text-xs font-bold"
+            className={cn(
+              "bg-card rounded-full shadow-lg",
+              goal.progress === 100 ? "[&_circle:last-child]:stroke-success" : "[&_circle:last-child]:stroke-primary"
+            )}
+          />
+        </div>
 
-      <CardContent className="p-5 flex flex-col h-full">
         {/* Goal Type Badge */}
         {goal.goalType && typeStyles && (
-          <div className="mb-3">
+          <div className="absolute top-2 left-2">
             {(() => {
               const Icon = goalTypeIcons[goal.goalType];
               return (
                 <Badge 
                   variant="outline"
                   className={cn(
-                    "text-xs font-medium gap-1.5 border-primary/30 text-primary",
-                    goal.goalType === "north-star" && "animate-pulse border-primary bg-primary/10"
+                    "text-[10px] font-medium gap-1 border-transparent bg-card/80 backdrop-blur-sm shadow-sm",
+                    goal.goalType === "north-star" && "animate-pulse"
                   )}
                 >
-                  <Icon size={12} />
+                  <Icon size={10} />
                   {typeStyles.label}
                 </Badge>
               );
@@ -158,101 +136,137 @@ export const GoalCard = ({
           </div>
         )}
 
-        {/* Progress Circle */}
-        <div className="flex items-start gap-4 mb-4">
-          <CircularProgress 
-            value={goal.progress} 
-            size={64} 
-            strokeWidth={6}
-            labelClassName="text-sm"
-            className={goal.progress === 100 ? "[&_circle:last-child]:stroke-success" : "[&_circle:last-child]:stroke-foreground"}
-          />
-          <div className="flex-1 min-w-0">
-            <h3 className="font-display text-lg font-semibold leading-tight line-clamp-3 group-hover:text-primary transition-colors">
-              {goal.name}
-            </h3>
-          </div>
-        </div>
-
-        {/* Achievability */}
+        {/* Menu Button */}
         <div className={cn(
-          "flex items-center gap-2 mb-3 transition-all duration-300",
-          showMenu ? "translate-x-0 opacity-100" : "translate-x-2 opacity-70"
+          "absolute top-2 right-2 z-10 transition-opacity duration-200",
+          showMenu ? "opacity-100" : "opacity-0"
         )}>
-          <span className="text-xs text-muted-foreground">Achievability:</span>
-          <span className={cn(
-            "font-bold text-lg",
-            getAchievabilityColor(goal.achievability)
-          )}>
-            {goal.achievability}/10
-          </span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
+              <Button variant="ghost" size="icon-sm" className="h-7 w-7 bg-card/80 backdrop-blur-sm shadow-sm">
+                <MoreVertical className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" onClick={(e) => e.preventDefault()}>
+              <DropdownMenuItem onClick={() => {
+                const newName = prompt("Enter new goal name:", goal.name);
+                if (newName) onRename(goal.id, newName);
+              }}>
+                <Pencil className="h-4 w-4 mr-2" />
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const dateStr = prompt("Enter due date (YYYY-MM-DD):", goal.dueDate ? format(goal.dueDate, "yyyy-MM-dd") : "");
+                if (dateStr) {
+                  const date = new Date(dateStr);
+                  if (!isNaN(date.getTime())) {
+                    onChangeDueDate(goal.id, date);
+                  }
+                }
+              }}>
+                <Calendar className="h-4 w-4 mr-2" />
+                Change Due Date
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
+                const num = parseInt(value || "");
+                if (num >= 1 && num <= 10) {
+                  onChangeAchievability(goal.id, num);
+                }
+              }}>
+                <Gauge className="h-4 w-4 mr-2" />
+                Change Achievability
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                className="text-destructive focus:text-destructive"
+                onClick={() => onDelete(goal.id)}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        {/* Dates */}
-        <div className="flex flex-col gap-1 mb-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-3 w-3" />
-            <span>Created: {format(goal.createdAt, "MMM d, yyyy")}</span>
+        {/* Overdue indicator */}
+        {goalOverdueStatus === "overdue" && goal.progress < 100 && (
+          <div className="absolute top-2 left-1/2 -translate-x-1/2">
+            <Badge variant="destructive" className="text-[9px] gap-1 px-1.5 py-0.5">
+              <AlertTriangle className="h-2.5 w-2.5" />
+              Overdue
+            </Badge>
+          </div>
+        )}
+      </div>
+
+      {/* Content Section */}
+      <div className="p-3 pt-4 flex flex-col">
+        {/* Goal Name */}
+        <h3 className="font-display text-sm font-semibold leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+          {goal.name}
+        </h3>
+
+        {/* Achievability & Due Date Row */}
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-2">
+          <div className="flex items-center gap-1">
+            <span>Achievability:</span>
+            <span className={cn("font-bold", getAchievabilityColor(goal.achievability))}>
+              {goal.achievability}/10
+            </span>
           </div>
           {goal.dueDate && (
             <div className={cn(
-              "flex items-center gap-2",
-              goalOverdueStyles?.textColor || "text-primary"
+              "flex items-center gap-1",
+              goalOverdueStyles?.textColor || ""
             )}>
-              {goalOverdueStatus === "overdue" && goal.progress < 100 ? (
-                <AlertTriangle className="h-3 w-3" />
-              ) : (
-                <Calendar className="h-3 w-3" />
-              )}
-              <span className="font-medium">
-                {goalOverdueStyles && goal.progress < 100 
-                  ? `${goalOverdueStyles.label}: ${format(goal.dueDate, "MMM d, yyyy")}`
-                  : `Due: ${format(goal.dueDate, "MMM d, yyyy")}`
-                }
-              </span>
-            </div>
-          )}
-          {hasOverdueTargets && (
-            <div className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="h-3 w-3" />
-              <span className="font-medium">Has overdue targets</span>
+              <Calendar className="h-2.5 w-2.5" />
+              <span>{format(goal.dueDate, "MMM d")}</span>
             </div>
           )}
         </div>
 
         {/* Targets badges */}
-        <div className="mt-auto flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 mt-auto">
           {notStartedCount > 0 && (
-            <Badge variant="notStarted" className="text-[10px]">
-              <TargetIcon className="h-3 w-3 mr-1" />
-              {notStartedCount} not started
+            <Badge variant="notStarted" className="text-[8px] px-1.5 py-0">
+              <TargetIcon className="h-2 w-2 mr-0.5" />
+              {notStartedCount}
             </Badge>
           )}
           {inProgressCount > 0 && (
-            <Badge variant="inProgress" className="text-[10px]">
-              <TargetIcon className="h-3 w-3 mr-1" />
-              {inProgressCount} in progress
+            <Badge variant="inProgress" className="text-[8px] px-1.5 py-0">
+              <TargetIcon className="h-2 w-2 mr-0.5" />
+              {inProgressCount}
             </Badge>
           )}
           {completedCount > 0 && (
-            <Badge variant="completed" className="text-[10px]">
-              <TargetIcon className="h-3 w-3 mr-1" />
-              {completedCount} completed
+            <Badge variant="completed" className="text-[8px] px-1.5 py-0">
+              <TargetIcon className="h-2 w-2 mr-0.5" />
+              {completedCount}
             </Badge>
           )}
           {goal.targets.length === 0 && (
-            <Badge variant="muted" className="text-[10px]">
-              No targets yet
+            <Badge variant="muted" className="text-[8px] px-1.5 py-0">
+              No targets
             </Badge>
           )}
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Has overdue targets indicator */}
+        {hasOverdueTargets && (
+          <div className="flex items-center gap-1 mt-2 text-[9px] text-destructive">
+            <AlertTriangle className="h-2.5 w-2.5" />
+            <span>Has overdue targets</span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 
   return (
     <div
-      className="group perspective-1000"
+      className="group"
       draggable
       onDragStart={handleDragStart}
       onMouseEnter={() => setShowMenu(true)}
