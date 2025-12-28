@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, AlertTriangle } from "lucide-react";
+import { Plus, X, Pencil, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -23,7 +23,7 @@ export const RealitySection = ({
       {/* Actions - Primary/Teal theme */}
       <RealityList
         title="Actions"
-        icon={<Zap className="h-5 w-5" />}
+        icon={<i className="icofont-mining" style={{ fontSize: '20px' }} />}
         items={actions}
         onUpdate={onUpdateActions}
         colorScheme="actions"
@@ -34,7 +34,7 @@ export const RealitySection = ({
       {/* Obstacles - Destructive/Red theme */}
       <RealityList
         title="Obstacles"
-        icon={<AlertTriangle className="h-5 w-5" />}
+        icon={<i className="icofont-volcano" style={{ fontSize: '20px' }} />}
         items={obstacles}
         onUpdate={onUpdateObstacles}
         colorScheme="obstacles"
@@ -202,11 +202,14 @@ const RealityList = ({
               </div>
             ) : (
               <>
-                {/* Bullet point */}
-                <div 
-                  className="flex-shrink-0 mt-1.5 w-2 h-2 rounded-full" 
-                  style={{ backgroundColor: colorScheme === "actions" ? "rgb(19, 56, 68)" : "rgb(127, 9, 29)" }}
-                />
+                {/* Bullet point - diamond for actions, stone/rock for obstacles */}
+                <div className="flex-shrink-0 mt-1.5">
+                  {colorScheme === "actions" ? (
+                    <i className="icofont-diamond" style={{ fontSize: '8px', color: "rgb(19, 56, 68)" }} />
+                  ) : (
+                    <i className="icofont-rock-stone" style={{ fontSize: '8px', color: "rgb(127, 9, 29)" }} />
+                  )}
+                </div>
                 <span className="flex-1 text-sm text-foreground">{item.name}</span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
