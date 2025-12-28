@@ -46,27 +46,13 @@ export const LongTermIcon = ({ size = 16, className, ...props }: IconProps) => (
   </svg>
 );
 
-// North Star: Star with compass feel
-export const NorthStarIcon = ({ size = 16, className, ...props }: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
+// North Star: Star icon from icofont
+export const NorthStarIcon = ({ size = 16, className, ...props }: FontIconProps) => (
+  <i 
+    className={`icofont-star-alt-1 ${className || ''}`}
+    style={{ fontSize: `${size}px`, lineHeight: 1 }}
     {...props}
-  >
-    <path d="M12 2v4" />
-    <path d="M12 18v4" />
-    <path d="M2 12h4" />
-    <path d="M18 12h4" />
-    <path d="M12 8l2 4-2 4-2-4 2-4z" fill="currentColor" />
-    <circle cx="12" cy="12" r="2" fill="currentColor" />
-  </svg>
+  />
 );
 
 // Dream: Full night icon from icofont
