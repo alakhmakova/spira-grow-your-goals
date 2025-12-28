@@ -1,14 +1,14 @@
 import { HTMLAttributes } from "react";
+import { cn } from "@/lib/utils";
 
 interface FontIconProps extends HTMLAttributes<HTMLElement> {
   size?: number;
-  className?: string;
 }
 
 // Short-term: Bomb icon from icofont
 export const ShortTermIcon = ({ size = 16, className, ...props }: FontIconProps) => (
   <i 
-    className={`icofont-bomb ${className || ''}`}
+    className={cn("icofont-bomb", className)}
     style={{ fontSize: `${size}px`, lineHeight: 1 }}
     {...props}
   />
@@ -17,7 +17,7 @@ export const ShortTermIcon = ({ size = 16, className, ...props }: FontIconProps)
 // Long-term: Zigzag icon from icofont
 export const LongTermIcon = ({ size = 16, className, ...props }: FontIconProps) => (
   <i 
-    className={`icofont-zigzag ${className || ''}`}
+    className={cn("icofont-zigzag", className)}
     style={{ fontSize: `${size}px`, lineHeight: 1 }}
     {...props}
   />
@@ -26,7 +26,7 @@ export const LongTermIcon = ({ size = 16, className, ...props }: FontIconProps) 
 // North Star: Star alt-1 icon from icofont
 export const NorthStarIcon = ({ size = 16, className, ...props }: FontIconProps) => (
   <i 
-    className={`icofont-star-alt-1 ${className || ''}`}
+    className={cn("icofont-star-alt-1", className)}
     style={{ fontSize: `${size}px`, lineHeight: 1 }}
     {...props}
   />
@@ -35,7 +35,7 @@ export const NorthStarIcon = ({ size = 16, className, ...props }: FontIconProps)
 // Dream: Full night icon from icofont
 export const DreamIcon = ({ size = 16, className, ...props }: FontIconProps) => (
   <i 
-    className={`icofont-full-night ${className || ''}`}
+    className={cn("icofont-full-night", className)}
     style={{ fontSize: `${size}px`, lineHeight: 1 }}
     {...props}
   />
