@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { 
@@ -42,8 +41,6 @@ export const GoalCard = ({
   onChangeAchievability,
   onDragStart,
 }: GoalCardProps) => {
-  const [showMenu, setShowMenu] = useState(false);
-
   const getAchievabilityColor = (value: number) => {
     if (value <= 3) return "text-destructive";
     if (value <= 6) return "text-warning";
@@ -124,7 +121,7 @@ export const GoalCard = ({
         />
         {/* Header Content */}
         <div className="relative z-10 px-3 pt-3 pb-8">
-          {/* Top Row: Type Badge and Menu */}
+          {/* Top Row: Goal Type Badge and Menu */}
           <div className="flex items-start justify-between mb-3">
             {/* Goal Type Badge - text only, no icon */}
             {goal.goalType && typeStyles && (
@@ -139,11 +136,8 @@ export const GoalCard = ({
               </Badge>
             )}
             
-            {/* Menu Button */}
-            <div className={cn(
-              "transition-opacity duration-200",
-              showMenu ? "opacity-100" : "opacity-0"
-            )}>
+            {/* Menu Button - always visible */}
+            <div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
                   <Button variant="ghost" size="icon-sm" className="h-7 w-7 bg-card/80 backdrop-blur-sm shadow-sm">
@@ -193,15 +187,10 @@ export const GoalCard = ({
             </div>
           </div>
 
-          {/* Goal Type Icon in Center */}
-          {goal.goalType && (
-            <div className="flex justify-center mb-2 transition-transform duration-500 group-hover:scale-110">
-              {(() => {
-                const Icon = goalTypeIcons[goal.goalType];
-                return <Icon size={40} className="text-foreground" />;
-              })()}
-            </div>
-          )}
+          {/* Progress Percentage in Center */}
+          <div className="flex justify-center mb-2 transition-transform duration-500 group-hover:scale-110">
+            <div className="text-4xl font-extrabold">{goal.progress}%</div>
+          </div>
         </div>
 
         {/* Progress bar removed in favor of header-wide overlay */}
@@ -223,7 +212,7 @@ export const GoalCard = ({
         <h3 className="font-display text-sm font-semibold leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors">
           {goal.name}
         </h3>
-        {/* Bottom stats row: Progress, Target, Confidence */}
+        {/* Bottom stats row: Goal Type, Target, Achievability */}
         {(() => {
           const achievabilityValue = goal.achievability ?? 0;
           const totalTargets = goal.targets.length;
@@ -232,10 +221,19 @@ export const GoalCard = ({
           return (
             <div className="mt-auto">
               <div className="grid grid-cols-3 items-start gap-3 rounded-xl border border-border/40 bg-card/70 p-3 shadow-sm">
-                {/* Progress */}
+                {/* Goal Type */}
                 <div>
-                  <div className="text-[10px] text-muted-foreground mb-1">Progress</div>
-                  <div className="text-xl font-extrabold">{goal.progress}%</div>
+                  <div className="text-[10px] text-muted-foreground mb-1">
+                    {goal.goalType && typeStyles ? typeStyles.label : "Type"}
+                  </div>
+                  {goal.goalType && (
+                    <div className="flex items-center justify-center">
+                      {(() => {
+                        const Icon = goalTypeIcons[goal.goalType];
+                        return <Icon size={24} className="text-foreground" />;
+                      })()}
+                    </div>
+                  )}
                 </div>
                 {/* Target */}
                 <div className="border-l border-border/40 pl-3">
@@ -274,8 +272,6 @@ export const GoalCard = ({
       className="group"
       draggable
       onDragStart={handleDragStart}
-      onMouseEnter={() => setShowMenu(true)}
-      onMouseLeave={() => setShowMenu(false)}
     >
       <Link to={`/goal/${goal.id}`} draggable={false}>
         {cardContent}
