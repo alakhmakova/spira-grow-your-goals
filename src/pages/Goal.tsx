@@ -481,12 +481,9 @@ const GoalPage = () => {
 
               <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground text-left">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:gap-2 gap-1 items-start w-full">
-                    <div className="flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4" />
-                      Options: What strategies could you use?
-                    </div>
-                    {activeOption && <Badge variant="success" className="text-xs no-underline lg:ml-auto">Active option: {activeOption.name}</Badge>}
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4" />
+                    Options: What strategies could you use?
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="text-primary-foreground">
@@ -546,7 +543,6 @@ const GoalPage = () => {
                 <TargetIcon className="h-5 w-5 flex-shrink-0" />
                 Targets
                 <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground" style={{ color: 'rgb(19, 56, 68)' }}>{filteredTargets.length}</Badge>
-                {activeOption && <Badge variant="outline" className="text-xs border-transparent bg-success text-success-foreground no-underline" style={{ backgroundColor: 'rgb(103, 232, 249)' }}>Active option: {activeOption.name}</Badge>}
               </h2>
               <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90 flex-shrink-0">
                 <Plus className="h-4 w-4" />
