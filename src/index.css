@@ -218,7 +218,7 @@
     font-weight: var(--font-weight-normal, 400);
     font-style: normal;
     -webkit-font-smoothing: antialiased;
-    font-family: var(--setting-font-family, var(--optional-font-family, "InterVariable", system-ui, sans-serif));
+    font-family: 'Nunito', sans-serif;
     line-height: 1.4285714286;
     font-size: .875em;
     color: #0c0c14;
