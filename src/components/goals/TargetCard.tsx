@@ -16,7 +16,7 @@ import { Target, Task, GoalOption } from "@/types/goal";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { LeafToggle } from "@/components/ui/leaf-toggle";
+import { DoneToggle } from "@/components/ui/done-toggle";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -194,10 +194,9 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
           {/* Toggle for success type only */}
           {targetData.type === "success" && (
             <div className="flex-shrink-0">
-              <LeafToggle
+              <DoneToggle
                 checked={targetData.isCompleted}
                 onCheckedChange={handleToggleComplete}
-                size="sm"
               />
             </div>
           )}

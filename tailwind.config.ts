@@ -148,6 +148,26 @@ export default {
           "0%, 100%": { transform: "scale(1)", opacity: "0.8" },
           "50%": { transform: "scale(1.05)", opacity: "1" },
         },
+        "checkmark": {
+          "0%": { strokeDashoffset: "24" },
+          "100%": { strokeDashoffset: "0" },
+        },
+        "particle-1": {
+          "0%": { transform: "translate(0, 0) scale(1)", opacity: "1" },
+          "100%": { transform: "translate(-8px, -8px) scale(0)", opacity: "0" },
+        },
+        "particle-2": {
+          "0%": { transform: "translate(0, 0) scale(1)", opacity: "1" },
+          "100%": { transform: "translate(8px, -8px) scale(0)", opacity: "0" },
+        },
+        "particle-3": {
+          "0%": { transform: "translate(0, 0) scale(1)", opacity: "1" },
+          "100%": { transform: "translate(-8px, 8px) scale(0)", opacity: "0" },
+        },
+        "particle-4": {
+          "0%": { transform: "translate(0, 0) scale(1)", opacity: "1" },
+          "100%": { transform: "translate(8px, 8px) scale(0)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -161,6 +181,11 @@ export default {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "breathe": "breathe 4s ease-in-out infinite",
+        "checkmark": "checkmark 0.3s ease-out forwards",
+        "particle-1": "particle-1 0.6s ease-out forwards",
+        "particle-2": "particle-2 0.6s ease-out 0.1s forwards",
+        "particle-3": "particle-3 0.6s ease-out 0.2s forwards",
+        "particle-4": "particle-4 0.6s ease-out 0.3s forwards",
       },
     },
   },
