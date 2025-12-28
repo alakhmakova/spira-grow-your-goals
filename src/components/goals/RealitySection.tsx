@@ -202,14 +202,11 @@ const RealityList = ({
               </div>
             ) : (
               <>
-                {/* Bullet point - diamond for actions, stone/rock for obstacles */}
-                <div className="flex-shrink-0 mt-1.5">
-                  {colorScheme === "actions" ? (
-                    <i className="icofont-diamond" style={{ fontSize: '12px', color: "rgb(19, 56, 68)" }} />
-                  ) : (
-                    <i className="icofont-rock-stone" style={{ fontSize: '12px', color: "rgb(127, 9, 29)" }} />
-                  )}
-                </div>
+                {/* Bullet point */}
+                <div 
+                  className="flex-shrink-0 mt-1.5 w-2 h-2 rounded-full" 
+                  style={{ backgroundColor: colorScheme === "actions" ? "rgb(19, 56, 68)" : "rgb(127, 9, 29)" }}
+                />
                 <span className="flex-1 text-sm text-foreground">{item.name}</span>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
