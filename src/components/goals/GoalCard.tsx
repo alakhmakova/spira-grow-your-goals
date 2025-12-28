@@ -75,6 +75,24 @@ export const GoalCard = ({
     return "bg-primary/10";
   };
 
+  // Match overlay color to header but darker
+  const getOverlayColorClass = () => {
+    if (goal.progress === 100) return "bg-success/70";
+    if (goalOverdueStatus === "overdue" && goal.progress < 100) return "bg-destructive/60";
+    switch (goal.goalType) {
+      case "north-star":
+        return "bg-amber-300 dark:bg-amber-700/70";
+      case "dream":
+        return "bg-purple-300 dark:bg-purple-700/70";
+      case "long-term":
+        return "bg-blue-300 dark:bg-blue-700/70";
+      case "short-term":
+        return "bg-emerald-300 dark:bg-emerald-700/70";
+      default:
+        return "bg-primary/40";
+    }
+  };
+
   const cardContent = (
     <div 
       className={cn(
@@ -96,8 +114,16 @@ export const GoalCard = ({
           borderBottomRightRadius: "50% 20px",
         }}
       >
+        {/* Header-wide progress fill overlay */}
+        <div
+          className={cn(
+            "absolute inset-y-0 left-0 pointer-events-none transition-all duration-500",
+            getOverlayColorClass()
+          )}
+          style={{ width: `${goal.progress}%` }}
+        />
         {/* Header Content */}
-        <div className="px-3 pt-3 pb-8">
+        <div className="relative z-10 px-3 pt-3 pb-8">
           {/* Top Row: Type Badge and Menu */}
           <div className="flex items-start justify-between mb-3">
             {/* Goal Type Badge - text only, no icon */}
@@ -170,26 +196,15 @@ export const GoalCard = ({
           {/* Goal Type Icon in Center */}
           {goal.goalType && (
             <div className="flex justify-center mb-2 transition-transform duration-500 group-hover:scale-110">
-              <div className="bg-card/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
-                {(() => {
-                  const Icon = goalTypeIcons[goal.goalType];
-                  return <Icon size={28} className="text-foreground" />;
-                })()}
-              </div>
+              {(() => {
+                const Icon = goalTypeIcons[goal.goalType];
+                return <Icon size={40} className="text-foreground" />;
+              })()}
             </div>
           )}
         </div>
 
-        {/* Progress Bar at bottom of header */}
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-muted/50">
-          <div 
-            className={cn(
-              "h-full transition-all duration-500",
-              goal.progress === 100 ? "bg-success" : "bg-primary"
-            )}
-            style={{ width: `${goal.progress}%` }}
-          />
-        </div>
+        {/* Progress bar removed in favor of header-wide overlay */}
 
         {/* Overdue indicator */}
         {goalOverdueStatus === "overdue" && goal.progress < 100 && (
@@ -208,59 +223,48 @@ export const GoalCard = ({
         <h3 className="font-display text-sm font-semibold leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors">
           {goal.name}
         </h3>
-
-        {/* Progress Percentage Badge */}
-        <div className="mb-2">
-          <Badge 
-            variant="outline" 
-            className={cn(
-              "text-xs font-bold px-2 py-0.5",
-              goal.progress === 100 
-                ? "bg-success/10 text-success border-success/30" 
-                : "bg-primary/10 text-primary border-primary/30"
-            )}
-          >
-            {goal.progress}%
-          </Badge>
-        </div>
-
-        {/* Achievability & Due Date Row */}
-        <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-2">
-          <div className="flex items-center gap-1">
-            <span>Achievability:</span>
-            <span className={cn("font-bold", getAchievabilityColor(goal.achievability))}>
-              {goal.achievability}/10
-            </span>
-          </div>
-          {goal.dueDate && (
-            <div className={cn(
-              "flex items-center gap-1",
-              goalOverdueStyles?.textColor || ""
-            )}>
-              <Calendar className="h-2.5 w-2.5" />
-              <span>{format(goal.dueDate, "MMM d")}</span>
+        {/* Bottom stats row: Progress, Target, Confidence */}
+        {(() => {
+          const achievabilityValue = goal.achievability ?? 0;
+          const totalTargets = goal.targets.length;
+          const doneTargets = goal.targets.filter(t => (t.progress ?? 0) >= 100 || t.isCompleted === true).length;
+          const pendingTargets = Math.max(totalTargets - doneTargets, 0);
+          return (
+            <div className="mt-auto">
+              <div className="grid grid-cols-3 items-start gap-3 rounded-xl border border-border/40 bg-card/70 p-3 shadow-sm">
+                {/* Progress */}
+                <div>
+                  <div className="text-[10px] text-muted-foreground mb-1">Progress</div>
+                  <div className="text-xl font-extrabold">{goal.progress}%</div>
+                </div>
+                {/* Target */}
+                <div className="border-l border-border/40 pl-3">
+                  <div className="text-[10px] text-muted-foreground mb-1">Targets</div>
+                  <div className="text-sm font-semibold leading-tight">
+                    {doneTargets} done
+                  </div>
+                  <div className="text-[10px] text-muted-foreground">
+                    {pendingTargets} not done
+                  </div>
+                </div>
+                {/* Achievability */}
+                <div className="border-l border-border/40 pl-3">
+                  <div className="text-[10px] text-muted-foreground mb-1">Achievability</div>
+                  <div className={cn("text-xl font-extrabold", getAchievabilityColor(goal.achievability))}>
+                    {achievabilityValue}/10
+                  </div>
+                </div>
+              </div>
+              {/* Overdue targets inline indicator */}
+              {hasOverdueTargets && (
+                <div className="flex items-center gap-1 mt-2 text-[9px] text-destructive">
+                  <AlertTriangle className="h-2.5 w-2.5" />
+                  <span>Has overdue targets</span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-
-        {/* Targets badge - bigger with word "target/targets" */}
-        <div className="flex flex-wrap gap-1.5 mt-auto">
-          <Badge 
-            variant="secondary" 
-            className="text-[10px] px-2 py-1 font-medium gap-1"
-          >
-            <TargetIcon className="h-3 w-3" />
-            {goal.targets.length} {goal.targets.length === 1 ? "target" : "targets"}
-          </Badge>
-        </div>
-
-        {/* Has overdue targets indicator */}
-        {hasOverdueTargets && (
-          <div className="flex items-center gap-1 mt-2 text-[9px] text-destructive">
-            <AlertTriangle className="h-2.5 w-2.5" />
-            <span>Has overdue targets</span>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );
