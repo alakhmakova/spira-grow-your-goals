@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Lightbulb, Check, Plus, Sparkles, AlertTriangle, Trash2, Star } from "lucide-react";
+import { Check, Plus, Sparkles, AlertTriangle, Trash2, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -337,8 +337,8 @@ export const OptionsSection = ({
     return (
       <div className="space-y-4">
         <div className="text-center py-6">
-          <Lightbulb className="h-10 w-10 mx-auto mb-3 text-white" />
-          <p className="text-sm mb-3 text-white">No options defined yet.</p>
+          <i className="icofont-speed-meter" style={{ fontSize: '40px', color: 'white' }} />
+          <p className="text-sm mb-3 text-white mt-3">No options defined yet.</p>
           <p className="text-xs mb-4 max-w-md mx-auto text-white">
             Add different strategies or approaches to achieve your goal. You can then select an active option to focus on.
           </p>
@@ -495,7 +495,7 @@ export const OptionsSection = ({
                     {/* Content at top left */}
                     <div className="flex-1 mb-2">
                       <div className="flex items-start gap-1.5 mb-0.5">
-                        <Lightbulb className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: isActive ? "white" : "rgb(93,47,193)" }} />
+                        <i className="icofont-speed-meter flex-shrink-0 mt-0.5" style={{ fontSize: '14px', color: isActive ? "white" : "rgb(93,47,193)" }} />
                         <h4 className="font-semibold text-sm line-clamp-2" style={{ color: isActive ? "white" : "rgb(29, 41, 86)" }}>{option.name}</h4>
                       </div>
                       {option.description && (

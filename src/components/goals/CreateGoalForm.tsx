@@ -280,6 +280,7 @@ export const CreateGoalForm = ({ open, onOpenChange }: CreateGoalFormProps) => {
           {/* Will */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
+              <i className="icofont-speed-meter" style={{ fontSize: '16px' }} />
               <Label htmlFor="will" className="text-base font-medium">
                 How committed are you to this goal?
               </Label>

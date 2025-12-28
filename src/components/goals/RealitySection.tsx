@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, X, Pencil, Check, Zap, AlertTriangle } from "lucide-react";
+import { Plus, X, Pencil, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RealityItem } from "@/types/goal";
@@ -23,7 +23,7 @@ export const RealitySection = ({
       {/* Actions - Primary/Teal theme */}
       <RealityList
         title="Actions"
-        icon={<Zap className="h-5 w-5" />}
+        icon={<i className="icofont-mining" style={{ fontSize: '20px' }} />}
         items={actions}
         onUpdate={onUpdateActions}
         colorScheme="actions"
@@ -34,7 +34,7 @@ export const RealitySection = ({
       {/* Obstacles - Destructive/Red theme */}
       <RealityList
         title="Obstacles"
-        icon={<AlertTriangle className="h-5 w-5" />}
+        icon={<i className="icofont-volcano" style={{ fontSize: '20px' }} />}
         items={obstacles}
         onUpdate={onUpdateObstacles}
         colorScheme="obstacles"

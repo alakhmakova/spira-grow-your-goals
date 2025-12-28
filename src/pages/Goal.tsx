@@ -16,9 +16,6 @@ import {
   ChevronDown,
   ChevronUp,
   Clock,
-  Lightbulb,
-  Compass,
-  Heart,
 } from "lucide-react";
 import { WaveSeparator, WaveSectionWrapper } from "@/components/ui/wave-separator";
 import { Layout } from "@/components/layout/Layout";
@@ -465,7 +462,7 @@ const GoalPage = () => {
               <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground text-left">
                   <div className="flex items-center gap-2">
-                    <Compass className="h-4 w-4" />
+                    <i className="icofont-look" style={{ fontSize: '16px' }} />
                     Reality: Actions & Obstacles
                   </div>
                 </AccordionTrigger>
@@ -482,7 +479,7 @@ const GoalPage = () => {
               <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground text-left">
                   <div className="flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4" />
+                    <i className="icofont-speed-meter" style={{ fontSize: '16px' }} />
                     Options: What strategies could you use?
                   </div>
                 </AccordionTrigger>
@@ -512,7 +509,7 @@ const GoalPage = () => {
               <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground text-left">
                   <div className="flex items-center gap-2">
-                    <Heart className="h-4 w-4" />
+                    <i className="icofont-speed-meter" style={{ fontSize: '16px' }} />
                     Why is this goal important?
                   </div>
                 </AccordionTrigger>
@@ -540,7 +537,7 @@ const GoalPage = () => {
           <div className="rounded-lg p-6" style={{ backgroundColor: '#d7fdf5' }}>
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <h2 className="font-display text-xl font-semibold flex items-center gap-2 flex-wrap min-w-0" style={{ color: 'rgb(19, 56, 68)' }}>
-                <TargetIcon className="h-5 w-5 flex-shrink-0" />
+                <i className="icofont-dart" style={{ fontSize: '20px' }} />
                 Targets
                 <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground" style={{ color: 'rgb(19, 56, 68)' }}>{filteredTargets.length}</Badge>
               </h2>
