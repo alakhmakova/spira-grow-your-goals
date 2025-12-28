@@ -1,7 +1,12 @@
-import { SVGProps } from "react";
+import { SVGProps, HTMLAttributes } from "react";
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   size?: number;
+}
+
+interface FontIconProps extends HTMLAttributes<HTMLElement> {
+  size?: number;
+  className?: string;
 }
 
 // Short-term: Lightning bolt - quick action
@@ -65,7 +70,7 @@ export const NorthStarIcon = ({ size = 16, className, ...props }: IconProps) => 
 );
 
 // Dream: Full night icon from icofont
-export const DreamIcon = ({ size = 16, className, ...props }: IconProps) => (
+export const DreamIcon = ({ size = 16, className, ...props }: FontIconProps) => (
   <i 
     className={`icofont-full-night ${className || ''}`}
     style={{ fontSize: `${size}px`, lineHeight: 1 }}
