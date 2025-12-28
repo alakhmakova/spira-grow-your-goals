@@ -121,10 +121,23 @@ export const GoalCard = ({
         />
         {/* Header Content */}
         <div className="relative z-10 px-3 pt-3 pb-8">
-          {/* Top Row: Goal Type Badge and Menu */}
+          {/* Top Row: Due Date Badge (or Goal Type) and Menu */}
           <div className="flex items-start justify-between mb-3">
-            {/* Goal Type Badge - text only, no icon */}
-            {goal.goalType && typeStyles && (
+            {/* Due Date Badge - shows due date if present, otherwise goal type */}
+            {goal.dueDate ? (
+              <Badge 
+                variant="outline"
+                className={cn(
+                  "text-[10px] font-medium border-transparent bg-card/80 backdrop-blur-sm shadow-sm",
+                  goalOverdueStatus === "overdue" && "bg-destructive/20 text-destructive",
+                  goalOverdueStatus === "due-today" && "bg-warning/20 text-warning",
+                  goalOverdueStatus === "due-soon" && "bg-amber-500/20 text-amber-600"
+                )}
+              >
+                <Calendar className="h-3 w-3 mr-1" />
+                {format(goal.dueDate, "MMM d, yyyy")}
+              </Badge>
+            ) : goal.goalType && typeStyles ? (
               <Badge 
                 variant="outline"
                 className={cn(
@@ -134,7 +147,7 @@ export const GoalCard = ({
               >
                 {typeStyles.label}
               </Badge>
-            )}
+            ) : null}
             
             {/* Menu Button - always visible */}
             <div>
