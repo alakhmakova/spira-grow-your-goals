@@ -479,7 +479,7 @@ const GoalPage = () => {
               <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
                 <AccordionTrigger className="font-medium text-primary-foreground text-left">
                   <div className="flex items-center gap-2">
-                    <i className="icofont-speed-meter" style={{ fontSize: '16px' }} />
+                    <i className="icofont-light-bulb" style={{ fontSize: '16px' }} />
                     Options: What strategies could you use?
                   </div>
                 </AccordionTrigger>
