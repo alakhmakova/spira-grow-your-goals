@@ -1,7 +1,12 @@
-import { SVGProps } from "react";
+import { SVGProps, HTMLAttributes } from "react";
 
 interface IconProps extends SVGProps<SVGSVGElement> {
   size?: number;
+}
+
+interface FontIconProps extends HTMLAttributes<HTMLElement> {
+  size?: number;
+  className?: string;
 }
 
 // Short-term: Lightning bolt - quick action
@@ -64,24 +69,13 @@ export const NorthStarIcon = ({ size = 16, className, ...props }: IconProps) => 
   </svg>
 );
 
-// Dream: Cloud with sparkles
-export const DreamIcon = ({ size = 16, className, ...props }: IconProps) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
+// Dream: Full night icon from icofont
+export const DreamIcon = ({ size = 16, className, ...props }: FontIconProps) => (
+  <i 
+    className={`icofont-full-night ${className || ''}`}
+    style={{ fontSize: `${size}px`, lineHeight: 1 }}
     {...props}
-  >
-    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
-    <path d="M20 4l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5.5-1z" fill="currentColor" stroke="none" />
-    <path d="M4 8l.5 1 1 .5-1 .5-.5 1-.5-1-1-.5 1-.5.5-1z" fill="currentColor" stroke="none" />
-  </svg>
+  />
 );
 
 export const goalTypeIcons = {
