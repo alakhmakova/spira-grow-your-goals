@@ -199,6 +199,41 @@
     font-family: 'Nunito', sans-serif;
   }
 
+  /* Modal heading styling */
+  .modal-heading {
+    font-synthesis: none;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Nunito', sans-serif;
+    line-height: 1.4285714286;
+    font-size: 1.7142857143em;
+    font-weight: 700;
+    word-break: break-word;
+    color: var(--modal-text-color, var(--foreground));
+  }
+
+  /* Paragraph styling to match provided scheme for dialog descriptions */
+  .proton-paragraph {
+    font-synthesis: none;
+    font-weight: var(--font-weight-normal, 400);
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    font-family: var(--setting-font-family, var(--optional-font-family, "InterVariable", system-ui, sans-serif));
+    line-height: 1.4285714286;
+    font-size: .875em;
+    color: #0c0c14;
+    /* Margins: respect optional --margin, default to no extra left/right */
+    margin-top: .5em;
+    margin-bottom: 1em;
+    margin-left: var(--margin, 0);
+    margin-right: var(--margin, 0);
+    quotes: "\201c" "\201d" "\2018" "\2019";
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0) rgba(0,0,0,0);
+    scroll-behavior: auto !important;
+    box-sizing: inherit;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Nunito', sans-serif;
     font-weight: 700;

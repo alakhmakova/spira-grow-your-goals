@@ -436,8 +436,7 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+            <AlertDialogTitle className="modal-heading">
               Delete Target?
             </AlertDialogTitle>
             <AlertDialogDescription>
@@ -451,9 +450,9 @@ export const TargetCard = ({ target: targetData, goalId, style, goalOptions = []
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteTarget(goalId, targetData.id)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              variant="destructive"
             >
-              Delete
+              Delete permanently
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

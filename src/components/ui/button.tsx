@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg active:scale-[0.98]",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-md hover:shadow-lg active:scale-[0.98]",
+          "border border-[#c62d49] bg-[#dc3251] text-white hover:bg-[#c62d49] active:bg-[#b02841] hover:border-[#b02841] active:border-[#9a2339] shadow-md hover:shadow-lg active:scale-[0.98]",
         outline:
           "border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground active:scale-[0.98]",
         secondary:
@@ -22,6 +22,8 @@ const buttonVariants = cva(
         success: "bg-success text-success-foreground hover:bg-success/90 shadow-md hover:shadow-success-glow active:scale-[0.98]",
         soft: "bg-primary/10 text-primary hover:bg-primary/20 active:scale-[0.98]",
         earth: "bg-earth text-earth-foreground hover:bg-earth/90 shadow-md hover:shadow-lg active:scale-[0.98]",
+        cancel:
+          "border border-[#d3d0cd] bg-white text-[#0c0c14] hover:bg-[#f9f8f7] active:bg-[#f5f3f2] hover:border-[#dedbd9] active:border-[#d3d0cd] active:scale-[0.98]",
       },
       size: {
         default: "h-10 px-4 py-2",

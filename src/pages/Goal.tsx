@@ -7,11 +7,11 @@ import {
   MoreVertical,
   Pencil,
   Trash2,
+  AlertTriangle,
   Gauge,
   Plus,
   Target as TargetIcon,
   MessageSquare,
-  AlertTriangle,
   Sparkles,
   ChevronDown,
   ChevronUp,
@@ -638,8 +638,7 @@ const GoalPage = () => {
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+            <AlertDialogTitle className="modal-heading">
               Delete Goal Permanently?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base">
@@ -651,9 +650,9 @@ const GoalPage = () => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              variant="destructive"
             >
-              Yes, delete permanently
+              Delete permanently
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

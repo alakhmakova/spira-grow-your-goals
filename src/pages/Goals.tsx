@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Sprout, AlertTriangle } from "lucide-react";
+import { Plus, Sprout } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { GoalCard } from "@/components/goals/GoalCard";
 import { GoalsToolbar } from "@/components/goals/GoalsToolbar";
@@ -181,8 +181,7 @@ const GoalsPage = () => {
       <AlertDialog open={deleteConfirm.show} onOpenChange={(open) => !open && setDeleteConfirm({ show: false, goalId: null })}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+            <AlertDialogTitle className="modal-heading">
               Delete Goal Permanently?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base">
@@ -195,9 +194,9 @@ const GoalsPage = () => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              variant="destructive"
             >
-              Yes, delete permanently
+              Delete permanently
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

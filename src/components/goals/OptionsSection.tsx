@@ -358,8 +358,7 @@ export const OptionsSection = ({
         <AlertDialog open={showBindConfirm} onOpenChange={setShowBindConfirm}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-warning" />
+              <AlertDialogTitle className="modal-heading">
                 What to do with existing targets?
               </AlertDialogTitle>
               <AlertDialogDescription className="space-y-3">
@@ -480,16 +479,15 @@ export const OptionsSection = ({
               >
                 <div
                   className={cn(
-                    "relative group p-3 rounded-xl border-2 transition-all h-full",
+                    "relative group p-3 rounded-xl transition-all h-full",
                     isActive
                       ? "ring-2 ring-primary/20"
-                      : "hover:border-gray-300",
+                      : "",
                     isDragging && "scale-105 shadow-lg"
                   )}
                   onClick={(e) => handleOptionClick(option, e)}
                   style={{ 
                     color: isActive ? "white" : "rgb(29, 41, 86)", 
-                    borderColor: isActive ? "hsl(95, 75%, 45%)" : "rgb(93,47,193)", 
                     backgroundColor: isActive ? "hsl(95, 75%, 45%)" : "#fff" 
                   }}
                 >
@@ -529,7 +527,7 @@ export const OptionsSection = ({
                         >
                           <Star 
                             className={cn("h-4 w-4", isActive && "fill-current")} 
-                            style={{ color: isActive ? "white" : "rgb(93,47,193)" }} 
+                            style={{ color: (showOptionModal && selectedOption?.id === option.id) ? "rgb(118,118,118)" : (isActive ? "#fff" : "rgb(19,56,68)") }} 
                           />
                         </button>
                         <button
@@ -541,7 +539,7 @@ export const OptionsSection = ({
                           }}
                           title="Delete"
                         >
-                          <Trash2 className="h-4 w-4" style={{ color: isActive ? "white" : "rgb(244,77,97)" }} />
+                          <Trash2 className="h-4 w-4" style={{ color: (showOptionModal && selectedOption?.id === option.id) ? "rgb(118,118,118)" : (isActive ? "#fff" : "rgb(19,56,68)") }} />
                         </button>
                       </div>
                     </div>
@@ -569,8 +567,7 @@ export const OptionsSection = ({
       <AlertDialog open={showBindConfirm} onOpenChange={setShowBindConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-warning" />
+            <AlertDialogTitle className="modal-heading">
               What to do with existing targets?
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-3">
@@ -727,9 +724,8 @@ export const OptionsSection = ({
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              Delete Option
+            <AlertDialogTitle className="modal-heading">
+              Delete option permanently
             </AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete "{selectedOption?.name}"? This action cannot be undone.
@@ -738,7 +734,7 @@ export const OptionsSection = ({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+              variant="destructive"
               onClick={() => {
                 if (selectedOption) {
                   handleDelete(selectedOption.id);
@@ -747,7 +743,7 @@ export const OptionsSection = ({
                 }
               }}
             >
-              Delete
+              Delete permanently
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
