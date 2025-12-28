@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Goal } from "@/types/goal";
 import { Badge } from "@/components/ui/badge";
-import { CircularProgress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -44,10 +43,6 @@ export const GoalCard = ({
   onDragStart,
 }: GoalCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
-  
-  const notStartedCount = goal.targets.filter(t => t.progress === 0).length;
-  const inProgressCount = goal.targets.filter(t => t.progress > 0 && t.progress < 100).length;
-  const completedCount = goal.targets.filter(t => t.progress === 100).length;
 
   const getAchievabilityColor = (value: number) => {
     if (value <= 3) return "text-destructive";
@@ -89,109 +84,116 @@ export const GoalCard = ({
         goalOverdueStatus === "overdue" && goal.progress < 100 && "border-destructive/40"
       )}
     >
-      {/* Rounded Header Section */}
+      {/* Rounded Header Section with Progress Bar */}
       <div 
         className={cn(
-          "relative h-24 transition-all duration-500 ease-out",
+          "relative transition-all duration-500 ease-out overflow-hidden",
           getHeaderColor(),
-          "group-hover:h-28"
+          "group-hover:pb-2"
         )}
         style={{
-          borderBottomLeftRadius: "50% 30px",
-          borderBottomRightRadius: "50% 30px",
+          borderBottomLeftRadius: "50% 20px",
+          borderBottomRightRadius: "50% 20px",
         }}
       >
-        {/* Progress Circle in Header */}
-        <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 transition-transform duration-500 group-hover:scale-110">
-          <CircularProgress 
-            value={goal.progress} 
-            size={56} 
-            strokeWidth={5}
-            labelClassName="text-xs font-bold"
-            className={cn(
-              "bg-card rounded-full shadow-lg",
-              goal.progress === 100 ? "[&_circle:last-child]:stroke-success" : "[&_circle:last-child]:stroke-primary"
+        {/* Header Content */}
+        <div className="px-3 pt-3 pb-8">
+          {/* Top Row: Type Badge and Menu */}
+          <div className="flex items-start justify-between mb-3">
+            {/* Goal Type Badge - text only, no icon */}
+            {goal.goalType && typeStyles && (
+              <Badge 
+                variant="outline"
+                className={cn(
+                  "text-[10px] font-medium border-transparent bg-card/80 backdrop-blur-sm shadow-sm",
+                  goal.goalType === "north-star" && "animate-pulse"
+                )}
+              >
+                {typeStyles.label}
+              </Badge>
             )}
-          />
+            
+            {/* Menu Button */}
+            <div className={cn(
+              "transition-opacity duration-200",
+              showMenu ? "opacity-100" : "opacity-0"
+            )}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
+                  <Button variant="ghost" size="icon-sm" className="h-7 w-7 bg-card/80 backdrop-blur-sm shadow-sm">
+                    <MoreVertical className="h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" onClick={(e) => e.preventDefault()}>
+                  <DropdownMenuItem onClick={() => {
+                    const newName = prompt("Enter new goal name:", goal.name);
+                    if (newName) onRename(goal.id, newName);
+                  }}>
+                    <Pencil className="h-4 w-4 mr-2" />
+                    Rename
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const dateStr = prompt("Enter due date (YYYY-MM-DD):", goal.dueDate ? format(goal.dueDate, "yyyy-MM-dd") : "");
+                    if (dateStr) {
+                      const date = new Date(dateStr);
+                      if (!isNaN(date.getTime())) {
+                        onChangeDueDate(goal.id, date);
+                      }
+                    }
+                  }}>
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Change Due Date
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
+                    const num = parseInt(value || "");
+                    if (num >= 1 && num <= 10) {
+                      onChangeAchievability(goal.id, num);
+                    }
+                  }}>
+                    <Gauge className="h-4 w-4 mr-2" />
+                    Change Achievability
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    className="text-destructive focus:text-destructive"
+                    onClick={() => onDelete(goal.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+
+          {/* Goal Type Icon in Center */}
+          {goal.goalType && (
+            <div className="flex justify-center mb-2 transition-transform duration-500 group-hover:scale-110">
+              <div className="bg-card/90 backdrop-blur-sm rounded-full p-3 shadow-lg">
+                {(() => {
+                  const Icon = goalTypeIcons[goal.goalType];
+                  return <Icon size={28} className="text-foreground" />;
+                })()}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Goal Type Badge */}
-        {goal.goalType && typeStyles && (
-          <div className="absolute top-2 left-2">
-            {(() => {
-              const Icon = goalTypeIcons[goal.goalType];
-              return (
-                <Badge 
-                  variant="outline"
-                  className={cn(
-                    "text-[10px] font-medium gap-1 border-transparent bg-card/80 backdrop-blur-sm shadow-sm",
-                    goal.goalType === "north-star" && "animate-pulse"
-                  )}
-                >
-                  <Icon size={10} />
-                  {typeStyles.label}
-                </Badge>
-              );
-            })()}
-          </div>
-        )}
-
-        {/* Menu Button */}
-        <div className={cn(
-          "absolute top-2 right-2 z-10 transition-opacity duration-200",
-          showMenu ? "opacity-100" : "opacity-0"
-        )}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
-              <Button variant="ghost" size="icon-sm" className="h-7 w-7 bg-card/80 backdrop-blur-sm shadow-sm">
-                <MoreVertical className="h-3.5 w-3.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" onClick={(e) => e.preventDefault()}>
-              <DropdownMenuItem onClick={() => {
-                const newName = prompt("Enter new goal name:", goal.name);
-                if (newName) onRename(goal.id, newName);
-              }}>
-                <Pencil className="h-4 w-4 mr-2" />
-                Rename
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                const dateStr = prompt("Enter due date (YYYY-MM-DD):", goal.dueDate ? format(goal.dueDate, "yyyy-MM-dd") : "");
-                if (dateStr) {
-                  const date = new Date(dateStr);
-                  if (!isNaN(date.getTime())) {
-                    onChangeDueDate(goal.id, date);
-                  }
-                }
-              }}>
-                <Calendar className="h-4 w-4 mr-2" />
-                Change Due Date
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                const value = prompt("Enter achievability (1-10):", goal.achievability.toString());
-                const num = parseInt(value || "");
-                if (num >= 1 && num <= 10) {
-                  onChangeAchievability(goal.id, num);
-                }
-              }}>
-                <Gauge className="h-4 w-4 mr-2" />
-                Change Achievability
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="text-destructive focus:text-destructive"
-                onClick={() => onDelete(goal.id)}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        {/* Progress Bar at bottom of header */}
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-muted/50">
+          <div 
+            className={cn(
+              "h-full transition-all duration-500",
+              goal.progress === 100 ? "bg-success" : "bg-primary"
+            )}
+            style={{ width: `${goal.progress}%` }}
+          />
         </div>
 
         {/* Overdue indicator */}
         {goalOverdueStatus === "overdue" && goal.progress < 100 && (
-          <div className="absolute top-2 left-1/2 -translate-x-1/2">
+          <div className="absolute top-10 left-1/2 -translate-x-1/2">
             <Badge variant="destructive" className="text-[9px] gap-1 px-1.5 py-0.5">
               <AlertTriangle className="h-2.5 w-2.5" />
               Overdue
@@ -201,11 +203,26 @@ export const GoalCard = ({
       </div>
 
       {/* Content Section */}
-      <div className="p-3 pt-4 flex flex-col">
+      <div className="p-3 pt-3 flex flex-col flex-1">
         {/* Goal Name */}
         <h3 className="font-display text-sm font-semibold leading-tight line-clamp-2 mb-2 group-hover:text-primary transition-colors">
           {goal.name}
         </h3>
+
+        {/* Progress Percentage Badge */}
+        <div className="mb-2">
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "text-xs font-bold px-2 py-0.5",
+              goal.progress === 100 
+                ? "bg-success/10 text-success border-success/30" 
+                : "bg-primary/10 text-primary border-primary/30"
+            )}
+          >
+            {goal.progress}%
+          </Badge>
+        </div>
 
         {/* Achievability & Due Date Row */}
         <div className="flex items-center justify-between text-[10px] text-muted-foreground mb-2">
@@ -226,31 +243,15 @@ export const GoalCard = ({
           )}
         </div>
 
-        {/* Targets badges */}
-        <div className="flex flex-wrap gap-1 mt-auto">
-          {notStartedCount > 0 && (
-            <Badge variant="notStarted" className="text-[8px] px-1.5 py-0">
-              <TargetIcon className="h-2 w-2 mr-0.5" />
-              {notStartedCount}
-            </Badge>
-          )}
-          {inProgressCount > 0 && (
-            <Badge variant="inProgress" className="text-[8px] px-1.5 py-0">
-              <TargetIcon className="h-2 w-2 mr-0.5" />
-              {inProgressCount}
-            </Badge>
-          )}
-          {completedCount > 0 && (
-            <Badge variant="completed" className="text-[8px] px-1.5 py-0">
-              <TargetIcon className="h-2 w-2 mr-0.5" />
-              {completedCount}
-            </Badge>
-          )}
-          {goal.targets.length === 0 && (
-            <Badge variant="muted" className="text-[8px] px-1.5 py-0">
-              No targets
-            </Badge>
-          )}
+        {/* Targets badge - bigger with word "target/targets" */}
+        <div className="flex flex-wrap gap-1.5 mt-auto">
+          <Badge 
+            variant="secondary" 
+            className="text-[10px] px-2 py-1 font-medium gap-1"
+          >
+            <TargetIcon className="h-3 w-3" />
+            {goal.targets.length} {goal.targets.length === 1 ? "target" : "targets"}
+          </Badge>
         </div>
 
         {/* Has overdue targets indicator */}
