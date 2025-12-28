@@ -8,6 +8,9 @@ interface DoneToggleProps {
   className?: string;
 }
 
+// Length of the checkmark SVG path for animation
+const CHECKMARK_PATH_LENGTH = 24;
+
 const DoneToggle = React.forwardRef<HTMLButtonElement, DoneToggleProps>(
   ({ checked = false, onCheckedChange, disabled = false, className }, ref) => {
     return (
@@ -49,11 +52,11 @@ const DoneToggle = React.forwardRef<HTMLButtonElement, DoneToggleProps>(
               strokeLinejoin="round"
               className={cn(
                 "transition-all duration-300",
-                checked && "animate-checkmark"
+                checked ? "animate-checkmark" : ""
               )}
               style={{
-                strokeDasharray: 24,
-                strokeDashoffset: checked ? 0 : 24,
+                strokeDasharray: CHECKMARK_PATH_LENGTH,
+                strokeDashoffset: checked ? 0 : CHECKMARK_PATH_LENGTH,
               }}
             />
           </svg>
