@@ -210,7 +210,7 @@ export const GoalCard = ({
 
         {/* Overdue indicator */}
         {goalOverdueStatus === "overdue" && goal.progress < 100 && (
-          <div className="absolute top-10 left-1/2 -translate-x-1/2">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
             <Badge variant="destructive" className="text-[9px] gap-1 px-1.5 py-0.5">
               <AlertTriangle className="h-2.5 w-2.5" />
               Overdue
