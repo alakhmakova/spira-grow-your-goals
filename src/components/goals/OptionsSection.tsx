@@ -313,6 +313,8 @@ export const OptionsSection = ({
     e?.stopPropagation();
     if (!hasDragged.current) {
       setSelectedOption(option);
+      setModalEditName(option.name);
+      setModalEditDescription(option.description || "");
       setShowOptionModal(true);
     }
   }, []);
