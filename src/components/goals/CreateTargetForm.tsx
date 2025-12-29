@@ -38,6 +38,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Number icon (same size as others)
 const NumberIcon = ({ className }: { className?: string }) => (
@@ -167,8 +168,7 @@ interface CreateTargetFormProps {
 
 export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOptions = [] }: CreateTargetFormProps) => {
   const { createTarget } = useGoalsContext();
-  // Initialize with current window width
-  const [isMobile, setIsMobile] = useState<boolean>(() => window.innerWidth < 768);
+  const isMobile = useIsMobile();
   
   const [name, setName] = useState("");
   const [type, setType] = useState<"number" | "success" | "tasks">("number");
@@ -188,15 +188,6 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
   const hasOptions = goalOptions.length > 0;
   const hasActiveOption = !!optionId;
   const showOptionSelector = hasOptions && !hasActiveOption;
-  
-  // Update mobile state on resize
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const handleAddTask = () => {
     if (newTask.trim()) {
