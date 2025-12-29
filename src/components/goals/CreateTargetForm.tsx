@@ -167,7 +167,8 @@ interface CreateTargetFormProps {
 
 export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOptions = [] }: CreateTargetFormProps) => {
   const { createTarget } = useGoalsContext();
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  // Initialize with current window width
+  const [isMobile, setIsMobile] = useState<boolean>(() => window.innerWidth < 768);
   
   const [name, setName] = useState("");
   const [type, setType] = useState<"number" | "success" | "tasks">("number");
@@ -188,12 +189,11 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
   const hasActiveOption = !!optionId;
   const showOptionSelector = hasOptions && !hasActiveOption;
   
-  // Detect mobile on client side
+  // Update mobile state on resize
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -649,11 +649,7 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
     </form>
   );
 
-  // Don't render until mobile detection is complete
-  if (isMobile === null) {
-    return null;
-  }
-
+  // On mobile, use Drawer (bottom sheet), on desktop use Dialog (centered modal)
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
