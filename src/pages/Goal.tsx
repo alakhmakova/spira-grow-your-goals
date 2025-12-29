@@ -64,7 +64,7 @@ import {
 import { Calendar as CalendarUI } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { CreateTargetForm } from "@/components/goals/CreateTargetForm";
-import { TargetCard } from "@/components/goals/TargetCard";
+import { TargetsTable } from "@/components/goals/TargetsTable";
 import { CommentsSection } from "@/components/goals/CommentsSection";
 import { ResourcesSection } from "@/components/goals/ResourcesSection";
 import { OptionsSection } from "@/components/goals/OptionsSection";
@@ -78,7 +78,7 @@ import { goalTypeIcons } from "@/components/icons/GoalTypeIcons";
 const GoalPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { goals, getGoalById, updateGoal, deleteGoal, getGoalComments } = useGoalsContext();
+  const { goals, getGoalById, updateGoal, deleteGoal, getGoalComments, addComment } = useGoalsContext();
 
   const goal = getGoalById(id || "");
   const comments = getGoalComments(id || "");
@@ -564,17 +564,20 @@ const GoalPage = () => {
               </Card>
             ) : (
               <>
-                <div className="space-y-3">
-                  {filteredTargets.map((target, index) => (
-                    <TargetCard 
-                      key={target.id} 
-                      target={target} 
-                      goalId={goal.id}
-                      goalOptions={goal.goalOptions || []}
-                      style={{ animationDelay: `${index * 0.05}s` }}
-                    />
-                  ))}
-                </div>
+                <TargetsTable 
+                  targets={filteredTargets}
+                  goalId={goal.id}
+                  goalOptions={goal.goalOptions || []}
+                  onAddNote={(targetId) => {
+                    const note = prompt("Add a note:");
+                    if (note) addComment(goal.id, note, targetId);
+                  }}
+                  onJumpToNotes={(targetId) => {
+                    // Scroll to comments section
+                    const commentsSection = document.querySelector('[data-comments-section]');
+                    commentsSection?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                />
                 
                 {filteredTargets.length > 3 && (
                   <div className="mt-4 flex justify-center">
@@ -612,7 +615,7 @@ const GoalPage = () => {
 
       {/* Section 3: Comments Section - back to background */}
       <div className="bg-background -mt-px">
-        <div className="container pt-4 pb-8 sm:pt-6 sm:pb-12 px-4 sm:px-6">
+        <div className="container pt-4 pb-8 sm:pt-6 sm:pb-12 px-4 sm:px-6" data-comments-section>
           <h2 className="font-display text-xl font-semibold flex items-center gap-2 mb-4">
             <MessageSquare className="h-5 w-5 text-primary" />
             Comments & Notes
