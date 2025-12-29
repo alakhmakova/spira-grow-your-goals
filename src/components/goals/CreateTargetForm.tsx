@@ -12,6 +12,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -32,6 +38,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useGoalsContext } from "@/context/GoalsContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Number icon (same size as others)
 const NumberIcon = ({ className }: { className?: string }) => (
@@ -161,6 +168,7 @@ interface CreateTargetFormProps {
 
 export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOptions = [] }: CreateTargetFormProps) => {
   const { createTarget } = useGoalsContext();
+  const isMobile = useIsMobile();
   
   const [name, setName] = useState("");
   const [type, setType] = useState<"number" | "success" | "tasks">("number");
@@ -299,342 +307,361 @@ export const CreateTargetForm = ({ open, onOpenChange, goalId, optionId, goalOpt
     onOpenChange(false);
   };
 
+  // Form content that will be reused in both Dialog and Drawer
+  const formContent = (
+    <form onSubmit={handleSubmit} className="space-y-5 py-2 sm:py-4">
+      {/* Target Name */}
+      <div className="space-y-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="target-name" className="text-base font-medium leading-none">
+              How would you break this goal down into smaller pieces? <span className="text-destructive">*</span>
+            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help flex-shrink-0" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs">
+                Accountability set-up – define actions, timeframe, and measures of accomplishment. 
+                Targets are measurable steps towards your goal.
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <a 
+            href="/info#targets" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-xs text-primary hover:underline flex items-center gap-1 whitespace-nowrap flex-shrink-0"
+          >
+            Learn more <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+        <Input
+          id="target-name"
+          placeholder="What step towards your goal will you act on?"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            if (errors.name) setErrors(prev => ({ ...prev, name: "" }));
+          }}
+          className={cn(errors.name && "border-destructive")}
+        />
+        {errors.name && (
+          <p className="text-sm text-destructive">{errors.name}</p>
+        )}
+      </div>
+
+      {/* Option Selector - only shown when options exist but none is active */}
+      {showOptionSelector && (
+        <div className="space-y-2">
+          <Label className="text-base font-medium">
+            Bind to option
+          </Label>
+          <Select value={selectedOptionId} onValueChange={setSelectedOptionId}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select an option to bind this target to..." />
+            </SelectTrigger>
+            <SelectContent>
+              {goalOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Choose which option this target should be linked to
+          </p>
+        </div>
+      )}
+
+      {/* Target Type */}
+      <div className="space-y-3">
+        <Label className="text-base font-medium">
+          Measure your success <span className="text-destructive">*</span>
+        </Label>
+        <RadioGroup
+          value={type}
+          onValueChange={(v) => setType(v as typeof type)}
+          className="grid grid-cols-3 gap-2 sm:gap-3"
+        >
+          <div className="flex-1">
+            <RadioGroupItem value="number" id="type-number" className="peer sr-only" />
+            <Label
+              htmlFor="type-number"
+              className={cn(
+                "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
+                type === "number" 
+                  ? "border-primary bg-primary/5" 
+                  : "border-muted hover:border-primary/50"
+              )}
+            >
+              <NumberIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-foreground" />
+              <span className="text-xs sm:text-sm font-medium text-center">Number</span>
+            </Label>
+          </div>
+          <div className="flex-1">
+            <RadioGroupItem value="success" id="type-success" className="peer sr-only" />
+            <Label
+              htmlFor="type-success"
+              className={cn(
+                "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
+                type === "success" 
+                  ? "border-primary bg-primary/5" 
+                  : "border-muted hover:border-primary/50"
+              )}
+            >
+              <ToggleIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
+              <span className="text-xs sm:text-sm font-medium text-center">Done/Not Done</span>
+            </Label>
+          </div>
+          <div className="flex-1">
+            <RadioGroupItem value="tasks" id="type-tasks" className="peer sr-only" />
+            <Label
+              htmlFor="type-tasks"
+              className={cn(
+                "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
+                type === "tasks" 
+                  ? "border-primary bg-primary/5" 
+                  : "border-muted hover:border-primary/50"
+              )}
+            >
+              <LeavesIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
+              <span className="text-xs sm:text-sm font-medium text-center">Tasks</span>
+            </Label>
+          </div>
+        </RadioGroup>
+      </div>
+
+      {/* Number Type Fields */}
+      {type === "number" && (
+        <div className="space-y-4 p-3 sm:p-4 rounded-lg bg-muted/50">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 h-5">
+                <Label htmlFor="start-value" className="leading-none">
+                  Start <span className="text-destructive">*</span>
+                </Label>
+              </div>
+              <Input
+                id="start-value"
+                type="number"
+                value={startValue}
+                onChange={(e) => {
+                  setStartValue(e.target.value);
+                  if (errors.startValue) setErrors(prev => ({ ...prev, startValue: "" }));
+                }}
+                className={cn(errors.startValue && "border-destructive")}
+              />
+              {errors.startValue && (
+                <p className="text-xs text-destructive">{errors.startValue}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 h-5">
+                <Label htmlFor="target-value" className="leading-none">
+                  Target <span className="text-destructive">*</span>
+                </Label>
+              </div>
+              <Input
+                id="target-value"
+                type="number"
+                value={targetValue}
+                onChange={(e) => {
+                  setTargetValue(e.target.value);
+                  if (errors.targetValue) setErrors(prev => ({ ...prev, targetValue: "" }));
+                }}
+                className={cn(errors.targetValue && "border-destructive")}
+              />
+              {errors.targetValue && (
+                <p className="text-xs text-destructive">{errors.targetValue}</p>
+              )}
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-1 h-5">
+                <Label htmlFor="unit" className="leading-none">Unit</Label>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    What will measure your success?
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <Input
+                id="unit"
+                placeholder="USD, kg, etc."
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Type Info */}
+      {type === "success" && (
+        <div className="p-4 rounded-lg bg-muted/50">
+          <p className="text-sm text-muted-foreground">
+            This target will be marked as either "Done" or "Not Done" with a simple toggle switch.
+          </p>
+        </div>
+      )}
+
+      {/* Tasks Type */}
+      {type === "tasks" && (
+        <div className="space-y-3 p-4 rounded-lg bg-muted/50">
+          <Label>Add tasks to your target</Label>
+          <div className="flex gap-2">
+            <Input
+              placeholder="Enter task name"
+              value={newTask}
+              onChange={(e) => setNewTask(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddTask();
+                }
+              }}
+            />
+            <Button 
+              type="button" 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddTask();
+              }} 
+              variant="secondary"
+            >
+              Add
+            </Button>
+          </div>
+          {tasks.length > 0 && (
+            <ul className="space-y-2">
+              {tasks.map((task, index) => (
+                <li 
+                  key={index} 
+                  className="flex items-center gap-2 p-2 rounded bg-background"
+                >
+                  {editingTaskIndex === index ? (
+                    <Input
+                      autoFocus
+                      value={editingTaskValue}
+                      onChange={(e) => setEditingTaskValue(e.target.value)}
+                      onBlur={() => handleSaveTaskEdit(index)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSaveTaskEdit(index);
+                        if (e.key === "Escape") setEditingTaskIndex(null);
+                      }}
+                      className="flex-1 h-8"
+                    />
+                  ) : (
+                    <>
+                      <span className="flex-1 text-sm">{task}</span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => handleEditTask(index)}
+                      >
+                        <Pencil className="h-3 w-3 text-muted-foreground" />
+                      </Button>
+                    </>
+                  )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => handleRemoveTask(index)}
+                  >
+                    <Trash2 className="h-3 w-3 text-destructive" />
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {errors.tasks && (
+            <p className="text-sm text-destructive">{errors.tasks}</p>
+          )}
+        </div>
+      )}
+
+      {/* Deadline */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Label className="text-base font-medium">Deadline (optional)</Label>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent>
+              When precisely are you going to finish?
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant={deadline ? "nature" : "outline"}
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !deadline && "text-muted-foreground",
+                deadline && "text-white"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {deadline ? format(deadline, "MMMM do, yyyy") : "Pick a deadline"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={deadline}
+              onSelect={setDeadline}
+              initialFocus
+              className="pointer-events-auto"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Actions */}
+      <div className="flex justify-end gap-3 pt-4 border-t">
+        <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          Cancel
+        </Button>
+        <Button type="submit" variant="nature">
+          Create Target
+        </Button>
+      </div>
+    </form>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle className="font-display text-xl sm:text-2xl">Create New Target</DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-4 max-h-[80vh] overflow-y-auto">
+            {formContent}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="font-display text-xl sm:text-2xl">Create New Target</DialogTitle>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-5 py-2 sm:py-4">
-          {/* Target Name */}
-          <div className="space-y-2">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="target-name" className="text-base font-medium leading-none">
-                  How would you break this goal down into smaller pieces? <span className="text-destructive">*</span>
-                </Label>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help flex-shrink-0" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    Accountability set-up – define actions, timeframe, and measures of accomplishment. 
-                    Targets are measurable steps towards your goal.
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <a 
-                href="/info#targets" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-xs text-primary hover:underline flex items-center gap-1 whitespace-nowrap flex-shrink-0"
-              >
-                Learn more <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
-            <Input
-              id="target-name"
-              placeholder="What step towards your goal will you act on?"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) setErrors(prev => ({ ...prev, name: "" }));
-              }}
-              className={cn(errors.name && "border-destructive")}
-            />
-            {errors.name && (
-              <p className="text-sm text-destructive">{errors.name}</p>
-            )}
-          </div>
-
-          {/* Option Selector - only shown when options exist but none is active */}
-          {showOptionSelector && (
-            <div className="space-y-2">
-              <Label className="text-base font-medium">
-                Bind to option
-              </Label>
-              <Select value={selectedOptionId} onValueChange={setSelectedOptionId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select an option to bind this target to..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {goalOptions.map((option) => (
-                    <SelectItem key={option.id} value={option.id}>
-                      {option.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground">
-                Choose which option this target should be linked to
-              </p>
-            </div>
-          )}
-
-          {/* Target Type */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">
-              Measure your success <span className="text-destructive">*</span>
-            </Label>
-            <RadioGroup
-              value={type}
-              onValueChange={(v) => setType(v as typeof type)}
-              className="grid grid-cols-3 gap-2 sm:gap-3"
-            >
-              <div className="flex-1">
-                <RadioGroupItem value="number" id="type-number" className="peer sr-only" />
-                <Label
-                  htmlFor="type-number"
-                  className={cn(
-                    "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
-                    type === "number" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-muted hover:border-primary/50"
-                  )}
-                >
-                  <NumberIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-foreground" />
-                  <span className="text-xs sm:text-sm font-medium text-center">Number</span>
-                </Label>
-              </div>
-              <div className="flex-1">
-                <RadioGroupItem value="success" id="type-success" className="peer sr-only" />
-                <Label
-                  htmlFor="type-success"
-                  className={cn(
-                    "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
-                    type === "success" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-muted hover:border-primary/50"
-                  )}
-                >
-                  <ToggleIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
-                  <span className="text-xs sm:text-sm font-medium text-center">Done/Not Done</span>
-                </Label>
-              </div>
-              <div className="flex-1">
-                <RadioGroupItem value="tasks" id="type-tasks" className="peer sr-only" />
-                <Label
-                  htmlFor="type-tasks"
-                  className={cn(
-                    "flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg border-2 cursor-pointer transition-all h-full min-h-[72px] sm:min-h-[88px]",
-                    type === "tasks" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-muted hover:border-primary/50"
-                  )}
-                >
-                  <LeavesIcon className="h-5 w-5 sm:h-6 sm:w-6 mb-1" />
-                  <span className="text-xs sm:text-sm font-medium text-center">Tasks</span>
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-
-          {/* Number Type Fields */}
-          {type === "number" && (
-            <div className="space-y-4 p-3 sm:p-4 rounded-lg bg-muted/50">
-              <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1 h-5">
-                    <Label htmlFor="start-value" className="leading-none">
-                      Start <span className="text-destructive">*</span>
-                    </Label>
-                  </div>
-                  <Input
-                    id="start-value"
-                    type="number"
-                    value={startValue}
-                    onChange={(e) => {
-                      setStartValue(e.target.value);
-                      if (errors.startValue) setErrors(prev => ({ ...prev, startValue: "" }));
-                    }}
-                    className={cn(errors.startValue && "border-destructive")}
-                  />
-                  {errors.startValue && (
-                    <p className="text-xs text-destructive">{errors.startValue}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1 h-5">
-                    <Label htmlFor="target-value" className="leading-none">
-                      Target <span className="text-destructive">*</span>
-                    </Label>
-                  </div>
-                  <Input
-                    id="target-value"
-                    type="number"
-                    value={targetValue}
-                    onChange={(e) => {
-                      setTargetValue(e.target.value);
-                      if (errors.targetValue) setErrors(prev => ({ ...prev, targetValue: "" }));
-                    }}
-                    className={cn(errors.targetValue && "border-destructive")}
-                  />
-                  {errors.targetValue && (
-                    <p className="text-xs text-destructive">{errors.targetValue}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1 h-5">
-                    <Label htmlFor="unit" className="leading-none">Unit</Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        What will measure your success?
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                  <Input
-                    id="unit"
-                    placeholder="USD, kg, etc."
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Success Type Info */}
-          {type === "success" && (
-            <div className="p-4 rounded-lg bg-muted/50">
-              <p className="text-sm text-muted-foreground">
-                This target will be marked as either "Done" or "Not Done" with a simple toggle switch.
-              </p>
-            </div>
-          )}
-
-          {/* Tasks Type */}
-          {type === "tasks" && (
-            <div className="space-y-3 p-4 rounded-lg bg-muted/50">
-              <Label>Add tasks to your target</Label>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Enter task name"
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleAddTask();
-                    }
-                  }}
-                />
-                <Button 
-                  type="button" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleAddTask();
-                  }} 
-                  variant="secondary"
-                >
-                  Add
-                </Button>
-              </div>
-              {tasks.length > 0 && (
-                <ul className="space-y-2">
-                  {tasks.map((task, index) => (
-                    <li 
-                      key={index} 
-                      className="flex items-center gap-2 p-2 rounded bg-background"
-                    >
-                      {editingTaskIndex === index ? (
-                        <Input
-                          autoFocus
-                          value={editingTaskValue}
-                          onChange={(e) => setEditingTaskValue(e.target.value)}
-                          onBlur={() => handleSaveTaskEdit(index)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") handleSaveTaskEdit(index);
-                            if (e.key === "Escape") setEditingTaskIndex(null);
-                          }}
-                          className="flex-1 h-8"
-                        />
-                      ) : (
-                        <>
-                          <span className="flex-1 text-sm">{task}</span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => handleEditTask(index)}
-                          >
-                            <Pencil className="h-3 w-3 text-muted-foreground" />
-                          </Button>
-                        </>
-                      )}
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => handleRemoveTask(index)}
-                      >
-                        <Trash2 className="h-3 w-3 text-destructive" />
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {errors.tasks && (
-                <p className="text-sm text-destructive">{errors.tasks}</p>
-              )}
-            </div>
-          )}
-
-          {/* Deadline */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label className="text-base font-medium">Deadline (optional)</Label>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  When precisely are you going to finish?
-                </TooltipContent>
-              </Tooltip>
-            </div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant={deadline ? "nature" : "outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !deadline && "text-muted-foreground",
-                    deadline && "text-white"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {deadline ? format(deadline, "MMMM do, yyyy") : "Pick a deadline"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={deadline}
-                  onSelect={setDeadline}
-                  initialFocus
-                  className="pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="nature">
-              Create Target
-            </Button>
-          </div>
-        </form>
+        {formContent}
       </DialogContent>
     </Dialog>
   );
