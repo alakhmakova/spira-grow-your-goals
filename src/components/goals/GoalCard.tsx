@@ -61,30 +61,30 @@ export const GoalCard = ({
     t.deadline && getOverdueStatus(t.deadline) === "overdue" && t.progress < 100
   );
 
-  // Get header color based on goal type or status
+  // Get header color based on goal type or status - using SSA color scheme
   const getHeaderColor = () => {
     if (goal.progress === 100) return "bg-success/20";
     if (goalOverdueStatus === "overdue" && goal.progress < 100) return "bg-destructive/20";
-    if (goal.goalType === "north-star") return "bg-amber-100 dark:bg-amber-900/30";
-    if (goal.goalType === "dream") return "bg-purple-100 dark:bg-purple-900/30";
-    if (goal.goalType === "long-term") return "bg-blue-100 dark:bg-blue-900/30";
-    if (goal.goalType === "short-term") return "bg-emerald-100 dark:bg-emerald-900/30";
+    if (goal.goalType === "north-star") return "bg-warning/20 dark:bg-warning/10";
+    if (goal.goalType === "dream") return "bg-purple/20 dark:bg-purple/10";
+    if (goal.goalType === "long-term") return "bg-primary/20 dark:bg-primary/10";
+    if (goal.goalType === "short-term") return "bg-accent/20 dark:bg-accent/10";
     return "bg-primary/10";
   };
 
-  // Match overlay color to header but darker
+  // Match overlay color to header but darker - using SSA color scheme
   const getOverlayColorClass = () => {
     if (goal.progress === 100) return "bg-success/70";
     if (goalOverdueStatus === "overdue" && goal.progress < 100) return "bg-destructive/60";
     switch (goal.goalType) {
       case "north-star":
-        return "bg-amber-300 dark:bg-amber-700/70";
+        return "bg-warning/60 dark:bg-warning/40";
       case "dream":
-        return "bg-purple-300 dark:bg-purple-700/70";
+        return "bg-purple/60 dark:bg-purple/40";
       case "long-term":
-        return "bg-blue-300 dark:bg-blue-700/70";
+        return "bg-primary/60 dark:bg-primary/40";
       case "short-term":
-        return "bg-emerald-300 dark:bg-emerald-700/70";
+        return "bg-accent/60 dark:bg-accent/40";
       default:
         return "bg-primary/40";
     }
@@ -95,7 +95,7 @@ export const GoalCard = ({
       className={cn(
         "relative h-full min-h-[200px] bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-grab active:cursor-grabbing border border-border/50",
         goal.progress === 100 && "border-success/30",
-        goal.goalType === "north-star" && "ring-1 ring-amber-400/50",
+        goal.goalType === "north-star" && "ring-1 ring-warning/50",
         goalOverdueStatus === "overdue" && goal.progress < 100 && "border-destructive/40"
       )}
     >
@@ -132,7 +132,7 @@ export const GoalCard = ({
                     "text-[10px] font-medium border-transparent bg-card/80 backdrop-blur-sm shadow-sm",
                     goalOverdueStatus === "overdue" && "bg-destructive/20 text-destructive",
                     goalOverdueStatus === "due-today" && "bg-warning/20 text-warning",
-                    goalOverdueStatus === "due-soon" && "bg-amber-500/20 text-amber-600"
+                    goalOverdueStatus === "due-soon" && "bg-warning/20 text-warning"
                   )}
                 >
                   <Calendar className="h-3 w-3 mr-1" />
