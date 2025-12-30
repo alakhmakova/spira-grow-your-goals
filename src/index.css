@@ -6,221 +6,305 @@
 
 @layer base {
   :root {
-    /* SSA Color Scheme - Light Mode */
-    /* Background: light gray-4 */
-    --background: 170 11% 97%;
-    --foreground: 195 56% 17%;
+    /* New Color Scheme - Light Mode */
+    /* Based on the provided palette */
+    
+    /* Background: white / off-white */
+    --background: 0 0% 100%;
+    --foreground: 180 100% 6%;
 
-    /* Cards: white with subtle coolness */
+    /* Cards */
     --card: 0 0% 100%;
-    --card-foreground: 195 56% 17%;
+    --card-foreground: 180 100% 6%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 195 56% 17%;
+    --popover-foreground: 180 100% 6%;
 
-    /* Primary: brand hero blue */
-    --primary: 218 82% 54%;
+    /* Primary: turquoise-600 */
+    --primary: 180 100% 24%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 218 100% 66%;
-    --primary-dark: 218 98% 38%;
+    --primary-light: 180 100% 32%;
+    --primary-dark: 180 100% 12%;
 
-    /* Secondary: cambridge warm blue */
-    --secondary: 169 67% 73%;
-    --secondary-foreground: 195 56% 17%;
+    /* Secondary: sand */
+    --secondary: 33 15% 80%;
+    --secondary-foreground: 180 100% 6%;
 
-    /* Muted: eng-gray-3 */
-    --muted: 180 9% 92%;
-    --muted-foreground: 213 9% 32%;
+    /* Muted: grey */
+    --muted: 180 6% 92%;
+    --muted-foreground: 180 8% 47%;
 
-    /* Accent: cambridge blue (teal) */
-    --accent: 178 100% 37%;
+    /* Accent: teal-400 */
+    --accent: 158 56% 46%;
     --accent-foreground: 0 0% 100%;
 
-    /* Mint: cambridge light blue */
-    --mint: 167 86% 92%;
-    --mint-foreground: 195 56% 17%;
+    /* Purple: purple-600 */
+    --purple: 244 71% 60%;
+    --purple-light: 240 100% 94%;
+    --purple-dark: 247 56% 26%;
 
-    /* Forest: cambridge dark blue */
-    --forest: 195 56% 17%;
+    /* Blue shades */
+    --blue: 195 100% 32%;
+    --blue-light: 186 79% 93%;
+    --blue-dark: 203 100% 22%;
+
+    /* Violet */
+    --violet: 270 78% 55%;
+    --violet-light: 280 100% 94%;
+    --violet-dark: 270 60% 25%;
+
+    /* Pink */
+    --pink: 316 73% 61%;
+    --pink-light: 300 100% 95%;
+    --pink-dark: 316 80% 27%;
+
+    /* Success: green-600 */
+    --success: 112 38% 41%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 116 79% 95%;
+    --success-dark: 109 37% 17%;
+
+    /* Warning: yellow-600 */
+    --warning: 36 77% 53%;
+    --warning-foreground: 180 100% 6%;
+    --warning-light: 51 100% 90%;
+    --warning-dark: 35 77% 36%;
+
+    /* Lime */
+    --lime: 68 79% 38%;
+    --lime-light: 66 65% 90%;
+    --lime-dark: 67 68% 21%;
+
+    /* Teal */
+    --teal: 158 56% 46%;
+    --teal-light: 151 79% 94%;
+    --teal-dark: 162 69% 18%;
+
+    /* Turquoise */
+    --turquoise: 180 100% 32%;
+    --turquoise-light: 174 73% 91%;
+    --turquoise-dark: 180 100% 12%;
+
+    /* Red: red-600 */
+    --destructive: 355 73% 54%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 352 100% 95%;
+    --destructive-dark: 355 87% 26%;
+
+    /* Info: turquoise */
+    --info: 180 100% 40%;
+    --info-foreground: 180 100% 6%;
+
+    /* Forest: turquoise-1000 */
+    --forest: 180 100% 12%;
     --forest-foreground: 0 0% 100%;
 
-    /* Success: confirmation green */
-    --success: 112 90% 19%;
-    --success-foreground: 0 0% 100%;
+    /* Mint */
+    --mint: 151 79% 94%;
+    --mint-foreground: 180 100% 6%;
 
-    /* Warning: orange */
-    --warning: 31 100% 50%;
-    --warning-foreground: 0 0% 100%;
+    /* Light green */
+    --light-green: 116 79% 95%;
+    --light-green-foreground: 109 37% 17%;
 
-    /* Lime: cpe-yellow */
-    --lime: 64 97% 54%;
-    --lime-foreground: 195 56% 17%;
-
-    /* Light green: cambridge light blue */
-    --light-green: 167 86% 92%;
-    --light-green-foreground: 195 56% 17%;
-
-    /* Destructive: error red */
-    --destructive: 0 91% 37%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* Info: teal/information */
-    --info: 175 63% 65%;
-    --info-foreground: 195 56% 17%;
-
-    /* Border: eng-gray-3 */
-    --border: 180 9% 92%;
-    --input: 180 9% 92%;
-    --ring: 218 82% 54%;
+    /* Border & Input */
+    --border: 180 6% 92%;
+    --input: 180 6% 92%;
+    --ring: 180 100% 24%;
 
     --radius: 0.75rem;
 
-    /* Gradients - using brand hero and cambridge blue */
-    --gradient-primary: linear-gradient(135deg, hsl(218 82% 54%) 0%, hsl(218 100% 66%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(178 100% 37%) 0%, hsl(169 67% 73%) 100%);
-    --gradient-forest: linear-gradient(135deg, hsl(195 56% 17%) 0%, hsl(218 82% 54%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(170 11% 97%) 0%, hsl(180 9% 95%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(170 11% 98%) 100%);
-    --gradient-text: linear-gradient(90deg, hsl(218 82% 54%) 0%, hsl(178 100% 37%) 100%);
-    --gradient-lime: linear-gradient(135deg, hsl(178 100% 37%) 0%, hsl(64 97% 54%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(178 100% 37%) 0%, hsl(112 90% 19%) 100%);
-    --gradient-progress: linear-gradient(90deg, hsl(218 82% 54%) 0%, hsl(178 100% 37%) 100%);
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(180 100% 24%) 0%, hsl(180 100% 32%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 56% 46%) 0%, hsl(180 100% 40%) 100%);
+    --gradient-forest: linear-gradient(135deg, hsl(180 100% 12%) 0%, hsl(180 100% 24%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(180 6% 98%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(180 6% 98%) 100%);
+    --gradient-text: linear-gradient(90deg, hsl(180 100% 24%) 0%, hsl(158 56% 46%) 100%);
+    --gradient-lime: linear-gradient(135deg, hsl(158 56% 46%) 0%, hsl(68 79% 38%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(158 56% 46%) 0%, hsl(112 38% 41%) 100%);
+    --gradient-progress: linear-gradient(90deg, hsl(180 100% 24%) 0%, hsl(158 56% 46%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(270 78% 55%) 0%, hsl(244 71% 60%) 100%);
+    --gradient-pink: linear-gradient(135deg, hsl(316 73% 61%) 0%, hsl(270 78% 55%) 100%);
     
     /* Shadows */
-    --shadow-sm: 0 1px 3px 0 hsl(195 56% 17% / 0.05);
-    --shadow-md: 0 4px 16px -2px hsl(195 56% 17% / 0.08);
-    --shadow-lg: 0 12px 40px -8px hsl(195 56% 17% / 0.1);
-    --shadow-glow: 0 0 30px hsl(218 82% 54% / 0.2);
-    --shadow-success: 0 0 30px hsl(112 90% 19% / 0.25);
-    --shadow-accent: 0 0 30px hsl(178 100% 37% / 0.2);
+    --shadow-sm: 0 1px 3px 0 hsl(180 100% 6% / 0.05);
+    --shadow-md: 0 4px 16px -2px hsl(180 100% 6% / 0.08);
+    --shadow-lg: 0 12px 40px -8px hsl(180 100% 6% / 0.1);
+    --shadow-glow: 0 0 30px hsl(180 100% 24% / 0.2);
+    --shadow-success: 0 0 30px hsl(112 38% 41% / 0.25);
+    --shadow-accent: 0 0 30px hsl(158 56% 46% / 0.2);
+    --shadow-purple: 0 0 30px hsl(244 71% 60% / 0.25);
 
     /* Sidebar */
-    --sidebar-background: 170 11% 97%;
-    --sidebar-foreground: 195 56% 17%;
-    --sidebar-primary: 218 82% 54%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 180 100% 6%;
+    --sidebar-primary: 180 100% 24%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 167 86% 92%;
-    --sidebar-accent-foreground: 195 56% 17%;
-    --sidebar-border: 180 9% 92%;
-    --sidebar-ring: 218 82% 54%;
+    --sidebar-accent: 174 73% 91%;
+    --sidebar-accent-foreground: 180 100% 6%;
+    --sidebar-border: 180 6% 92%;
+    --sidebar-ring: 180 100% 24%;
 
-    /* Additional SSA colors for components */
-    --cambridge-blue: 178 100% 37%;
-    --cambridge-warm-blue: 169 67% 73%;
-    --cambridge-warm-red: 351 100% 81%;
-    --brand-hero: 218 82% 54%;
-    --purple: 261 61% 47%;
-    --pink: 338 92% 55%;
-    --dark-pink: 309 81% 20%;
-    --eng-bright-orange: 14 89% 59%;
-    --eng-bright-pink: 315 73% 55%;
-    --eng-bright-red: 353 89% 63%;
-    --cpe-bright-blue: 194 77% 68%;
+    /* Grey shades */
+    --grey-50: 180 6% 98%;
+    --grey-100: 180 6% 96%;
+    --grey-200: 180 6% 80%;
+    --grey-400: 180 6% 56%;
+    --grey-600: 180 8% 44%;
+    --grey-800: 180 7% 33%;
+
+    /* Sand */
+    --sand: 33 15% 80%;
+    --sand-light: 40 20% 97%;
+    --sand-dark: 24 12% 37%;
   }
 
   .dark {
-    /* SSA Color Scheme - Dark Mode */
-    --background: 227 50% 23%;
-    --foreground: 170 11% 97%;
+    /* Dark Mode - using forest and turquoise as base */
+    --background: 180 100% 6%;
+    --foreground: 0 0% 97%;
 
-    --card: 195 56% 17%;
-    --card-foreground: 170 11% 97%;
+    --card: 180 50% 10%;
+    --card-foreground: 0 0% 97%;
 
-    --popover: 195 56% 17%;
-    --popover-foreground: 170 11% 97%;
+    --popover: 180 50% 10%;
+    --popover-foreground: 0 0% 97%;
 
-    /* Primary: brighter hero blue for dark mode */
-    --primary: 218 100% 66%;
-    --primary-foreground: 227 50% 23%;
-    --primary-light: 218 82% 54%;
-    --primary-dark: 218 100% 76%;
+    /* Primary: brighter turquoise for dark mode */
+    --primary: 180 100% 40%;
+    --primary-foreground: 180 100% 6%;
+    --primary-light: 180 100% 50%;
+    --primary-dark: 180 100% 32%;
 
     /* Secondary */
-    --secondary: 195 40% 25%;
-    --secondary-foreground: 169 67% 73%;
+    --secondary: 180 20% 18%;
+    --secondary-foreground: 0 0% 90%;
 
     /* Muted */
-    --muted: 227 40% 30%;
-    --muted-foreground: 180 9% 75%;
+    --muted: 180 20% 15%;
+    --muted-foreground: 180 6% 65%;
 
-    /* Accent: cambridge blue */
-    --accent: 178 100% 45%;
-    --accent-foreground: 227 50% 23%;
+    /* Accent */
+    --accent: 158 56% 50%;
+    --accent-foreground: 180 100% 6%;
 
-    /* Mint */
-    --mint: 167 60% 35%;
-    --mint-foreground: 0 0% 100%;
+    /* Purple */
+    --purple: 244 71% 70%;
+    --purple-light: 244 50% 25%;
+    --purple-dark: 244 71% 80%;
 
-    /* Forest */
-    --forest: 195 40% 30%;
-    --forest-foreground: 0 0% 100%;
+    /* Blue */
+    --blue: 195 100% 45%;
+    --blue-light: 195 50% 20%;
+    --blue-dark: 195 100% 55%;
+
+    /* Violet */
+    --violet: 270 78% 65%;
+    --violet-light: 270 40% 20%;
+    --violet-dark: 270 78% 75%;
+
+    /* Pink */
+    --pink: 316 73% 65%;
+    --pink-light: 316 40% 20%;
+    --pink-dark: 316 73% 75%;
 
     /* Success */
-    --success: 112 70% 35%;
+    --success: 112 50% 45%;
     --success-foreground: 0 0% 100%;
+    --success-light: 112 30% 20%;
+    --success-dark: 112 50% 55%;
 
     /* Warning */
-    --warning: 31 90% 55%;
-    --warning-foreground: 227 50% 23%;
+    --warning: 36 85% 55%;
+    --warning-foreground: 180 100% 6%;
+    --warning-light: 36 40% 20%;
+    --warning-dark: 36 85% 65%;
 
     /* Lime */
-    --lime: 64 90% 60%;
-    --lime-foreground: 227 50% 23%;
+    --lime: 68 79% 45%;
+    --lime-light: 68 40% 18%;
+    --lime-dark: 68 79% 55%;
+
+    /* Teal */
+    --teal: 158 56% 50%;
+    --teal-light: 158 30% 18%;
+    --teal-dark: 158 56% 60%;
+
+    /* Turquoise */
+    --turquoise: 180 100% 40%;
+    --turquoise-light: 180 40% 15%;
+    --turquoise-dark: 180 100% 50%;
+
+    /* Destructive */
+    --destructive: 355 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-light: 355 40% 20%;
+    --destructive-dark: 355 70% 65%;
+
+    /* Info */
+    --info: 180 100% 50%;
+    --info-foreground: 180 100% 6%;
+
+    /* Forest */
+    --forest: 180 30% 20%;
+    --forest-foreground: 0 0% 100%;
+
+    /* Mint */
+    --mint: 158 30% 25%;
+    --mint-foreground: 0 0% 100%;
 
     /* Light green */
-    --light-green: 167 50% 40%;
+    --light-green: 112 30% 25%;
     --light-green-foreground: 0 0% 100%;
 
-    --destructive: 0 80% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --info: 175 63% 55%;
-    --info-foreground: 227 50% 23%;
-
-    --border: 227 35% 30%;
-    --input: 227 35% 30%;
-    --ring: 218 100% 66%;
+    --border: 180 20% 20%;
+    --input: 180 20% 20%;
+    --ring: 180 100% 40%;
 
     /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(218 100% 66%) 0%, hsl(218 82% 54%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(178 100% 45%) 0%, hsl(169 60% 55%) 100%);
-    --gradient-forest: linear-gradient(135deg, hsl(195 40% 30%) 0%, hsl(218 100% 66%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(227 50% 23%) 0%, hsl(227 45% 26%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(195 56% 19%) 0%, hsl(195 56% 17%) 100%);
-    --gradient-text: linear-gradient(90deg, hsl(218 100% 66%) 0%, hsl(178 100% 45%) 100%);
-    --gradient-lime: linear-gradient(135deg, hsl(178 100% 45%) 0%, hsl(64 90% 60%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(178 100% 45%) 0%, hsl(112 70% 35%) 100%);
-    --gradient-progress: linear-gradient(90deg, hsl(218 100% 66%) 0%, hsl(178 100% 45%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(180 100% 40%) 0%, hsl(180 100% 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 56% 50%) 0%, hsl(180 100% 45%) 100%);
+    --gradient-forest: linear-gradient(135deg, hsl(180 30% 20%) 0%, hsl(180 100% 40%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(180 100% 6%) 0%, hsl(180 50% 10%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(180 50% 12%) 0%, hsl(180 50% 10%) 100%);
+    --gradient-text: linear-gradient(90deg, hsl(180 100% 40%) 0%, hsl(158 56% 50%) 100%);
+    --gradient-lime: linear-gradient(135deg, hsl(158 56% 50%) 0%, hsl(68 79% 45%) 100%);
+    --gradient-success: linear-gradient(135deg, hsl(158 56% 50%) 0%, hsl(112 50% 45%) 100%);
+    --gradient-progress: linear-gradient(90deg, hsl(180 100% 40%) 0%, hsl(158 56% 50%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(270 78% 65%) 0%, hsl(244 71% 70%) 100%);
+    --gradient-pink: linear-gradient(135deg, hsl(316 73% 65%) 0%, hsl(270 78% 65%) 100%);
 
     --shadow-sm: 0 1px 3px 0 hsl(0 0% 0% / 0.25);
     --shadow-md: 0 4px 16px -2px hsl(0 0% 0% / 0.35);
     --shadow-lg: 0 12px 40px -8px hsl(0 0% 0% / 0.45);
-    --shadow-glow: 0 0 35px hsl(218 100% 66% / 0.25);
-    --shadow-success: 0 0 35px hsl(112 70% 35% / 0.3);
-    --shadow-accent: 0 0 35px hsl(178 100% 45% / 0.25);
+    --shadow-glow: 0 0 35px hsl(180 100% 40% / 0.25);
+    --shadow-success: 0 0 35px hsl(112 50% 45% / 0.3);
+    --shadow-accent: 0 0 35px hsl(158 56% 50% / 0.25);
+    --shadow-purple: 0 0 35px hsl(244 71% 70% / 0.3);
 
     /* Sidebar dark */
-    --sidebar-background: 227 45% 20%;
-    --sidebar-foreground: 170 11% 97%;
-    --sidebar-primary: 218 100% 66%;
-    --sidebar-primary-foreground: 227 50% 23%;
-    --sidebar-accent: 227 35% 28%;
-    --sidebar-accent-foreground: 169 67% 73%;
-    --sidebar-border: 227 35% 28%;
-    --sidebar-ring: 218 100% 66%;
+    --sidebar-background: 180 50% 8%;
+    --sidebar-foreground: 0 0% 97%;
+    --sidebar-primary: 180 100% 40%;
+    --sidebar-primary-foreground: 180 100% 6%;
+    --sidebar-accent: 180 30% 18%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 180 20% 18%;
+    --sidebar-ring: 180 100% 40%;
 
-    /* Additional SSA colors for dark mode */
-    --cambridge-blue: 178 100% 45%;
-    --cambridge-warm-blue: 169 60% 55%;
-    --cambridge-warm-red: 351 90% 70%;
-    --brand-hero: 218 100% 66%;
-    --purple: 261 55% 55%;
-    --pink: 338 85% 60%;
-    --dark-pink: 309 70% 35%;
-    --eng-bright-orange: 14 85% 65%;
-    --eng-bright-pink: 315 70% 60%;
-    --eng-bright-red: 353 85% 68%;
-    --cpe-bright-blue: 194 70% 60%;
+    /* Grey shades - dark mode */
+    --grey-50: 180 20% 12%;
+    --grey-100: 180 20% 15%;
+    --grey-200: 180 15% 25%;
+    --grey-400: 180 10% 45%;
+    --grey-600: 180 8% 60%;
+    --grey-800: 180 6% 75%;
+
+    /* Sand dark */
+    --sand: 33 10% 25%;
+    --sand-light: 33 8% 18%;
+    --sand-dark: 33 15% 50%;
   }
 }
 
@@ -304,6 +388,14 @@
     background: var(--gradient-success);
   }
 
+  .gradient-purple {
+    background: var(--gradient-purple);
+  }
+
+  .gradient-pink {
+    background: var(--gradient-pink);
+  }
+
   .card-gradient {
     background: var(--gradient-card);
   }
@@ -324,6 +416,10 @@
     box-shadow: var(--shadow-accent);
   }
 
+  .shadow-purple-glow {
+    box-shadow: var(--shadow-purple);
+  }
+
   .gradient-progress {
     background: var(--gradient-progress);
   }
@@ -341,6 +437,11 @@
   .text-gradient-lime {
     @apply bg-clip-text text-transparent;
     background: var(--gradient-lime);
+  }
+
+  .text-gradient-purple {
+    @apply bg-clip-text text-transparent;
+    background: var(--gradient-purple);
   }
 
   /* Nordic-style organic shapes */
