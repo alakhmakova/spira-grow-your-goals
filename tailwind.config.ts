@@ -69,6 +69,10 @@ export default {
           DEFAULT: "hsl(var(--light-green))",
           foreground: "hsl(var(--light-green-foreground))",
         },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -87,6 +91,22 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // SSA specific colors
+        cambridge: {
+          blue: "hsl(var(--cambridge-blue))",
+          "warm-blue": "hsl(var(--cambridge-warm-blue))",
+          "warm-red": "hsl(var(--cambridge-warm-red))",
+        },
+        "brand-hero": "hsl(var(--brand-hero))",
+        purple: "hsl(var(--purple))",
+        pink: "hsl(var(--pink))",
+        "dark-pink": "hsl(var(--dark-pink))",
+        "eng-bright": {
+          orange: "hsl(var(--eng-bright-orange))",
+          pink: "hsl(var(--eng-bright-pink))",
+          red: "hsl(var(--eng-bright-red))",
+        },
+        "cpe-bright-blue": "hsl(var(--cpe-bright-blue))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -148,6 +168,10 @@ export default {
           "0%, 100%": { transform: "scale(1)", opacity: "0.8" },
           "50%": { transform: "scale(1.05)", opacity: "1" },
         },
+        "progress": {
+          "0%": { width: "0", opacity: "1" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -161,6 +185,7 @@ export default {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
         "breathe": "breathe 4s ease-in-out infinite",
+        "progress": "progress 0.4s ease-in-out forwards",
       },
     },
   },
