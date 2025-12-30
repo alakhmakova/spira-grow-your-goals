@@ -389,23 +389,15 @@ const GoalPage = () => {
 
           {/* Achievability reminder - full width */}
           {showAchievabilityReminder && (
-            <div className="flex items-center gap-3 p-5 rounded-lg mb-12 sm:mb-6 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgb(93,47,193)', opacity: 0.7 }}>
-              <Sparkles className="h-4 w-4 flex-shrink-0" style={{ color: 'rgb(93,47,193)', opacity: 1 }} />
+            <div className="flex items-center gap-3 p-5 rounded-lg mb-12 sm:mb-6 text-sm bg-purple-light/90 text-forest shadow-purple-glow/30">
+              <Sparkles className="h-4 w-4 flex-shrink-0 text-purple" />
               <p className="flex-1">
                 Has anything changed about this goal? Consider updating your achievability rating.
               </p>
               <Button 
                 variant="ghost" 
                 size="sm"
-                style={{ color: 'rgb(93,47,193)', opacity: 1 }}
-                onMouseEnter={(e) => { 
-                  e.currentTarget.style.backgroundColor = 'rgb(93,47,193)';
-                  e.currentTarget.style.color = 'white';
-                }} 
-                onMouseLeave={(e) => { 
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = 'rgb(93,47,193)';
-                }}
+                className="text-purple hover:bg-purple hover:text-white"
                 onClick={() => setShowAchievabilityReminder(false)}
               >
                 Dismiss
@@ -424,15 +416,15 @@ const GoalPage = () => {
           preserveAspectRatio="none"
         >
           <path
-            fill="#133844"
+            className="fill-forest"
             fillOpacity="1"
             d="M0,256L48,234.7C96,213,192,171,288,170.7C384,171,480,213,576,240C672,267,768,277,864,240C960,203,1056,117,1152,96C1248,75,1344,117,1392,138.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
           />
         </svg>
       </div>
 
-      {/* Section 2: GROW Details & Targets - on primary background */}
-      <div className="text-primary-foreground pb-8 sm:pb-12 -mt-[10px] sm:-mt-[15px]" style={{ backgroundColor: '#133844' }}>
+      {/* Section 2: GROW Details & Targets - on forest background */}
+      <div className="bg-forest text-forest-foreground pb-8 sm:pb-12 -mt-[10px] sm:-mt-[15px]">
         <div className="container px-4 sm:px-6">
           {/* GROW Description Section */}
           <div className="mb-8 pt-10 sm:pt-8">
@@ -444,29 +436,29 @@ const GoalPage = () => {
             </h2>
 
             {hasEmptyGrowFields && !growWarningDismissed && (
-              <div className="flex items-center gap-3 p-5 rounded-lg mb-6 text-sm" style={{ backgroundColor: 'rgba(245, 245, 245, 0.9)', border: '2px solid #D7FDF5', color: 'rgb(29,41,86)', boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+              <div className="flex items-center gap-3 p-5 rounded-lg mb-6 text-sm bg-grey-50 border-2 border-teal-light text-forest shadow-md">
+                <AlertTriangle className="h-4 w-4 flex-shrink-0 text-warning" />
                 <p className="flex-1">
                   Working with all stages of the GROW model helps achieve your goal more effectively.
-                  <Link to="/info#grow-model" className="underline ml-1" style={{ color: 'rgb(0, 112, 161)', opacity: 0.8 }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0.8'}>
+                  <Link to="/info#grow-model" className="underline ml-1 text-blue hover:text-blue-dark">
                     Learn more
                   </Link>
                 </p>
-                <Button variant="ghost" size="sm" style={{ color: 'rgb(29,41,86)' }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgb(103, 232, 249)'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }} onClick={() => setGrowWarningDismissed(true)}>
+                <Button variant="ghost" size="sm" className="text-forest hover:bg-teal-light hover:text-forest" onClick={() => setGrowWarningDismissed(true)}>
                   Dismiss
                 </Button>
               </div>
             )}
 
             <Accordion type="multiple" value={expandedSections} onValueChange={setExpandedSections} className="space-y-4">
-              <AccordionItem value="reality" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AccordionTrigger className="font-medium text-primary-foreground text-left">
+              <AccordionItem value="reality" className="bg-forest-foreground/10 border-forest-foreground/20 rounded-lg px-4 shadow-md">
+                <AccordionTrigger className="font-medium text-forest-foreground text-left">
                   <div className="flex items-center gap-2">
                     <i className="icofont-look" style={{ fontSize: '16px' }} />
                     Reality: Actions & Obstacles
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 text-primary-foreground">
+                <AccordionContent className="space-y-4 text-forest-foreground">
                   <RealitySection
                     actions={goal.actions || []}
                     obstacles={goal.obstacles || []}
@@ -476,14 +468,14 @@ const GoalPage = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="goalOptions" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AccordionTrigger className="font-medium text-primary-foreground text-left">
+              <AccordionItem value="goalOptions" className="bg-forest-foreground/10 border-forest-foreground/20 rounded-lg px-4 shadow-md">
+                <AccordionTrigger className="font-medium text-forest-foreground text-left">
                   <div className="flex items-center gap-2">
                     <i className="icofont-light-bulb" style={{ fontSize: '16px' }} />
                     Options: What strategies could you use?
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="text-primary-foreground">
+                <AccordionContent className="text-forest-foreground">
                   <OptionsSection
                     options={goal.goalOptions || []}
                     activeOptionId={goal.activeOptionId}
@@ -506,19 +498,19 @@ const GoalPage = () => {
                 </AccordionContent>
               </AccordionItem>
 
-              <AccordionItem value="will" className="bg-primary-foreground/10 border-primary-foreground/20 rounded-lg px-4" style={{ boxShadow: '4px -4px 12px rgba(0, 0, 0, 0.1)' }}>
-                <AccordionTrigger className="font-medium text-primary-foreground text-left">
+              <AccordionItem value="will" className="bg-forest-foreground/10 border-forest-foreground/20 rounded-lg px-4 shadow-md">
+                <AccordionTrigger className="font-medium text-forest-foreground text-left">
                   <div className="flex items-center gap-2">
                     <i className="icofont-award" style={{ fontSize: '16px' }} />
                     Why is this goal important?
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="text-primary-foreground">
+                <AccordionContent className="text-forest-foreground">
                   <Textarea
                     value={goal.will || ""}
                     onChange={(e) => updateGoal(goal.id, { will: e.target.value })}
                     placeholder="Describe your commitment and motivation..."
-                    className="min-h-[100px] resize-y bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/50"
+                    className="min-h-[100px] resize-y bg-forest-foreground/10 border-forest-foreground/20 text-forest-foreground placeholder:text-forest-foreground/50"
                   />
                 </AccordionContent>
               </AccordionItem>
@@ -534,29 +526,29 @@ const GoalPage = () => {
           </div>
 
           {/* Targets */}
-          <div className="rounded-lg p-6" style={{ backgroundColor: '#d7fdf5' }}>
+          <div className="rounded-lg p-6 bg-teal-light">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <h2 className="font-display text-xl font-semibold flex items-center gap-2 flex-wrap min-w-0" style={{ color: 'rgb(19, 56, 68)' }}>
+              <h2 className="font-display text-xl font-semibold flex items-center gap-2 flex-wrap min-w-0 text-forest">
                 <i className="icofont-dart" style={{ fontSize: '20px' }} />
                 Targets
-                <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground" style={{ color: 'rgb(19, 56, 68)' }}>{filteredTargets.length}</Badge>
+                <Badge variant="secondary" className="bg-forest/20 text-forest">{filteredTargets.length}</Badge>
               </h2>
-              <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90 flex-shrink-0">
+              <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-white text-forest hover:bg-white/90 flex-shrink-0">
                 <Plus className="h-4 w-4" />
                 New Target
               </Button>
             </div>
 
             {filteredTargets.length === 0 ? (
-              <Card className="text-center py-8 bg-primary-foreground/10 border-primary-foreground/20">
+              <Card className="text-center py-8 bg-white/80 border-forest/20 text-forest">
                 <CardContent>
-                  <TargetIcon className="h-12 w-12 opacity-40 mx-auto mb-4" />
-                  <h3 className="font-display text-lg font-semibold mb-2">No targets yet</h3>
-                  <p className="opacity-80 mb-4 max-w-md mx-auto">
+                  <TargetIcon className="h-12 w-12 opacity-40 mx-auto mb-4 text-forest" />
+                  <h3 className="font-display text-lg font-semibold mb-2 text-forest">No targets yet</h3>
+                  <p className="opacity-80 mb-4 max-w-md mx-auto text-forest">
                     Break down your goal into measurable targets. Without targets, 
                     your goal lacks the "Will" part of the GROW model.
                   </p>
-                  <Button onClick={() => setShowCreateTarget(true)} variant="secondary" className="gap-2 bg-primary-foreground text-primary hover:bg-primary-foreground/90">
+                  <Button onClick={() => setShowCreateTarget(true)} variant="secondary" className="gap-2 bg-white text-forest hover:bg-grey-100">
                     <Plus className="h-4 w-4" />
                     Create your first target
                   </Button>
@@ -581,7 +573,7 @@ const GoalPage = () => {
                 
                 {filteredTargets.length > 3 && (
                   <div className="mt-4 flex justify-center">
-                    <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-primary-foreground/20 hover:bg-primary-foreground/30">
+                    <Button onClick={() => setShowCreateTarget(true)} variant="secondary" size="sm" className="gap-2 bg-white/60 hover:bg-white/80 text-forest">
                       <Plus className="h-4 w-4" />
                       Add another target
                     </Button>
@@ -602,10 +594,10 @@ const GoalPage = () => {
         preserveAspectRatio="none"
         style={{ marginBottom: '-1px' }}
       >
-        <rect x="0" y="0" width="1440" height="20" fill="#133844" />
+        <rect x="0" y="0" width="1440" height="20" className="fill-forest" />
         <path
           d="M0,20 L0,70 Q720,-10 1440,70 L1440,20 Z"
-          fill="#133844"
+          className="fill-forest"
         />
         <path
           d="M0,70 Q720,-10 1440,70 L1440,80 L0,80 Z"
