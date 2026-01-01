@@ -415,6 +415,64 @@ const GoalPage = () => {
           className="w-full block h-[60px] sm:h-[80px] md:h-[100px]"
           preserveAspectRatio="none"
         >
+          <defs>
+            {/* Rainbow gradient for the glow */}
+            <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#ff0080" />
+              <stop offset="20%" stopColor="#ff8c00" />
+              <stop offset="40%" stopColor="#ffff00" />
+              <stop offset="60%" stopColor="#00ff00" />
+              <stop offset="80%" stopColor="#0080ff" />
+              <stop offset="100%" stopColor="#8000ff" />
+            </linearGradient>
+            
+            {/* Glow filter with 3x intensity */}
+            <filter id="rainbowGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur1" />
+              <feColorMatrix in="blur1" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="glow1" />
+              
+              <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur2" />
+              <feColorMatrix in="blur2" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.7 0" result="glow2" />
+              
+              <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur3" />
+              <feColorMatrix in="blur3" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0" result="glow3" />
+              
+              <feMerge>
+                <feMergeNode in="glow1" />
+                <feMergeNode in="glow2" />
+                <feMergeNode in="glow3" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          
+          {/* Rainbow glow stroke layers */}
+          <path
+            stroke="url(#rainbowGradient)"
+            strokeWidth="15"
+            fill="none"
+            opacity="0.6"
+            filter="url(#rainbowGlow)"
+            d="M0,256L48,234.7C96,213,192,171,288,170.7C384,171,480,213,576,240C672,267,768,277,864,240C960,203,1056,117,1152,96C1248,75,1344,117,1392,138.7L1440,160"
+          />
+          <path
+            stroke="url(#rainbowGradient)"
+            strokeWidth="15"
+            fill="none"
+            opacity="0.4"
+            filter="url(#rainbowGlow)"
+            d="M0,256L48,234.7C96,213,192,171,288,170.7C384,171,480,213,576,240C672,267,768,277,864,240C960,203,1056,117,1152,96C1248,75,1344,117,1392,138.7L1440,160"
+          />
+          <path
+            stroke="url(#rainbowGradient)"
+            strokeWidth="15"
+            fill="none"
+            opacity="0.2"
+            filter="url(#rainbowGlow)"
+            d="M0,256L48,234.7C96,213,192,171,288,170.7C384,171,480,213,576,240C672,267,768,277,864,240C960,203,1056,117,1152,96C1248,75,1344,117,1392,138.7L1440,160"
+          />
+          
+          {/* Main filled wave */}
           <path
             className="fill-forest"
             fillOpacity="1"
@@ -594,11 +652,70 @@ const GoalPage = () => {
         preserveAspectRatio="none"
         style={{ marginBottom: '-1px' }}
       >
+        <defs>
+          {/* Rainbow gradient for the glow */}
+          <linearGradient id="rainbowGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ff0080" />
+            <stop offset="20%" stopColor="#ff8c00" />
+            <stop offset="40%" stopColor="#ffff00" />
+            <stop offset="60%" stopColor="#00ff00" />
+            <stop offset="80%" stopColor="#0080ff" />
+            <stop offset="100%" stopColor="#8000ff" />
+          </linearGradient>
+          
+          {/* Glow filter with 3x intensity */}
+          <filter id="rainbowGlow2" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur1" />
+            <feColorMatrix in="blur1" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="glow1" />
+            
+            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur2" />
+            <feColorMatrix in="blur2" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.7 0" result="glow2" />
+            
+            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="blur3" />
+            <feColorMatrix in="blur3" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.5 0" result="glow3" />
+            
+            <feMerge>
+              <feMergeNode in="glow1" />
+              <feMergeNode in="glow2" />
+              <feMergeNode in="glow3" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        
         <rect x="0" y="0" width="1440" height="20" className="fill-forest" />
         <path
           d="M0,20 L0,70 Q720,-10 1440,70 L1440,20 Z"
           className="fill-forest"
         />
+        
+        {/* Rainbow glow stroke layers for the rounded curve */}
+        <path
+          d="M0,70 Q720,-10 1440,70"
+          stroke="url(#rainbowGradient2)"
+          strokeWidth="15"
+          fill="none"
+          opacity="0.6"
+          filter="url(#rainbowGlow2)"
+        />
+        <path
+          d="M0,70 Q720,-10 1440,70"
+          stroke="url(#rainbowGradient2)"
+          strokeWidth="15"
+          fill="none"
+          opacity="0.4"
+          filter="url(#rainbowGlow2)"
+        />
+        <path
+          d="M0,70 Q720,-10 1440,70"
+          stroke="url(#rainbowGradient2)"
+          strokeWidth="15"
+          fill="none"
+          opacity="0.2"
+          filter="url(#rainbowGlow2)"
+        />
+        
+        {/* Main background curve */}
         <path
           d="M0,70 Q720,-10 1440,70 L1440,80 L0,80 Z"
           className="fill-background"
